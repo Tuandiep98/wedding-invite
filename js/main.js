@@ -12,6 +12,10 @@
   var countdownDone = document.getElementById("countdown-done");
   var introEl = document.getElementById("invite-intro");
   var openInviteBtn = document.getElementById("open-invite-btn");
+  var audio = document.getElementById("bg-music");
+  var audioBtn = document.getElementById("audio-toggle");
+  var iconOff = document.getElementById("icon-music-off");
+  var iconOn = document.getElementById("icon-music-on");
 
   function pad(n) {
     return String(n).padStart(2, "0");
@@ -64,6 +68,57 @@
     if (heroTitle && typeof heroTitle.focus === "function") heroTitle.focus();
   }
 
+  function playOpenChime() {
+    var AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    var ctx = new AudioCtx();
+    var now = ctx.currentTime;
+
+    function tone(freq, start, duration, gainValue) {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, start);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(gainValue, start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + duration + 0.03);
+    }
+
+    tone(740, now, 0.24, 0.05);
+    tone(988, now + 0.14, 0.32, 0.045);
+
+    window.setTimeout(function () {
+      if (typeof ctx.close === "function") ctx.close();
+    }, 800);
+  }
+
+  function setAudioUi(playing) {
+    if (!audioBtn) return;
+    audioBtn.setAttribute("aria-pressed", playing ? "true" : "false");
+    audioBtn.setAttribute(
+      "aria-label",
+      playing ? "Tắt nhạc nền" : "Bật nhạc nền"
+    );
+    if (iconOff) iconOff.style.display = playing ? "none" : "block";
+    if (iconOn) iconOn.style.display = playing ? "block" : "none";
+  }
+
+  function startBackgroundMusic() {
+    if (!audio) return;
+    audio.play().then(
+      function () {
+        setAudioUi(true);
+      },
+      function () {
+        setAudioUi(false);
+      }
+    );
+  }
+
   if (!introEl || !openInviteBtn) {
     unlockInviteContent();
   } else if (prefersReduced) {
@@ -72,6 +127,8 @@
   } else {
     openInviteBtn.addEventListener("click", function () {
       if (introEl.classList.contains("is-opening")) return;
+      playOpenChime();
+      startBackgroundMusic();
       introEl.classList.add("is-opening");
       window.setTimeout(function () {
         introEl.classList.add("is-expanding");
@@ -199,21 +256,6 @@
   });
 
   /** Nhạc nền */
-  var audio = document.getElementById("bg-music");
-  var audioBtn = document.getElementById("audio-toggle");
-  var iconOff = document.getElementById("icon-music-off");
-  var iconOn = document.getElementById("icon-music-on");
-
-  function setAudioUi(playing) {
-    if (!audioBtn) return;
-    audioBtn.setAttribute("aria-pressed", playing ? "true" : "false");
-    audioBtn.setAttribute(
-      "aria-label",
-      playing ? "Tắt nhạc nền" : "Bật nhạc nền"
-    );
-    if (iconOff) iconOff.style.display = playing ? "none" : "block";
-    if (iconOn) iconOn.style.display = playing ? "block" : "none";
-  }
 
   if (audioBtn && audio) {
     audioBtn.addEventListener("click", function () {
