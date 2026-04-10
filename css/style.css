@@ -105,6 +105,8 @@ body.is-invite-open .page {
   z-index: 120;
   display: grid;
   place-items: center;
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
   background:
     radial-gradient(ellipse at center, rgba(255, 255, 255, 0.5), transparent 65%),
     linear-gradient(180deg, #fdfaf6 0%, #f6efe6 100%);
@@ -116,6 +118,9 @@ body.is-invite-open .page {
   padding: 0;
   background: transparent;
   cursor: pointer;
+  line-height: 0;
+  display: grid;
+  place-items: center;
 }
 
 .invite-intro__button:focus-visible {
@@ -131,6 +136,8 @@ body.is-invite-open .page {
   perspective: 1000px;
   animation: inviteFloat 2.4s ease-in-out infinite;
   overflow: visible;
+  isolation: isolate;
+  margin-top: clamp(0.25rem, 1.2vh, 0.75rem);
 }
 
 .invite-card__body {
@@ -196,13 +203,13 @@ body.is-invite-open .page {
   position: absolute;
   left: 50%;
   top: 54%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) translateZ(0);
   width: 54%;
   max-width: 10rem;
   height: auto;
   object-fit: contain;
   pointer-events: none;
-  z-index: 5;
+  z-index: 10;
   filter:
     drop-shadow(0 6px 10px rgba(128, 18, 28, 0.24))
     drop-shadow(0 1px 2px rgba(255, 188, 73, 0.28));
@@ -251,7 +258,7 @@ body.is-invite-open .page {
     0 6px 14px rgba(44, 44, 44, 0.1),
     inset 0 0 0 1px rgba(255, 255, 255, 0.4);
   transition: transform 1.05s var(--ease-smooth);
-  z-index: 3;
+  z-index: 4;
 }
 
 .invite-card__flap::after {
@@ -311,7 +318,7 @@ body.is-invite-open .page {
   transition:
     transform 0.85s var(--ease-smooth),
     opacity 0.4s var(--ease-smooth);
-  z-index: 6;
+  z-index: 11;
   overflow: hidden;
 }
 
@@ -533,6 +540,10 @@ body.is-invite-open .page {
   line-height: 1.15;
   margin: 0 0 0.5rem;
   color: var(--color-ink);
+}
+
+.hero__names:focus {
+  outline: none;
 }
 
 .hero__ampersand {

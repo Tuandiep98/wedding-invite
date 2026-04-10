@@ -65,7 +65,14 @@
     if (introEl) introEl.setAttribute("aria-hidden", "true");
     var heroTitle = document.querySelector(".hero__names");
     if (heroTitle) heroTitle.setAttribute("tabindex", "-1");
-    if (heroTitle && typeof heroTitle.focus === "function") heroTitle.focus();
+    if (heroTitle && typeof heroTitle.focus === "function") {
+      heroTitle.focus({ preventScroll: true });
+      window.setTimeout(function () {
+        if (document.activeElement === heroTitle && typeof heroTitle.blur === "function") {
+          heroTitle.blur();
+        }
+      }, 120);
+    }
   }
 
   function playOpenChime() {
