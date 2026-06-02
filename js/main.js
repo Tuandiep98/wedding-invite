@@ -4,27 +4,27 @@
   /** Ngày giờ đám cưới (GMT+7) — chỉnh tại đây */
   var WEDDING_ISO = "2026-06-15T11:00:00+07:00";
 
-  var countdownEl = document.getElementById("countdown");
-  var cdDays = document.getElementById("cd-days");
+  var cdDays  = document.getElementById("cd-days");
   var cdHours = document.getElementById("cd-hours");
-  var cdMins = document.getElementById("cd-mins");
-  var cdSecs = document.getElementById("cd-secs");
+  var cdMins  = document.getElementById("cd-mins");
+  var cdSecs  = document.getElementById("cd-secs");
+  var countdownEl   = document.getElementById("countdown");
   var countdownDone = document.getElementById("countdown-done");
-  var introEl = document.getElementById("invite-intro");
-  var openInviteBtn = document.getElementById("open-invite-btn");
-  var audio = document.getElementById("bg-music");
+  var audio    = document.getElementById("bg-music");
   var audioBtn = document.getElementById("audio-toggle");
-  var iconOff = document.getElementById("icon-music-off");
-  var iconOn = document.getElementById("icon-music-on");
+  var iconOff  = document.getElementById("icon-music-off");
+  var iconOn   = document.getElementById("icon-music-on");
 
-  function pad(n) {
-    return String(n).padStart(2, "0");
-  }
+  var prefersReduced =
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  function pad(n) { return String(n).padStart(2, "0"); }
+
+  /** Countdown */
   function tickCountdown() {
     var target = new Date(WEDDING_ISO).getTime();
-    var now = Date.now();
-    var diff = target - now;
+    var diff = target - Date.now();
 
     if (diff <= 0) {
       if (countdownEl) countdownEl.classList.add("is-ended");
@@ -33,120 +33,20 @@
     }
 
     var s = Math.floor(diff / 1000);
-    var days = Math.floor(s / 86400);
-    var hours = Math.floor((s % 86400) / 3600);
-    var mins = Math.floor((s % 3600) / 60);
-    var secs = s % 60;
-
-    if (cdDays) cdDays.textContent = pad(days);
-    if (cdHours) cdHours.textContent = pad(hours);
-    if (cdMins) cdMins.textContent = pad(mins);
-    if (cdSecs) cdSecs.textContent = pad(secs);
+    if (cdDays)  cdDays.textContent  = pad(Math.floor(s / 86400));
+    if (cdHours) cdHours.textContent = pad(Math.floor((s % 86400) / 3600));
+    if (cdMins)  cdMins.textContent  = pad(Math.floor((s % 3600) / 60));
+    if (cdSecs)  cdSecs.textContent  = pad(s % 60);
     return true;
   }
 
   if (tickCountdown() !== false) {
-    var countdownTimer = setInterval(function () {
-      if (tickCountdown() === false) {
-        clearInterval(countdownTimer);
-      }
+    var timer = setInterval(function () {
+      if (!tickCountdown()) clearInterval(timer);
     }, 1000);
   }
 
-  /** Scroll reveal */
-  var prefersReduced =
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /** Intro card mở thiệp */
-  function unlockInviteContent() {
-    document.body.classList.remove("is-intro-active");
-    document.body.classList.add("is-invite-open");
-    if (introEl) introEl.setAttribute("aria-hidden", "true");
-    var heroTitle = document.querySelector(".hero__names");
-    if (heroTitle) heroTitle.setAttribute("tabindex", "-1");
-    if (heroTitle && typeof heroTitle.focus === "function") {
-      heroTitle.focus({ preventScroll: true });
-      window.setTimeout(function () {
-        if (document.activeElement === heroTitle && typeof heroTitle.blur === "function") {
-          heroTitle.blur();
-        }
-      }, 120);
-    }
-  }
-
-  function playOpenChime() {
-    var AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    var ctx = new AudioCtx();
-    var now = ctx.currentTime;
-
-    function tone(freq, start, duration, gainValue) {
-      var osc = ctx.createOscillator();
-      var gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(freq, start);
-      gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.exponentialRampToValueAtTime(gainValue, start + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(start);
-      osc.stop(start + duration + 0.03);
-    }
-
-    tone(740, now, 0.24, 0.05);
-    tone(988, now + 0.14, 0.32, 0.045);
-
-    window.setTimeout(function () {
-      if (typeof ctx.close === "function") ctx.close();
-    }, 800);
-  }
-
-  function setAudioUi(playing) {
-    if (!audioBtn) return;
-    audioBtn.setAttribute("aria-pressed", playing ? "true" : "false");
-    audioBtn.setAttribute(
-      "aria-label",
-      playing ? "Tắt nhạc nền" : "Bật nhạc nền"
-    );
-    if (iconOff) iconOff.style.display = playing ? "none" : "block";
-    if (iconOn) iconOn.style.display = playing ? "block" : "none";
-  }
-
-  function startBackgroundMusic() {
-    if (!audio) return;
-    audio.play().then(
-      function () {
-        setAudioUi(true);
-      },
-      function () {
-        setAudioUi(false);
-      }
-    );
-  }
-
-  if (!introEl || !openInviteBtn) {
-    unlockInviteContent();
-  } else if (prefersReduced) {
-    introEl.classList.add("is-opened");
-    unlockInviteContent();
-  } else {
-    openInviteBtn.addEventListener("click", function () {
-      if (introEl.classList.contains("is-opening")) return;
-      playOpenChime();
-      startBackgroundMusic();
-      introEl.classList.add("is-opening");
-      window.setTimeout(function () {
-        introEl.classList.add("is-expanding");
-      }, 700);
-      window.setTimeout(function () {
-        introEl.classList.add("is-opened");
-        unlockInviteContent();
-      }, 1450);
-    });
-  }
-
+  /** Scroll reveal — hỗ trợ --d (delay) qua inline style */
   var revealEls = document.querySelectorAll(".reveal");
   if (!prefersReduced && revealEls.length && "IntersectionObserver" in window) {
     var io = new IntersectionObserver(
@@ -157,18 +57,34 @@
           io.unobserve(entry.target);
         });
       },
-      { root: null, rootMargin: "0px 0px -8% 0px", threshold: 0.08 }
+      { root: null, rootMargin: "0px 0px -6% 0px", threshold: 0.06 }
     );
-    revealEls.forEach(function (el) {
-      io.observe(el);
-    });
+    revealEls.forEach(function (el) { io.observe(el); });
   } else {
-    revealEls.forEach(function (el) {
-      el.classList.add("is-visible");
-    });
+    revealEls.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
-  /** Gallery parallax + chuyển trạng thái caption theo section */
+  /** Cánh hoa rơi */
+  function initPetals() {
+    if (prefersReduced) return;
+    var container = document.getElementById("petals");
+    if (!container) return;
+    var count = 22;
+    for (var i = 0; i < count; i++) {
+      var p = document.createElement("div");
+      var size = (9 + Math.random() * 10).toFixed(1);
+      p.className = "petal";
+      p.style.left = (Math.random() * 100) + "vw";
+      p.style.animationDuration = (7 + Math.random() * 9) + "s";
+      p.style.animationDelay = (-Math.random() * 18) + "s";
+      p.style.opacity = (0.45 + Math.random() * 0.55).toFixed(2);
+      p.style.setProperty("--petal-size", size + "px");
+      container.appendChild(p);
+    }
+  }
+  initPetals();
+
+  /** Gallery parallax + caption */
   function setupGalleryStoryEffects() {
     var panels = document.querySelectorAll(".gallery__panel");
     if (!panels.length || prefersReduced) return;
@@ -178,31 +94,24 @@
         function (entries) {
           entries.forEach(function (entry) {
             if (!entry.isIntersecting) return;
-            panels.forEach(function (panel) {
-              panel.classList.remove("is-active");
-            });
+            panels.forEach(function (p) { p.classList.remove("is-active"); });
             entry.target.classList.add("is-active");
           });
         },
         { root: null, threshold: 0.45, rootMargin: "-8% 0px -8% 0px" }
       );
-      panels.forEach(function (panel) {
-        panelObserver.observe(panel);
-      });
+      panels.forEach(function (p) { panelObserver.observe(p); });
     }
 
     var ticking = false;
     function updateParallax() {
-      var viewportCenter = window.innerHeight / 2;
+      var vc = window.innerHeight / 2;
       panels.forEach(function (panel) {
-        var rect = panel.getBoundingClientRect();
-        var panelCenter = rect.top + rect.height / 2;
-        var delta = (panelCenter - viewportCenter) * -0.08;
+        var rect  = panel.getBoundingClientRect();
+        var delta = ((rect.top + rect.height / 2) - vc) * -0.08;
         var capped = Math.max(-42, Math.min(42, delta));
-        var image = panel.querySelector("img");
-        if (image) {
-          image.style.setProperty("--img-parallax", capped.toFixed(2) + "px");
-        }
+        var img = panel.querySelector("img");
+        if (img) img.style.setProperty("--img-parallax", capped.toFixed(2) + "px");
       });
       ticking = false;
     }
@@ -219,16 +128,37 @@
   }
   setupGalleryStoryEffects();
 
-  /** Lightbox */
-  var lightbox = document.getElementById("lightbox");
-  var lightboxImg = document.getElementById("lightbox-img");
+  /** Lightbox với prev/next navigation */
+  var lightbox      = document.getElementById("lightbox");
+  var lightboxImg   = document.getElementById("lightbox-img");
   var lightboxClose = document.getElementById("lightbox-close");
+  var lightboxPrev  = document.getElementById("lightbox-prev");
+  var lightboxNext  = document.getElementById("lightbox-next");
+  var lightboxCounter = document.getElementById("lightbox-counter");
 
-  function openLightbox(src, alt) {
+  var lightboxImages = [];
+  var lightboxIndex  = 0;
+
+  document.querySelectorAll("[data-lightbox]").forEach(function (btn, idx) {
+    var img = btn.querySelector("img");
+    if (img) {
+      lightboxImages.push({ src: img.src, alt: img.alt || "" });
+      btn.addEventListener("click", function () {
+        lightboxIndex = idx;
+        showAt(idx);
+      });
+    }
+  });
+
+  function showAt(idx) {
     if (!lightbox || !lightboxImg) return;
-    lightboxImg.src = src;
-    lightboxImg.alt = alt || "";
-    lightbox.showModal();
+    var item = lightboxImages[idx];
+    lightboxImg.src = item.src;
+    lightboxImg.alt = item.alt;
+    if (lightboxCounter) {
+      lightboxCounter.textContent = (idx + 1) + " / " + lightboxImages.length;
+    }
+    if (!lightbox.open) lightbox.showModal();
   }
 
   function closeLightbox() {
@@ -238,42 +168,57 @@
     }
   }
 
-  document.querySelectorAll("[data-lightbox]").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var img = btn.querySelector("img");
-      if (img) openLightbox(img.src, img.alt);
+  if (lightboxPrev) {
+    lightboxPrev.addEventListener("click", function () {
+      lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+      showAt(lightboxIndex);
     });
-  });
-
-  if (lightboxClose) {
-    lightboxClose.addEventListener("click", closeLightbox);
   }
+
+  if (lightboxNext) {
+    lightboxNext.addEventListener("click", function () {
+      lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+      showAt(lightboxIndex);
+    });
+  }
+
+  if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
 
   if (lightbox) {
     lightbox.addEventListener("click", function (e) {
       if (e.target === lightbox) closeLightbox();
     });
-    lightbox.addEventListener("cancel", function () {
-      closeLightbox();
-    });
+    lightbox.addEventListener("cancel", closeLightbox);
   }
 
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && lightbox && lightbox.open) closeLightbox();
+    if (!lightbox || !lightbox.open) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") {
+      lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+      showAt(lightboxIndex);
+    }
+    if (e.key === "ArrowRight") {
+      lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+      showAt(lightboxIndex);
+    }
   });
 
   /** Nhạc nền */
+  function setAudioUi(playing) {
+    if (!audioBtn) return;
+    audioBtn.setAttribute("aria-pressed", playing ? "true" : "false");
+    audioBtn.setAttribute("aria-label", playing ? "Tắt nhạc nền" : "Bật nhạc nền");
+    if (iconOff) iconOff.style.display = playing ? "none" : "block";
+    if (iconOn)  iconOn.style.display  = playing ? "block" : "none";
+  }
 
   if (audioBtn && audio) {
     audioBtn.addEventListener("click", function () {
       if (audio.paused) {
         audio.play().then(
-          function () {
-            setAudioUi(true);
-          },
-          function () {
-            setAudioUi(false);
-          }
+          function () { setAudioUi(true); },
+          function () { setAudioUi(false); }
         );
       } else {
         audio.pause();
@@ -282,8 +227,8 @@
     });
   }
 
-  /** RSVP — thông báo khi chưa đổi Formspree */
-  var form = document.getElementById("rsvp-form");
+  /** RSVP */
+  var form       = document.getElementById("rsvp-form");
   var formStatus = document.getElementById("form-status");
 
   if (form) {
@@ -292,8 +237,7 @@
       if (action.indexOf("YOUR_FORM_ID") !== -1) {
         e.preventDefault();
         if (formStatus) {
-          formStatus.textContent =
-            "Vui lòng thay YOUR_FORM_ID trong action của form bằng mã Formspree của bạn, rồi thử lại.";
+          formStatus.textContent = "Vui lòng thay YOUR_FORM_ID bằng mã Formspree của bạn rồi thử lại.";
           formStatus.classList.add("is-show");
         }
         return;
