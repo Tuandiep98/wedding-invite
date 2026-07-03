@@ -1,9 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Thiệp cưới Tuấn Điệp &amp; Thu Thảo — 15 tháng 6 năm 2026" />
+    <meta
+      name="description"
+      content="Thiệp cưới Tuấn Điệp &amp; Thu Thảo — 13 tháng 10 năm 2026"
+    />
     <title>Tuấn Điệp &amp; Thu Thảo — Thiệp cưới</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,11 +17,19 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-
     <!-- Hiệu ứng mở đầu: nhẫn cầu hôn -->
-    <dialog class="ring-gate" id="ring-gate" aria-label="Mở hộp nhẫn để vào thiệp cưới">
+    <dialog
+      class="ring-gate"
+      id="ring-gate"
+      aria-label="Mở hộp nhẫn để vào thiệp cưới"
+    >
       <div class="ring-gate__inner" id="ring-gate-inner">
-        <button type="button" class="ring-gate__trigger" id="ring-gate-trigger" aria-label="Chạm để mở hộp nhẫn">
+        <button
+          type="button"
+          class="ring-gate__trigger"
+          id="ring-gate-trigger"
+          aria-label="Chạm để mở hộp nhẫn"
+        >
           <span class="ring-gate__shadow" aria-hidden="true"></span>
           <span class="ring-gate__floater" id="ring-gate-floater">
             <span class="ring-gate__glow" aria-hidden="true"></span>
@@ -29,7 +40,7 @@
               alt=""
               width="560"
               height="757"
-              onerror="this.style.display='none'"
+              onerror="this.style.display = 'none'"
             />
 
             <img
@@ -40,7 +51,7 @@
               width="560"
               height="757"
               fetchpriority="high"
-              onerror="this.style.display='none'"
+              onerror="this.style.display = 'none'"
             />
 
             <span class="ring-gate__ring-lift">
@@ -50,18 +61,38 @@
                 alt=""
                 width="520"
                 height="535"
-                onerror="this.style.display='none'"
+                onerror="this.style.display = 'none'"
               />
             </span>
           </span>
-          <span class="ring-gate__sparkles" id="ring-gate-sparkles" aria-hidden="true"></span>
+          <span
+            class="ring-gate__sparkles"
+            id="ring-gate-sparkles"
+            aria-hidden="true"
+          ></span>
         </button>
 
         <div class="ring-gate__caption">
-          <p class="ring-gate__prompt" id="ring-gate-prompt">✦ Chạm vào hộp để mở lời mời</p>
-          <button type="button" class="ring-gate__skip" id="ring-gate-skip">Bỏ qua</button>
+          <p class="ring-gate__prompt" id="ring-gate-prompt">
+            ✦ Chạm vào hộp để mở lời mời
+          </p>
+          <button type="button" class="ring-gate__skip" id="ring-gate-skip">
+            Bỏ qua
+          </button>
         </div>
       </div>
+
+      <!-- Nhẫn bay từ hộp xuống đúng vị trí nhẫn giữa 2 tên ở Hero -->
+      <span class="ring-gate__fly" id="ring-gate-fly" aria-hidden="true">
+        <span class="ring-gate__fly-glow"></span>
+        <img
+          src="assets/ring-fly.webp"
+          alt=""
+          width="520"
+          height="535"
+          onerror="this.style.display = 'none'"
+        />
+      </span>
     </dialog>
 
     <!-- Cánh hoa rơi -->
@@ -77,8 +108,10 @@
     <header class="hero" id="top">
       <img
         class="hero__photo"
-        src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=900&h=1200&q=85"
+        src="assets/hero-photo.webp"
         alt=""
+        width="900"
+        height="1200"
         aria-hidden="true"
         fetchpriority="high"
       />
@@ -94,75 +127,177 @@
               alt=""
               width="520"
               height="535"
-              onerror="this.style.display='none'"
+              onerror="this.style.display = 'none'"
             />
           </span>
           <span class="hero__bride" aria-hidden="true">Thu Thảo</span>
         </h1>
-        <p class="hero__date">Chủ nhật · 15 · 06 · 2026</p>
+        <p class="hero__date">Thứ Ba · 13 · 10 · 2026</p>
         <p class="hero__ornament" aria-hidden="true">❧ ✦ ❧</p>
       </div>
-      <a class="hero__scroll-hint" href="#story" aria-label="Cuộn xuống">&#8595;</a>
+      <a class="hero__scroll-hint" href="#story" aria-label="Cuộn xuống"
+        >&#8595;</a
+      >
     </header>
 
     <!-- ═══ Khoảnh khắc cầu hôn ═══ -->
-    <section class="section section--dark story" id="story" aria-labelledby="story-heading">
+    <section
+      class="section section--dark story"
+      id="story"
+      aria-labelledby="story-heading"
+    >
       <div class="story__photo-wrap">
         <img
           class="story__photo"
           src="assets/proposal-ring.webp"
           alt="Khoảnh khắc Tuấn Điệp cầu hôn — nhẫn trên tay Thu Thảo"
           width="950"
-          height="1187"
+          height="1185"
           loading="lazy"
           decoding="async"
-          onerror="this.parentElement.style.display='none'"
+          onerror="this.parentElement.style.display = 'none'"
         />
-        <span class="story__ring-target" id="story-ring-target" aria-hidden="true"></span>
+        <span
+          class="story__ring-target"
+          id="story-ring-target"
+          aria-hidden="true"
+        ></span>
       </div>
 
       <div class="container story__container">
-        <h2 id="story-heading" class="section__title reveal">Khoảnh khắc cầu hôn</h2>
-        <p class="ornament reveal" style="--d:.13s" aria-hidden="true">❧ ✦ ❧</p>
+        <h2 id="story-heading" class="section__title reveal">
+          Khoảnh khắc cầu hôn
+        </h2>
+        <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
+          ❧ ✦ ❧
+        </p>
 
-        <div class="story__mockups reveal" style="--d:.26s" aria-hidden="true">
-          <img class="story__mockup story__mockup--a" src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=480&h=600&q=80" alt="" width="480" height="600" loading="lazy" decoding="async" />
-          <img class="story__mockup story__mockup--b" src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=480&h=600&q=80" alt="" width="480" height="600" loading="lazy" decoding="async" />
+        <div
+          class="story__mockups reveal"
+          style="--d: 0.26s"
+          aria-hidden="true"
+        >
+          <img
+            class="story__mockup story__mockup--a"
+            src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=480&h=600&q=80"
+            alt=""
+            width="480"
+            height="600"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="story__mockup story__mockup--b"
+            src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=480&h=600&q=80"
+            alt=""
+            width="480"
+            height="600"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
 
-        <p class="story__paragraph reveal" style="--d:.4s">
-          Một buổi chiều rất bình thường bỗng trở thành khoảnh khắc không thể nào quên —
-          khi anh quỳ xuống và hỏi em một câu, tay em run run còn tim thì đập loạn nhịp.
-          Chiếc nhẫn nhỏ từ hôm ấy đã trở thành lời hứa cho một hành trình dài phía trước.
+        <p class="story__paragraph reveal" style="--d: 0.4s">
+          Một buổi chiều rất bình thường bỗng trở thành khoảnh khắc không thể
+          nào quên — khi anh quỳ xuống và hỏi em một câu, tay em run run còn tim
+          thì đập loạn nhịp. Chiếc nhẫn nhỏ từ hôm ấy đã trở thành lời hứa cho
+          một hành trình dài phía trước.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ Nhẫn cưới ═══ -->
+    <section class="section rings" id="rings" aria-labelledby="rings-heading">
+      <div class="container">
+        <h2 id="rings-heading" class="section__title reveal">Nhẫn cưới</h2>
+        <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
+          ❧ ✦ ❧
+        </p>
+
+        <div class="rings__grid reveal" style="--d: 0.24s">
+          <div class="rings__item">
+            <div class="rings__photo-wrap">
+              <span class="rings__glow" aria-hidden="true"></span>
+              <img
+                class="rings__photo"
+                src="assets/ring-bride-2.png"
+                alt="Nhẫn cưới của cô dâu"
+                width="700"
+                height="700"
+                loading="lazy"
+                decoding="async"
+                onerror="this.parentElement.style.display = 'none'"
+              />
+            </div>
+          </div>
+          <div class="rings__divider" aria-hidden="true">♥</div>
+          <div class="rings__item">
+            <div class="rings__photo-wrap">
+              <span class="rings__glow" aria-hidden="true"></span>
+              <img
+                class="rings__photo"
+                src="assets/ring-bride.png"
+                alt="Nhẫn cưới của chú rể"
+                width="700"
+                height="700"
+                loading="lazy"
+                decoding="async"
+                onerror="this.parentElement.style.display = 'none'"
+              />
+            </div>
+          </div>
+        </div>
+
+        <p class="section__lead rings__lead reveal" style="--d: 0.4s">
+          Không cần lộng lẫy, chỉ cần vừa đủ tròn để ôm lấy ngón tay nhau suốt
+          một đời — hai chiếc nhẫn nhỏ, một lời hứa lớn.
         </p>
       </div>
     </section>
 
     <!-- ═══ Lời mời ═══ -->
-    <section class="section invitation" id="invitation" aria-labelledby="invitation-heading">
+    <section
+      class="section invitation"
+      id="invitation"
+      aria-labelledby="invitation-heading"
+    >
       <div class="container">
         <h2 id="invitation-heading" class="section__title reveal">Lời mời</h2>
-        <p class="ornament reveal" style="--d:.13s" aria-hidden="true">❧ ✦ ❧</p>
+        <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
+          ❧ ✦ ❧
+        </p>
         <div class="invitation__text">
-          <p class="reveal" style="--d:.26s">
-            Trân trọng kính mời quý vị đến chung vui trong ngày trọng đại của chúng tôi.
-            Sự hiện diện của quý khách là niềm vinh dự và hạnh phúc lớn lao nhất
-            mà chúng tôi mong mỏi trong ngày lễ thành hôn này.
+          <p class="reveal" style="--d: 0.26s">
+            Trước đây cứ nghĩ đám cưới chỉ là một thông báo chính thức,<br />
+            Giờ mới hiểu đó là một dịp hiếm hoi để mọi người tụ họp.<br />
+            Là những chuyến đi xa chỉ để có mặt bên nhau,<br />
+            Là sự ủng hộ vô điều kiện từ những người thương yêu.<br />
+            Cảm ơn gia đình, bạn bè đã luôn đồng hành.<br />
+            Lâu rồi không gặp, thật sự rất nhớ mọi người!
           </p>
-          <p class="reveal invitation__sign" style="--d:.38s">
-            Trân trọng,<br />
-            <em>Gia đình Tuấn Điệp &amp; Thu Thảo</em>
+          <p class="reveal invitation__date" style="--d: 0.38s">
+            13 · 10 · 2026
           </p>
         </div>
       </div>
     </section>
 
     <!-- ═══ Đếm ngược ═══ -->
-    <section class="section section--dark countdown" id="countdown" aria-labelledby="countdown-heading">
+    <section
+      class="section section--dark countdown"
+      id="countdown"
+      aria-labelledby="countdown-heading"
+    >
       <div class="container">
         <h2 id="countdown-heading" class="section__title reveal">Đếm ngược</h2>
-        <p class="ornament reveal" style="--d:.13s" aria-hidden="true">❧ ✦ ❧</p>
-        <div class="countdown__grid reveal" style="--d:.28s" id="countdown-grid">
+        <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
+          ❧ ✦ ❧
+        </p>
+        <div
+          class="countdown__grid reveal"
+          style="--d: 0.28s"
+          id="countdown-grid"
+        >
           <div class="countdown__unit">
             <div class="countdown__value" id="cd-days">00</div>
             <div class="countdown__label">Ngày</div>
@@ -186,126 +321,211 @@
       </div>
     </section>
 
-    <!-- ═══ Hai gia đình ═══ -->
-    <section class="section family" id="family" aria-labelledby="family-heading">
-      <div class="container">
-        <h2 id="family-heading" class="section__title reveal">Hai gia đình</h2>
-        <p class="ornament reveal" style="--d:.13s" aria-hidden="true">❧ ✦ ❧</p>
-        <div class="family__grid reveal" style="--d:.3s">
-          <div class="family__side">
-            <p class="family__role">Nhà trai</p>
-            <p class="family__parents">
-              Ông: <strong>Nguyễn Văn A</strong><br />
-              Bà: <strong>Nguyễn Thị B</strong>
-            </p>
-            <p class="family__child">Con trai trưởng</p>
-            <p class="family__name">Tuấn Điệp</p>
-          </div>
-          <div class="family__divider" aria-hidden="true">✦</div>
-          <div class="family__side">
-            <p class="family__role">Nhà gái</p>
-            <p class="family__parents">
-              Ông: <strong>Trần Văn C</strong><br />
-              Bà: <strong>Trần Thị D</strong>
-            </p>
-            <p class="family__child">Con gái yêu</p>
-            <p class="family__name">Thu Thảo</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- ═══ Thông tin sự kiện ═══ -->
-    <section class="section section--dark event-section" id="event" aria-labelledby="event-heading">
+    <section
+      class="section section--dark event-section"
+      id="event"
+      aria-labelledby="event-heading"
+    >
       <div class="container">
-        <h2 id="event-heading" class="section__title reveal">Thông tin sự kiện</h2>
-        <p class="ornament reveal" style="--d:.13s" aria-hidden="true">❧ ✦ ❧</p>
-        <div class="event-cards reveal" style="--d:.28s">
+        <h2 id="event-heading" class="section__title reveal">
+          Thông tin sự kiện
+        </h2>
+        <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
+          ❧ ✦ ❧
+        </p>
+        <div class="event-cards reveal" style="--d: 0.28s">
           <div class="event-card">
             <div class="event-card__icon" aria-hidden="true">🗓</div>
             <p class="event-card__label">Thời gian</p>
-            <p class="event-card__value">11:00 sáng<br />Chủ nhật, 15/06/2026</p>
+            <p class="event-card__value">11:00 sáng<br />Thứ Ba, 13/10/2026</p>
           </div>
           <div class="event-card">
             <div class="event-card__icon" aria-hidden="true">📍</div>
             <p class="event-card__label">Địa điểm</p>
-            <p class="event-card__value">Nhà hàng Demo Garden<br />Đường mẫu, Quận 1<br />TP. Hồ Chí Minh</p>
+            <p class="event-card__value">
+              Nhà hàng Demo Garden<br />Đường mẫu, Quận 1<br />TP. Hồ Chí Minh
+            </p>
           </div>
         </div>
-        <div class="event-map reveal" style="--d:.44s">
+        <div class="event-map reveal" style="--d: 0.44s">
           <a
             class="btn btn--gold"
             href="https://maps.google.com/?q=Ho+Chi+Minh+City"
             target="_blank"
             rel="noopener noreferrer"
-          >📍 &nbsp;Chỉ đường đến nhà hàng</a>
+            >📍 &nbsp;Chỉ đường đến nhà hàng</a
+          >
         </div>
       </div>
     </section>
 
     <!-- ═══ Album ảnh ═══ -->
-    <section class="section gallery-section" id="gallery" aria-labelledby="gallery-heading">
+    <section
+      class="section gallery-section"
+      id="gallery"
+      aria-labelledby="gallery-heading"
+    >
       <div class="container">
         <h2 id="gallery-heading" class="section__title reveal">Khoảnh khắc</h2>
-        <p class="ornament reveal" style="--d:.13s" aria-hidden="true">❧ ✦ ❧</p>
-        <p class="section__lead reveal" style="--d:.26s">Chạm vào ảnh để phóng to.</p>
-        <div class="gallery__story reveal" style="--d:.4s" role="list" aria-label="Album ảnh theo từng khoảnh khắc">
+        <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
+          ❧ ✦ ❧
+        </p>
+        <p class="section__lead reveal" style="--d: 0.26s">
+          Chạm vào ảnh để phóng to.
+        </p>
+        <div
+          class="gallery__story reveal"
+          style="--d: 0.4s"
+          role="list"
+          aria-label="Album ảnh theo từng khoảnh khắc"
+        >
           <article class="gallery__panel is-active" role="listitem">
-            <button type="button" class="gallery__slide-btn" aria-label="Xem ảnh khoảnh khắc 1 lớn hơn" data-lightbox>
-              <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1600&q=80" alt="Khoảnh khắc 1" width="1200" height="1600" loading="lazy" decoding="async" />
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label="Xem ảnh khoảnh khắc 1 lớn hơn"
+              data-lightbox
+            >
+              <img
+                src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1600&q=80"
+                alt="Khoảnh khắc 1"
+                width="1200"
+                height="1600"
+                loading="lazy"
+                decoding="async"
+              />
               <span class="gallery__caption">
                 <span class="gallery__caption-title">Khoảnh khắc gặp nhau</span>
-                <span class="gallery__caption-desc">Một chiều hoàng hôn nhẹ, tụi mình bắt đầu câu chuyện từ nụ cười rất nhỏ.</span>
+                <span class="gallery__caption-desc"
+                  >Một chiều hoàng hôn nhẹ, tụi mình bắt đầu câu chuyện từ nụ
+                  cười rất nhỏ.</span
+                >
               </span>
             </button>
           </article>
           <div class="gallery__separator" aria-hidden="true"></div>
           <article class="gallery__panel" role="listitem">
-            <button type="button" class="gallery__slide-btn" aria-label="Xem ảnh khoảnh khắc 2 lớn hơn" data-lightbox>
-              <img src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=1600&q=80" alt="Khoảnh khắc 2" width="1200" height="1600" loading="lazy" decoding="async" />
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label="Xem ảnh khoảnh khắc 2 lớn hơn"
+              data-lightbox
+            >
+              <img
+                src="https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=1600&q=80"
+                alt="Khoảnh khắc 2"
+                width="1200"
+                height="1600"
+                loading="lazy"
+                decoding="async"
+              />
               <span class="gallery__caption">
                 <span class="gallery__caption-title">Lời hứa đầu tiên</span>
-                <span class="gallery__caption-desc">Giữa tiếng cười của bạn bè, chúng mình chọn ở lại cùng nhau qua từng mùa.</span>
+                <span class="gallery__caption-desc"
+                  >Giữa tiếng cười của bạn bè, chúng mình chọn ở lại cùng nhau
+                  qua từng mùa.</span
+                >
               </span>
             </button>
           </article>
           <div class="gallery__separator" aria-hidden="true"></div>
           <article class="gallery__panel" role="listitem">
-            <button type="button" class="gallery__slide-btn" aria-label="Xem ảnh khoảnh khắc 3 lớn hơn" data-lightbox>
-              <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80" alt="Khoảnh khắc 3" width="1200" height="1600" loading="lazy" decoding="async" />
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label="Xem ảnh khoảnh khắc 3 lớn hơn"
+              data-lightbox
+            >
+              <img
+                src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80"
+                alt="Khoảnh khắc 3"
+                width="1200"
+                height="1600"
+                loading="lazy"
+                decoding="async"
+              />
               <span class="gallery__caption">
                 <span class="gallery__caption-title">Khoảnh khắc đính hôn</span>
-                <span class="gallery__caption-desc">Một lời "đồng ý" giản dị nhưng là câu trả lời đẹp nhất của cả thanh xuân.</span>
+                <span class="gallery__caption-desc"
+                  >Một lời "đồng ý" giản dị nhưng là câu trả lời đẹp nhất của cả
+                  thanh xuân.</span
+                >
               </span>
             </button>
           </article>
           <div class="gallery__separator" aria-hidden="true"></div>
           <article class="gallery__panel" role="listitem">
-            <button type="button" class="gallery__slide-btn" aria-label="Xem ảnh khoảnh khắc 4 lớn hơn" data-lightbox>
-              <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1600&q=80" alt="Khoảnh khắc 4" width="1200" height="1600" loading="lazy" decoding="async" />
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label="Xem ảnh khoảnh khắc 4 lớn hơn"
+              data-lightbox
+            >
+              <img
+                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1600&q=80"
+                alt="Khoảnh khắc 4"
+                width="1200"
+                height="1600"
+                loading="lazy"
+                decoding="async"
+              />
               <span class="gallery__caption">
                 <span class="gallery__caption-title">Ngày chuẩn bị</span>
-                <span class="gallery__caption-desc">Từng chi tiết nhỏ được xếp lại bằng sự chỉn chu và thật nhiều yêu thương.</span>
+                <span class="gallery__caption-desc"
+                  >Từng chi tiết nhỏ được xếp lại bằng sự chỉn chu và thật nhiều
+                  yêu thương.</span
+                >
               </span>
             </button>
           </article>
           <div class="gallery__separator" aria-hidden="true"></div>
           <article class="gallery__panel" role="listitem">
-            <button type="button" class="gallery__slide-btn" aria-label="Xem ảnh khoảnh khắc 5 lớn hơn" data-lightbox>
-              <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1600&q=80" alt="Khoảnh khắc 5" width="1200" height="1600" loading="lazy" decoding="async" />
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label="Xem ảnh khoảnh khắc 5 lớn hơn"
+              data-lightbox
+            >
+              <img
+                src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1600&q=80"
+                alt="Khoảnh khắc 5"
+                width="1200"
+                height="1600"
+                loading="lazy"
+                decoding="async"
+              />
               <span class="gallery__caption">
                 <span class="gallery__caption-title">Nghi thức thành đôi</span>
-                <span class="gallery__caption-desc">Khoảnh khắc trang trọng khi hai gia đình cùng chúc phúc cho hành trình mới.</span>
+                <span class="gallery__caption-desc"
+                  >Khoảnh khắc trang trọng khi hai gia đình cùng chúc phúc cho
+                  hành trình mới.</span
+                >
               </span>
             </button>
           </article>
           <div class="gallery__separator" aria-hidden="true"></div>
           <article class="gallery__panel" role="listitem">
-            <button type="button" class="gallery__slide-btn" aria-label="Xem ảnh khoảnh khắc 6 lớn hơn" data-lightbox>
-              <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1600&q=80" alt="Khoảnh khắc 6" width="1200" height="1600" loading="lazy" decoding="async" />
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label="Xem ảnh khoảnh khắc 6 lớn hơn"
+              data-lightbox
+            >
+              <img
+                src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=1600&q=80"
+                alt="Khoảnh khắc 6"
+                width="1200"
+                height="1600"
+                loading="lazy"
+                decoding="async"
+              />
               <span class="gallery__caption">
                 <span class="gallery__caption-title">Khởi đầu mới</span>
-                <span class="gallery__caption-desc">Khi buổi lễ khép lại, một chương mới chính thức bắt đầu với rất nhiều hy vọng.</span>
+                <span class="gallery__caption-desc"
+                  >Khi buổi lễ khép lại, một chương mới chính thức bắt đầu với
+                  rất nhiều hy vọng.</span
+                >
               </span>
             </button>
           </article>
@@ -317,16 +537,23 @@
     <section class="section gift" id="gift" aria-labelledby="gift-heading">
       <div class="container">
         <h2 id="gift-heading" class="section__title reveal">Quà mừng cưới</h2>
-        <p class="ornament reveal" style="--d:.13s" aria-hidden="true">❧ ✦ ❧</p>
-        <p class="section__lead reveal" style="--d:.26s">
+        <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
+          ❧ ✦ ❧
+        </p>
+        <p class="section__lead reveal" style="--d: 0.26s">
           Sự hiện diện của bạn là món quà quý giá nhất với chúng mình.<br />
           Nếu muốn gửi thêm chút tấm lòng, chúng mình trân trọng nhận.
         </p>
-        <div class="gift__grid reveal" style="--d:.4s">
+        <div class="gift__grid reveal" style="--d: 0.4s">
           <div class="gift__card">
             <p class="gift__side-label">Nhà trai</p>
             <div class="gift__qr">
-              <img src="https://placehold.co/160x160/2d1515/d4af37/png?text=QR+Code" alt="QR chuyển khoản nhà trai" width="160" height="160" />
+              <img
+                src="https://placehold.co/160x160/2d1515/d4af37/png?text=QR+Code"
+                alt="QR chuyển khoản nhà trai"
+                width="160"
+                height="160"
+              />
             </div>
             <div class="gift__info">
               <p class="gift__bank-name">Vietcombank (VCB)</p>
@@ -337,7 +564,12 @@
           <div class="gift__card">
             <p class="gift__side-label">Nhà gái</p>
             <div class="gift__qr">
-              <img src="https://placehold.co/160x160/2d1515/d4af37/png?text=QR+Code" alt="QR chuyển khoản nhà gái" width="160" height="160" />
+              <img
+                src="https://placehold.co/160x160/2d1515/d4af37/png?text=QR+Code"
+                alt="QR chuyển khoản nhà gái"
+                width="160"
+                height="160"
+              />
             </div>
             <div class="gift__info">
               <p class="gift__bank-name">Techcombank (TCB)</p>
@@ -350,24 +582,43 @@
     </section>
 
     <!-- ═══ RSVP ═══ -->
-    <section class="section section--dark rsvp" id="rsvp" aria-labelledby="rsvp-heading">
+    <section
+      class="section section--dark rsvp"
+      id="rsvp"
+      aria-labelledby="rsvp-heading"
+    >
       <div class="container">
-        <h2 id="rsvp-heading" class="section__title reveal">Xác nhận tham dự</h2>
-        <p class="ornament reveal" style="--d:.13s" aria-hidden="true">❧ ✦ ❧</p>
-        <p class="section__lead section__lead--light reveal" style="--d:.26s">
+        <h2 id="rsvp-heading" class="section__title reveal">
+          Xác nhận tham dự
+        </h2>
+        <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
+          ❧ ✦ ❧
+        </p>
+        <p class="section__lead section__lead--light reveal" style="--d: 0.26s">
           Điền thông tin bên dưới để chúng mình biết bạn sẽ đến.
         </p>
         <form
           class="form reveal"
-          style="--d:.4s"
+          style="--d: 0.4s"
           id="rsvp-form"
           action="https://formspree.io/f/YOUR_FORM_ID"
           method="POST"
         >
-          <input type="hidden" name="_subject" value="RSVP đám cưới — Tuấn Điệp &amp; Thu Thảo" />
+          <input
+            type="hidden"
+            name="_subject"
+            value="RSVP đám cưới — Tuấn Điệp &amp; Thu Thảo"
+          />
           <div class="form__row">
             <label for="name">Họ và tên</label>
-            <input id="name" name="name" type="text" required autocomplete="name" placeholder="Nguyễn Văn A" />
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              autocomplete="name"
+              placeholder="Nguyễn Văn A"
+            />
           </div>
           <div class="form__row">
             <label for="guests">Số khách đi cùng</label>
@@ -380,10 +631,20 @@
           </div>
           <div class="form__row">
             <label for="message">Lời nhắn (tùy chọn)</label>
-            <textarea id="message" name="message" rows="4" placeholder="Chúc mừng hạnh phúc..."></textarea>
+            <textarea
+              id="message"
+              name="message"
+              rows="4"
+              placeholder="Chúc mừng hạnh phúc..."
+            ></textarea>
           </div>
           <button class="btn btn--gold" type="submit">Gửi xác nhận</button>
-          <p class="form__status" id="form-status" role="status" aria-live="polite"></p>
+          <p
+            class="form__status"
+            id="form-status"
+            role="status"
+            aria-live="polite"
+          ></p>
         </form>
       </div>
     </section>
@@ -392,7 +653,7 @@
     <footer class="footer">
       <div class="footer__monogram" aria-hidden="true">T &amp; T</div>
       <p class="footer__text">Trân trọng cảm ơn · Hẹn gặp bạn trong ngày vui</p>
-      <p class="footer__date">15 · 06 · 2026</p>
+      <p class="footer__date">13 · 10 · 2026</p>
     </footer>
 
     <!-- Nút nhạc nền -->
@@ -404,13 +665,28 @@
       aria-label="Bật nhạc nền"
       title="Nhạc nền"
     >
-      <svg id="icon-music-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+      <svg
+        id="icon-music-off"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        aria-hidden="true"
+      >
         <path d="M9 18V5l12-2v13" />
         <circle cx="6" cy="18" r="3" />
         <circle cx="18" cy="16" r="3" />
         <path d="M3 3l18 18" stroke-linecap="round" />
       </svg>
-      <svg id="icon-music-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" style="display:none">
+      <svg
+        id="icon-music-on"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        aria-hidden="true"
+        style="display: none"
+      >
         <path d="M9 18V5l12-2v13" />
         <circle cx="6" cy="18" r="3" />
         <circle cx="18" cy="16" r="3" />
@@ -418,17 +694,45 @@
     </button>
 
     <audio id="bg-music" loop preload="metadata">
-      <source src="https://assets.mixkit.co/music/389/389.mp3" type="audio/mpeg" />
+      <source
+        src="https://assets.mixkit.co/music/389/389.mp3"
+        type="audio/mpeg"
+      />
     </audio>
 
     <!-- Lightbox -->
     <dialog class="lightbox" id="lightbox" aria-label="Ảnh phóng to">
       <div class="lightbox__inner" id="lightbox-inner">
-        <button type="button" class="lightbox__close" id="lightbox-close" aria-label="Đóng">×</button>
-        <button type="button" class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" aria-label="Ảnh trước">&#8249;</button>
-        <button type="button" class="lightbox__nav lightbox__nav--next" id="lightbox-next" aria-label="Ảnh sau">&#8250;</button>
+        <button
+          type="button"
+          class="lightbox__close"
+          id="lightbox-close"
+          aria-label="Đóng"
+        >
+          ×
+        </button>
+        <button
+          type="button"
+          class="lightbox__nav lightbox__nav--prev"
+          id="lightbox-prev"
+          aria-label="Ảnh trước"
+        >
+          &#8249;
+        </button>
+        <button
+          type="button"
+          class="lightbox__nav lightbox__nav--next"
+          id="lightbox-next"
+          aria-label="Ảnh sau"
+        >
+          &#8250;
+        </button>
         <img id="lightbox-img" src="" alt="" />
-        <p class="lightbox__counter" id="lightbox-counter" aria-live="polite"></p>
+        <p
+          class="lightbox__counter"
+          id="lightbox-counter"
+          aria-live="polite"
+        ></p>
       </div>
     </dialog>
 

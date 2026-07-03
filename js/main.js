@@ -2,33 +2,36 @@
   "use strict";
 
   /** Ngày giờ đám cưới (GMT+7) — chỉnh tại đây */
-  var WEDDING_ISO = "2026-06-15T11:00:00+07:00";
+  var WEDDING_ISO = "2026-10-13T11:00:00+07:00";
 
-  var cdDays  = document.getElementById("cd-days");
+  var cdDays = document.getElementById("cd-days");
   var cdHours = document.getElementById("cd-hours");
-  var cdMins  = document.getElementById("cd-mins");
-  var cdSecs  = document.getElementById("cd-secs");
-  var countdownEl   = document.getElementById("countdown");
+  var cdMins = document.getElementById("cd-mins");
+  var cdSecs = document.getElementById("cd-secs");
+  var countdownEl = document.getElementById("countdown");
   var countdownDone = document.getElementById("countdown-done");
-  var audio    = document.getElementById("bg-music");
+  var audio = document.getElementById("bg-music");
   var audioBtn = document.getElementById("audio-toggle");
-  var iconOff  = document.getElementById("icon-music-off");
-  var iconOn   = document.getElementById("icon-music-on");
+  var iconOff = document.getElementById("icon-music-off");
+  var iconOn = document.getElementById("icon-music-on");
 
-  var ringGate         = document.getElementById("ring-gate");
-  var ringGateTrigger  = document.getElementById("ring-gate-trigger");
-  var ringGateSkip     = document.getElementById("ring-gate-skip");
+  var ringGate = document.getElementById("ring-gate");
+  var ringGateTrigger = document.getElementById("ring-gate-trigger");
+  var ringGateSkip = document.getElementById("ring-gate-skip");
   var ringGateSparkles = document.getElementById("ring-gate-sparkles");
-  var ringGatePrompt   = document.getElementById("ring-gate-prompt");
-  var ringGateInner    = document.getElementById("ring-gate-inner");
-  var openSfx   = new Audio("assets/open.mp3");
+  var ringGatePrompt = document.getElementById("ring-gate-prompt");
+  var ringGateInner = document.getElementById("ring-gate-inner");
+  var ringGateFly = document.getElementById("ring-gate-fly");
+  var openSfx = new Audio("assets/open.mp3");
   var whooshSfx = new Audio("assets/whoosh.mp3");
 
   var prefersReduced =
     typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function pad(n) { return String(n).padStart(2, "0"); }
+  function pad(n) {
+    return String(n).padStart(2, "0");
+  }
 
   /** Ring nhẫn mở đầu */
   var RING_GATE_KEY = "ringGateSeen";
@@ -37,8 +40,11 @@
     if (!ringGate || !ringGateTrigger) return;
 
     var alreadySeen = false;
-    try { alreadySeen = sessionStorage.getItem(RING_GATE_KEY) === "1"; }
-    catch (err) { alreadySeen = false; }
+    try {
+      alreadySeen = sessionStorage.getItem(RING_GATE_KEY) === "1";
+    } catch (err) {
+      alreadySeen = false;
+    }
 
     if (alreadySeen) return;
 
@@ -63,15 +69,20 @@
   function openRingGate() {
     if (ringGate.getAttribute("data-step") !== "closed") return;
     ringGate.setAttribute("data-step", "opening");
-    if (ringGatePrompt) ringGatePrompt.textContent = "Dành tặng riêng cho bạn ✦";
+    if (ringGatePrompt)
+      ringGatePrompt.textContent = "Dành tặng riêng cho bạn ✦";
 
     openSfx.play().catch(function () {});
     spawnRingGateSparkles();
 
     if (audio) {
       audio.play().then(
-        function () { setAudioUi(true); },
-        function () { setAudioUi(false); }
+        function () {
+          setAudioUi(true);
+        },
+        function () {
+          setAudioUi(false);
+        },
       );
     }
 
@@ -82,17 +93,79 @@
   function leaveRingGate() {
     whooshSfx.play().catch(function () {});
     ringGate.setAttribute("data-step", "leaving");
-    if (!ringGateInner) { closeRingGate(); return; }
+    if (ringGateInner) ringGateInner.classList.add("is-leaving");
 
-    var done = false;
-    function finish() {
-      if (done) return;
-      done = true;
-      closeRingGate();
+    var flightMs = flyRingToHero();
+    setTimeout(closeRingGate, flightMs > 0 ? flightMs + 80 : 750);
+  }
+
+  /** Nhẫn tách khỏi hộp và bay xuống đúng vị trí nhẫn giữa 2 tên ở Hero,
+   *  đồng bộ với lúc dialog đóng — cùng pattern easing/arc với setupRingFlyScroll().
+   *  Trả về thời lượng animation (ms), hoặc 0 nếu bỏ qua (rút gọn chuyển động / thiếu phần tử). */
+  function flyRingToHero() {
+    var duration = 950;
+    if (prefersReduced || !ringGateFly) return 0;
+
+    var ringLift = document.querySelector(".ring-gate__ring-lift");
+    var ringImg = ringLift && ringLift.querySelector(".ring-gate__ring");
+    var heroRing = document.querySelector(".hero__ring");
+    if (!ringLift || !ringImg || !heroRing) return 0;
+
+    var startRect = ringImg.getBoundingClientRect();
+    var endRect = heroRing.getBoundingClientRect();
+    if (!startRect.width || !endRect.width) return 0;
+
+    ringLift.classList.add("is-hidden");
+
+    var startX = startRect.left + startRect.width / 2;
+    var startY = startRect.top + startRect.height / 2;
+    var endX = endRect.left + endRect.width / 2;
+    var endY = endRect.top + endRect.height / 2;
+    var startW = startRect.width;
+    var endW = endRect.width;
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
-    ringGateInner.addEventListener("transitionend", finish, { once: true });
-    setTimeout(finish, 750);
-    ringGateInner.classList.add("is-leaving");
+
+    ringGateFly.style.opacity = "1";
+    var t0 = null;
+
+    function frame(ts) {
+      if (t0 === null) t0 = ts;
+      var raw = Math.min(1, (ts - t0) / duration);
+      var t = easeInOutCubic(raw);
+
+      var envelope = Math.sin(raw * Math.PI); // 0 ở 2 đầu, đỉnh giữa hành trình
+      var arc = envelope * -46;
+      var sway = Math.sin(raw * Math.PI * 1.6) * 14 * envelope;
+      var wobble = Math.sin(raw * Math.PI * 2.2) * 10 * envelope;
+
+      var x = startX + (endX - startX) * t + sway;
+      var y = startY + (endY - startY) * t + arc;
+      var w = startW + (endW - startW) * t;
+      var fade = raw > 0.76 ? Math.max(0, 1 - (raw - 0.76) / 0.24) : 1;
+
+      ringGateFly.style.width = w.toFixed(1) + "px";
+      ringGateFly.style.transform =
+        "translate3d(" +
+        x.toFixed(1) +
+        "px," +
+        y.toFixed(1) +
+        "px,0) translate(-50%,-50%) rotate(" +
+        wobble.toFixed(1) +
+        "deg)";
+      ringGateFly.style.opacity = fade.toFixed(3);
+
+      if (raw < 1) {
+        window.requestAnimationFrame(frame);
+      } else {
+        ringGateFly.style.opacity = "0";
+      }
+    }
+    window.requestAnimationFrame(frame);
+
+    return duration;
   }
 
   function skipRingGate() {
@@ -101,7 +174,11 @@
 
   function closeRingGate() {
     document.documentElement.classList.remove("has-ring-gate");
-    try { sessionStorage.setItem(RING_GATE_KEY, "1"); } catch (err) { /* bỏ qua */ }
+    try {
+      sessionStorage.setItem(RING_GATE_KEY, "1");
+    } catch (err) {
+      /* bỏ qua */
+    }
     if (ringGate.open) ringGate.close();
   }
 
@@ -111,13 +188,16 @@
     var count = 16;
     for (var i = 0; i < count; i++) {
       var angle = Math.random() * Math.PI * 2;
-      var dist  = 40 + Math.random() * 60;
+      var dist = 40 + Math.random() * 60;
       var s = document.createElement("span");
       s.className = "ring-gate__sparkle";
-      s.style.setProperty("--sparkle-size", (3 + Math.random() * 4).toFixed(1) + "px");
+      s.style.setProperty(
+        "--sparkle-size",
+        (3 + Math.random() * 4).toFixed(1) + "px",
+      );
       s.style.setProperty("--sx", (Math.cos(angle) * dist).toFixed(1) + "px");
       s.style.setProperty("--sy", (Math.sin(angle) * dist).toFixed(1) + "px");
-      s.style.animationDelay = (Math.random() * 0.25) + "s";
+      s.style.animationDelay = Math.random() * 0.25 + "s";
       ringGateSparkles.appendChild(s);
     }
   }
@@ -136,10 +216,10 @@
     }
 
     var s = Math.floor(diff / 1000);
-    if (cdDays)  cdDays.textContent  = pad(Math.floor(s / 86400));
+    if (cdDays) cdDays.textContent = pad(Math.floor(s / 86400));
     if (cdHours) cdHours.textContent = pad(Math.floor((s % 86400) / 3600));
-    if (cdMins)  cdMins.textContent  = pad(Math.floor((s % 3600) / 60));
-    if (cdSecs)  cdSecs.textContent  = pad(s % 60);
+    if (cdMins) cdMins.textContent = pad(Math.floor((s % 3600) / 60));
+    if (cdSecs) cdSecs.textContent = pad(s % 60);
     return true;
   }
 
@@ -160,11 +240,15 @@
           io.unobserve(entry.target);
         });
       },
-      { root: null, rootMargin: "0px 0px -6% 0px", threshold: 0.06 }
+      { root: null, rootMargin: "0px 0px -6% 0px", threshold: 0.06 },
     );
-    revealEls.forEach(function (el) { io.observe(el); });
+    revealEls.forEach(function (el) {
+      io.observe(el);
+    });
   } else {
-    revealEls.forEach(function (el) { el.classList.add("is-visible"); });
+    revealEls.forEach(function (el) {
+      el.classList.add("is-visible");
+    });
   }
 
   /** Cánh hoa rơi */
@@ -177,9 +261,9 @@
       var p = document.createElement("div");
       var size = (9 + Math.random() * 10).toFixed(1);
       p.className = "petal";
-      p.style.left = (Math.random() * 100) + "vw";
-      p.style.animationDuration = (7 + Math.random() * 9) + "s";
-      p.style.animationDelay = (-Math.random() * 18) + "s";
+      p.style.left = Math.random() * 100 + "vw";
+      p.style.animationDuration = 7 + Math.random() * 9 + "s";
+      p.style.animationDelay = -Math.random() * 18 + "s";
       p.style.opacity = (0.45 + Math.random() * 0.55).toFixed(2);
       p.style.setProperty("--petal-size", size + "px");
       container.appendChild(p);
@@ -197,24 +281,29 @@
         function (entries) {
           entries.forEach(function (entry) {
             if (!entry.isIntersecting) return;
-            panels.forEach(function (p) { p.classList.remove("is-active"); });
+            panels.forEach(function (p) {
+              p.classList.remove("is-active");
+            });
             entry.target.classList.add("is-active");
           });
         },
-        { root: null, threshold: 0.45, rootMargin: "-8% 0px -8% 0px" }
+        { root: null, threshold: 0.45, rootMargin: "-8% 0px -8% 0px" },
       );
-      panels.forEach(function (p) { panelObserver.observe(p); });
+      panels.forEach(function (p) {
+        panelObserver.observe(p);
+      });
     }
 
     var ticking = false;
     function updateParallax() {
       var vc = window.innerHeight / 2;
       panels.forEach(function (panel) {
-        var rect  = panel.getBoundingClientRect();
-        var delta = ((rect.top + rect.height / 2) - vc) * -0.08;
+        var rect = panel.getBoundingClientRect();
+        var delta = (rect.top + rect.height / 2 - vc) * -0.08;
         var capped = Math.max(-42, Math.min(42, delta));
         var img = panel.querySelector("img");
-        if (img) img.style.setProperty("--img-parallax", capped.toFixed(2) + "px");
+        if (img)
+          img.style.setProperty("--img-parallax", capped.toFixed(2) + "px");
       });
       ticking = false;
     }
@@ -237,8 +326,8 @@
    *  vào vị trí cuộn. Nhẫn tĩnh ở Hero cũng mờ dần đi trong lúc nhẫn bay xuất hiện. */
   function setupRingFlyScroll() {
     var startEl = document.querySelector(".hero__ring");
-    var endEl   = document.getElementById("story-ring-target");
-    var flyer   = document.getElementById("ring-fly-scroll");
+    var endEl = document.getElementById("story-ring-target");
+    var flyer = document.getElementById("ring-fly-scroll");
     if (!startEl || !endEl || !flyer || prefersReduced) return;
 
     var cur = { x: 0, y: 0, w: 0, rot: 0, opacity: 0 };
@@ -251,10 +340,10 @@
 
     function frame() {
       var startRect = startEl.getBoundingClientRect();
-      var endRect   = endEl.getBoundingClientRect();
-      var refY      = window.innerHeight * 0.55;
+      var endRect = endEl.getBoundingClientRect();
+      var refY = window.innerHeight * 0.55;
 
-      var total    = endRect.top - startRect.top;
+      var total = endRect.top - startRect.top;
       var traveled = refY - startRect.top;
       var rawT = total > 0 ? Math.max(0, Math.min(1, traveled / total)) : 0;
       var t = easeInOutCubic(rawT);
@@ -267,20 +356,25 @@
 
       var startX = startRect.left + startRect.width / 2;
       var startY = startRect.top + startRect.height / 2;
-      var endX   = endRect.left + endRect.width / 2;
-      var endY   = endRect.top + endRect.height / 2;
+      var endX = endRect.left + endRect.width / 2;
+      var endY = endRect.top + endRect.height / 2;
 
       var envelope = Math.sin(rawT * Math.PI); // 0 ở 2 đầu, đỉnh giữa hành trình
-      var arc      = envelope * -34;
-      var sway     = Math.sin(rawT * Math.PI * 2.4) * 10 * envelope;
-      var wobble   = Math.sin(rawT * Math.PI * 2.4) * 8 * envelope;
+      var arc = envelope * -34;
+      var sway = Math.sin(rawT * Math.PI * 2.4) * 10 * envelope;
+      var wobble = Math.sin(rawT * Math.PI * 2.4) * 8 * envelope;
 
       var targetX = startX + (endX - startX) * t + sway;
       var targetY = startY + (endY - startY) * t + arc;
-      var targetW = startRect.width + (endRect.width * 2.2 - startRect.width) * t;
+      var targetW =
+        startRect.width + (endRect.width * 2.2 - startRect.width) * t;
 
       if (!inited) {
-        cur.x = targetX; cur.y = targetY; cur.w = targetW; cur.rot = wobble; cur.opacity = fade;
+        cur.x = targetX;
+        cur.y = targetY;
+        cur.w = targetW;
+        cur.rot = wobble;
+        cur.opacity = fade;
         inited = true;
       } else {
         cur.x += (targetX - cur.x) * 0.14;
@@ -293,7 +387,13 @@
       var shownOpacity = cur.opacity < 0.004 ? 0 : cur.opacity;
       flyer.style.width = cur.w.toFixed(1) + "px";
       flyer.style.transform =
-        "translate3d(" + cur.x.toFixed(1) + "px," + cur.y.toFixed(1) + "px,0) translate(-50%,-50%) rotate(" + cur.rot.toFixed(1) + "deg)";
+        "translate3d(" +
+        cur.x.toFixed(1) +
+        "px," +
+        cur.y.toFixed(1) +
+        "px,0) translate(-50%,-50%) rotate(" +
+        cur.rot.toFixed(1) +
+        "deg)";
       flyer.style.opacity = shownOpacity.toFixed(3);
 
       // Ẩn dần nhẫn tĩnh ở Hero đúng lúc nhẫn bay xuất hiện, tránh thấy 2 nhẫn cùng lúc
@@ -302,7 +402,7 @@
       endEl.style.setProperty("--ring-arrival", fade.toFixed(3));
 
       var settled = rawT <= 0.001 || rawT >= 0.999;
-      var atRest  = shownOpacity === 0 && Math.abs(fade - cur.opacity) < 0.004;
+      var atRest = shownOpacity === 0 && Math.abs(fade - cur.opacity) < 0.004;
 
       if (settled && atRest) {
         running = false;
@@ -323,16 +423,104 @@
   }
   setupRingFlyScroll();
 
+  /** Nhẫn cưới "gắn kết" theo scroll — khi cuộn qua khỏi section Nhẫn cưới,
+   *  2 chiếc nhẫn trôi dần về phía nhau, lệch xuống dưới và đè so le lên
+   *  nhau (như 2 chiếc nhẫn lồng vào nhau). Ánh xạ trực tiếp theo vị trí
+   *  cuộn (không lerp) — cùng pattern với updateParallax() ở gallery. */
+  function setupRingsMergeScroll() {
+    var grid = document.querySelector(".rings__grid");
+    var photos = grid && grid.querySelectorAll(".rings__item");
+    if (!grid || !photos || photos.length !== 2 || prefersReduced) return;
+
+    var left = photos[0];
+    var right = photos[1];
+    var leftPhoto = left.querySelector(".rings__photo-wrap") || left;
+    var rightPhoto = right.querySelector(".rings__photo-wrap") || right;
+    var ticking = false;
+    var dxMax = 0;
+    var dyMax = 0;
+
+    // Đo khoảng cách gốc (chưa transform) 1 lần — nếu đo lại mỗi frame từ
+    // getBoundingClientRect() thì sẽ dính transform của chính frame trước,
+    // gây phản hồi dồn (feedback loop) khiến nhẫn trôi lệch không kiểm soát.
+    function measure() {
+      left.style.transform = "none";
+      right.style.transform = "none";
+      var lRect = leftPhoto.getBoundingClientRect();
+      var rRect = rightPhoto.getBoundingClientRect();
+      var width = lRect.width || 100;
+      var overlap = width * 0.3;
+      var centerDx =
+        rRect.left + rRect.width / 2 - (lRect.left + lRect.width / 2);
+      var centerDy =
+        rRect.top + rRect.height / 2 - (lRect.top + lRect.height / 2);
+      dxMax = centerDx / 2 + (centerDx >= 0 ? overlap : -overlap);
+      dyMax = centerDy / 2 + (centerDy >= 0 ? overlap : -overlap);
+    }
+
+    function update() {
+      var rect = grid.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var startY = vh * 0.32;
+      var endY = -rect.height * 0.8;
+      var raw = (startY - rect.top) / (startY - endY);
+      var t = Math.max(0, Math.min(1, raw));
+      var eased = t * t * (3 - 2 * t); // smoothstep
+      var rot = 12 * eased;
+
+      var dx = dxMax * eased;
+      var dy = dyMax * eased;
+
+      left.style.transform =
+        "translate(" +
+        dx.toFixed(1) +
+        "px," +
+        dy.toFixed(1) +
+        "px) rotate(" +
+        (-rot).toFixed(1) +
+        "deg)";
+      right.style.transform =
+        "translate(" +
+        (-dx).toFixed(1) +
+        "px," +
+        (-dy).toFixed(1) +
+        "px) rotate(" +
+        rot.toFixed(1) +
+        "deg)";
+      left.style.zIndex = "2";
+      right.style.zIndex = "1";
+
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      window.requestAnimationFrame(update);
+      ticking = true;
+    }
+
+    function onResize() {
+      measure();
+      update();
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    measure();
+    update();
+  }
+  setupRingsMergeScroll();
+
   /** Lightbox với prev/next navigation */
-  var lightbox      = document.getElementById("lightbox");
-  var lightboxImg   = document.getElementById("lightbox-img");
+  var lightbox = document.getElementById("lightbox");
+  var lightboxImg = document.getElementById("lightbox-img");
   var lightboxClose = document.getElementById("lightbox-close");
-  var lightboxPrev  = document.getElementById("lightbox-prev");
-  var lightboxNext  = document.getElementById("lightbox-next");
+  var lightboxPrev = document.getElementById("lightbox-prev");
+  var lightboxNext = document.getElementById("lightbox-next");
   var lightboxCounter = document.getElementById("lightbox-counter");
 
   var lightboxImages = [];
-  var lightboxIndex  = 0;
+  var lightboxIndex = 0;
 
   document.querySelectorAll("[data-lightbox]").forEach(function (btn, idx) {
     var img = btn.querySelector("img");
@@ -351,7 +539,7 @@
     lightboxImg.src = item.src;
     lightboxImg.alt = item.alt;
     if (lightboxCounter) {
-      lightboxCounter.textContent = (idx + 1) + " / " + lightboxImages.length;
+      lightboxCounter.textContent = idx + 1 + " / " + lightboxImages.length;
     }
     if (!lightbox.open) lightbox.showModal();
   }
@@ -365,7 +553,8 @@
 
   if (lightboxPrev) {
     lightboxPrev.addEventListener("click", function () {
-      lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+      lightboxIndex =
+        (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
       showAt(lightboxIndex);
     });
   }
@@ -390,7 +579,8 @@
     if (!lightbox || !lightbox.open) return;
     if (e.key === "Escape") closeLightbox();
     if (e.key === "ArrowLeft") {
-      lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+      lightboxIndex =
+        (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
       showAt(lightboxIndex);
     }
     if (e.key === "ArrowRight") {
@@ -403,17 +593,24 @@
   function setAudioUi(playing) {
     if (!audioBtn) return;
     audioBtn.setAttribute("aria-pressed", playing ? "true" : "false");
-    audioBtn.setAttribute("aria-label", playing ? "Tắt nhạc nền" : "Bật nhạc nền");
+    audioBtn.setAttribute(
+      "aria-label",
+      playing ? "Tắt nhạc nền" : "Bật nhạc nền",
+    );
     if (iconOff) iconOff.style.display = playing ? "none" : "block";
-    if (iconOn)  iconOn.style.display  = playing ? "block" : "none";
+    if (iconOn) iconOn.style.display = playing ? "block" : "none";
   }
 
   if (audioBtn && audio) {
     audioBtn.addEventListener("click", function () {
       if (audio.paused) {
         audio.play().then(
-          function () { setAudioUi(true); },
-          function () { setAudioUi(false); }
+          function () {
+            setAudioUi(true);
+          },
+          function () {
+            setAudioUi(false);
+          },
         );
       } else {
         audio.pause();
@@ -423,7 +620,7 @@
   }
 
   /** RSVP */
-  var form       = document.getElementById("rsvp-form");
+  var form = document.getElementById("rsvp-form");
   var formStatus = document.getElementById("form-status");
 
   if (form) {
@@ -432,7 +629,8 @@
       if (action.indexOf("YOUR_FORM_ID") !== -1) {
         e.preventDefault();
         if (formStatus) {
-          formStatus.textContent = "Vui lòng thay YOUR_FORM_ID bằng mã Formspree của bạn rồi thử lại.";
+          formStatus.textContent =
+            "Vui lòng thay YOUR_FORM_ID bằng mã Formspree của bạn rồi thử lại.";
           formStatus.classList.add("is-show");
         }
         return;
