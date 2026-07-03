@@ -15,8 +15,63 @@
   </head>
   <body>
 
+    <!-- Hiệu ứng mở đầu: nhẫn cầu hôn -->
+    <dialog class="ring-gate" id="ring-gate" aria-label="Mở hộp nhẫn để vào thiệp cưới">
+      <div class="ring-gate__inner" id="ring-gate-inner">
+        <button type="button" class="ring-gate__trigger" id="ring-gate-trigger" aria-label="Chạm để mở hộp nhẫn">
+          <span class="ring-gate__shadow" aria-hidden="true"></span>
+          <span class="ring-gate__floater" id="ring-gate-floater">
+            <span class="ring-gate__glow" aria-hidden="true"></span>
+
+            <img
+              class="ring-gate__photo ring-gate__photo--open"
+              src="assets/ring-box-open.webp"
+              alt=""
+              width="560"
+              height="757"
+              onerror="this.style.display='none'"
+            />
+
+            <img
+              class="ring-gate__photo ring-gate__photo--closed"
+              id="ring-gate-photo"
+              src="assets/ring-box.webp"
+              alt=""
+              width="560"
+              height="757"
+              fetchpriority="high"
+              onerror="this.style.display='none'"
+            />
+
+            <span class="ring-gate__ring-lift">
+              <img
+                class="ring-gate__ring"
+                src="assets/ring-fly.webp"
+                alt=""
+                width="520"
+                height="535"
+                onerror="this.style.display='none'"
+              />
+            </span>
+          </span>
+          <span class="ring-gate__sparkles" id="ring-gate-sparkles" aria-hidden="true"></span>
+        </button>
+
+        <div class="ring-gate__caption">
+          <p class="ring-gate__prompt" id="ring-gate-prompt">✦ Chạm vào hộp để mở lời mời</p>
+          <button type="button" class="ring-gate__skip" id="ring-gate-skip">Bỏ qua</button>
+        </div>
+      </div>
+    </dialog>
+
     <!-- Cánh hoa rơi -->
     <div id="petals" aria-hidden="true"></div>
+
+    <!-- Chiếc nhẫn bay theo scroll, từ Hero tới ảnh cầu hôn -->
+    <div class="ring-fly-scroll" id="ring-fly-scroll" aria-hidden="true">
+      <span class="ring-fly-scroll__glow"></span>
+      <img src="assets/ring-fly.webp" alt="" width="520" height="535" />
+    </div>
 
     <!-- ═══ HERO — Ảnh chân dung full màn hình ═══ -->
     <header class="hero" id="top">
@@ -29,18 +84,59 @@
       />
       <div class="hero__veil" aria-hidden="true"></div>
       <div class="hero__content">
-        <p class="hero__tagline">Trân trọng kính mời</p>
-        <div class="hero__monogram" aria-hidden="true">T &amp; T</div>
-        <h1 class="hero__names">
-          <span class="hero__groom">Tuấn Điệp</span>
-          <span class="hero__amp" aria-hidden="true">&amp;</span>
-          <span class="hero__bride">Thu Thảo</span>
+        <h1 class="hero__names" aria-label="Tuấn Điệp &amp; Thu Thảo">
+          <span class="hero__groom" aria-hidden="true">Tuấn Điệp</span>
+          <span class="hero__ring" aria-hidden="true">
+            <span class="hero__ring-glow"></span>
+            <img
+              class="hero__ring-photo"
+              src="assets/ring-fly.webp"
+              alt=""
+              width="520"
+              height="535"
+              onerror="this.style.display='none'"
+            />
+          </span>
+          <span class="hero__bride" aria-hidden="true">Thu Thảo</span>
         </h1>
         <p class="hero__date">Chủ nhật · 15 · 06 · 2026</p>
         <p class="hero__ornament" aria-hidden="true">❧ ✦ ❧</p>
       </div>
-      <a class="hero__scroll-hint" href="#invitation" aria-label="Cuộn xuống">&#8595;</a>
+      <a class="hero__scroll-hint" href="#story" aria-label="Cuộn xuống">&#8595;</a>
     </header>
+
+    <!-- ═══ Khoảnh khắc cầu hôn ═══ -->
+    <section class="section section--dark story" id="story" aria-labelledby="story-heading">
+      <div class="story__photo-wrap">
+        <img
+          class="story__photo"
+          src="assets/proposal-ring.webp"
+          alt="Khoảnh khắc Tuấn Điệp cầu hôn — nhẫn trên tay Thu Thảo"
+          width="950"
+          height="1187"
+          loading="lazy"
+          decoding="async"
+          onerror="this.parentElement.style.display='none'"
+        />
+        <span class="story__ring-target" id="story-ring-target" aria-hidden="true"></span>
+      </div>
+
+      <div class="container story__container">
+        <h2 id="story-heading" class="section__title reveal">Khoảnh khắc cầu hôn</h2>
+        <p class="ornament reveal" style="--d:.13s" aria-hidden="true">❧ ✦ ❧</p>
+
+        <div class="story__mockups reveal" style="--d:.26s" aria-hidden="true">
+          <img class="story__mockup story__mockup--a" src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=480&h=600&q=80" alt="" width="480" height="600" loading="lazy" decoding="async" />
+          <img class="story__mockup story__mockup--b" src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=480&h=600&q=80" alt="" width="480" height="600" loading="lazy" decoding="async" />
+        </div>
+
+        <p class="story__paragraph reveal" style="--d:.4s">
+          Một buổi chiều rất bình thường bỗng trở thành khoảnh khắc không thể nào quên —
+          khi anh quỳ xuống và hỏi em một câu, tay em run run còn tim thì đập loạn nhịp.
+          Chiếc nhẫn nhỏ từ hôm ấy đã trở thành lời hứa cho một hành trình dài phía trước.
+        </p>
+      </div>
+    </section>
 
     <!-- ═══ Lời mời ═══ -->
     <section class="section invitation" id="invitation" aria-labelledby="invitation-heading">

@@ -15,11 +15,114 @@
   var iconOff  = document.getElementById("icon-music-off");
   var iconOn   = document.getElementById("icon-music-on");
 
+  var ringGate         = document.getElementById("ring-gate");
+  var ringGateTrigger  = document.getElementById("ring-gate-trigger");
+  var ringGateSkip     = document.getElementById("ring-gate-skip");
+  var ringGateSparkles = document.getElementById("ring-gate-sparkles");
+  var ringGatePrompt   = document.getElementById("ring-gate-prompt");
+  var ringGateInner    = document.getElementById("ring-gate-inner");
+  var openSfx   = new Audio("assets/open.mp3");
+  var whooshSfx = new Audio("assets/whoosh.mp3");
+
   var prefersReduced =
     typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function pad(n) { return String(n).padStart(2, "0"); }
+
+  /** Ring nhẫn mở đầu */
+  var RING_GATE_KEY = "ringGateSeen";
+
+  function initRingGate() {
+    if (!ringGate || !ringGateTrigger) return;
+
+    var alreadySeen = false;
+    try { alreadySeen = sessionStorage.getItem(RING_GATE_KEY) === "1"; }
+    catch (err) { alreadySeen = false; }
+
+    if (alreadySeen) return;
+
+    if (prefersReduced && ringGatePrompt) {
+      ringGatePrompt.textContent = "Vào thiệp cưới";
+      ringGateTrigger.setAttribute("aria-label", "Vào thiệp cưới");
+    }
+
+    document.documentElement.classList.add("has-ring-gate");
+    ringGate.setAttribute("data-step", "closed");
+    ringGate.showModal();
+    ringGateTrigger.focus();
+
+    ringGateTrigger.addEventListener("click", openRingGate);
+    if (ringGateSkip) ringGateSkip.addEventListener("click", skipRingGate);
+    ringGate.addEventListener("cancel", function (e) {
+      e.preventDefault();
+      skipRingGate();
+    });
+  }
+
+  function openRingGate() {
+    if (ringGate.getAttribute("data-step") !== "closed") return;
+    ringGate.setAttribute("data-step", "opening");
+    if (ringGatePrompt) ringGatePrompt.textContent = "Dành tặng riêng cho bạn ✦";
+
+    openSfx.play().catch(function () {});
+    spawnRingGateSparkles();
+
+    if (audio) {
+      audio.play().then(
+        function () { setAudioUi(true); },
+        function () { setAudioUi(false); }
+      );
+    }
+
+    var holdMs = prefersReduced ? 0 : 1700;
+    setTimeout(leaveRingGate, holdMs);
+  }
+
+  function leaveRingGate() {
+    whooshSfx.play().catch(function () {});
+    ringGate.setAttribute("data-step", "leaving");
+    if (!ringGateInner) { closeRingGate(); return; }
+
+    var done = false;
+    function finish() {
+      if (done) return;
+      done = true;
+      closeRingGate();
+    }
+    ringGateInner.addEventListener("transitionend", finish, { once: true });
+    setTimeout(finish, 750);
+    ringGateInner.classList.add("is-leaving");
+  }
+
+  function skipRingGate() {
+    closeRingGate();
+  }
+
+  function closeRingGate() {
+    document.documentElement.classList.remove("has-ring-gate");
+    try { sessionStorage.setItem(RING_GATE_KEY, "1"); } catch (err) { /* bỏ qua */ }
+    if (ringGate.open) ringGate.close();
+  }
+
+  /** Sparkle burst khi mở hộp — cùng pattern với initPetals() */
+  function spawnRingGateSparkles() {
+    if (prefersReduced || !ringGateSparkles) return;
+    var count = 16;
+    for (var i = 0; i < count; i++) {
+      var angle = Math.random() * Math.PI * 2;
+      var dist  = 40 + Math.random() * 60;
+      var s = document.createElement("span");
+      s.className = "ring-gate__sparkle";
+      s.style.setProperty("--sparkle-size", (3 + Math.random() * 4).toFixed(1) + "px");
+      s.style.setProperty("--sx", (Math.cos(angle) * dist).toFixed(1) + "px");
+      s.style.setProperty("--sy", (Math.sin(angle) * dist).toFixed(1) + "px");
+      s.style.animationDelay = (Math.random() * 0.25) + "s";
+      ringGateSparkles.appendChild(s);
+    }
+  }
+
+  initRingGate();
 
   /** Countdown */
   function tickCountdown() {
@@ -127,6 +230,98 @@
     updateParallax();
   }
   setupGalleryStoryEffects();
+
+  /** Nhẫn bay theo scroll — từ nhẫn ở Hero tới vị trí nhẫn thật trong ảnh Story.
+   *  Dùng easing + lerp/damping mỗi khung hình (thay vì gán thẳng theo scroll) để
+   *  chuyển động mềm mại, có độ trễ tự nhiên như đang "đuổi theo" thay vì dính cứng
+   *  vào vị trí cuộn. Nhẫn tĩnh ở Hero cũng mờ dần đi trong lúc nhẫn bay xuất hiện. */
+  function setupRingFlyScroll() {
+    var startEl = document.querySelector(".hero__ring");
+    var endEl   = document.getElementById("story-ring-target");
+    var flyer   = document.getElementById("ring-fly-scroll");
+    if (!startEl || !endEl || !flyer || prefersReduced) return;
+
+    var cur = { x: 0, y: 0, w: 0, rot: 0, opacity: 0 };
+    var inited = false;
+    var running = false;
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function frame() {
+      var startRect = startEl.getBoundingClientRect();
+      var endRect   = endEl.getBoundingClientRect();
+      var refY      = window.innerHeight * 0.55;
+
+      var total    = endRect.top - startRect.top;
+      var traveled = refY - startRect.top;
+      var rawT = total > 0 ? Math.max(0, Math.min(1, traveled / total)) : 0;
+      var t = easeInOutCubic(rawT);
+
+      var fade;
+      if (rawT <= 0 || rawT >= 1) fade = 0;
+      else if (rawT < 0.14) fade = rawT / 0.14;
+      else if (rawT > 0.82) fade = (1 - rawT) / 0.18;
+      else fade = 1;
+
+      var startX = startRect.left + startRect.width / 2;
+      var startY = startRect.top + startRect.height / 2;
+      var endX   = endRect.left + endRect.width / 2;
+      var endY   = endRect.top + endRect.height / 2;
+
+      var envelope = Math.sin(rawT * Math.PI); // 0 ở 2 đầu, đỉnh giữa hành trình
+      var arc      = envelope * -34;
+      var sway     = Math.sin(rawT * Math.PI * 2.4) * 10 * envelope;
+      var wobble   = Math.sin(rawT * Math.PI * 2.4) * 8 * envelope;
+
+      var targetX = startX + (endX - startX) * t + sway;
+      var targetY = startY + (endY - startY) * t + arc;
+      var targetW = startRect.width + (endRect.width * 2.2 - startRect.width) * t;
+
+      if (!inited) {
+        cur.x = targetX; cur.y = targetY; cur.w = targetW; cur.rot = wobble; cur.opacity = fade;
+        inited = true;
+      } else {
+        cur.x += (targetX - cur.x) * 0.14;
+        cur.y += (targetY - cur.y) * 0.14;
+        cur.w += (targetW - cur.w) * 0.14;
+        cur.rot += (wobble - cur.rot) * 0.14;
+        cur.opacity += (fade - cur.opacity) * 0.18;
+      }
+
+      var shownOpacity = cur.opacity < 0.004 ? 0 : cur.opacity;
+      flyer.style.width = cur.w.toFixed(1) + "px";
+      flyer.style.transform =
+        "translate3d(" + cur.x.toFixed(1) + "px," + cur.y.toFixed(1) + "px,0) translate(-50%,-50%) rotate(" + cur.rot.toFixed(1) + "deg)";
+      flyer.style.opacity = shownOpacity.toFixed(3);
+
+      // Ẩn dần nhẫn tĩnh ở Hero đúng lúc nhẫn bay xuất hiện, tránh thấy 2 nhẫn cùng lúc
+      startEl.style.opacity = (1 - fade * 0.95).toFixed(3);
+
+      endEl.style.setProperty("--ring-arrival", fade.toFixed(3));
+
+      var settled = rawT <= 0.001 || rawT >= 0.999;
+      var atRest  = shownOpacity === 0 && Math.abs(fade - cur.opacity) < 0.004;
+
+      if (settled && atRest) {
+        running = false;
+        return;
+      }
+      window.requestAnimationFrame(frame);
+    }
+
+    function ensureRunning() {
+      if (running) return;
+      running = true;
+      window.requestAnimationFrame(frame);
+    }
+
+    window.addEventListener("scroll", ensureRunning, { passive: true });
+    window.addEventListener("resize", ensureRunning);
+    ensureRunning();
+  }
+  setupRingFlyScroll();
 
   /** Lightbox với prev/next navigation */
   var lightbox      = document.getElementById("lightbox");
