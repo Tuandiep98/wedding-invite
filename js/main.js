@@ -423,6 +423,104 @@
   }
   setupRingFlyScroll();
 
+  /** Ảnh cánh tay ở Story "nhô ra" đón nhẫn rồi thu lại theo scroll — nhô ra
+   *  mượt mà đúng lúc nhẫn bay tới (đồng bộ mốc thời gian với setupRingFlyScroll:
+   *  cùng lấy mốc ~50% chiều cao viewport làm điểm "nhẫn đã tới"), giữ nguyên
+   *  trong lúc đọc nội dung, rồi thu lại khi cuộn tiếp sang section Nhẫn cưới.
+   *  Đo theo vị trí tâm ảnh (anchorY) so với viewport thay vì mép section, và
+   *  co hẹp mốc thu lại về vùng còn nằm trong khung hình (anchorY > 0) — tránh
+   *  bị "lẹm mất góc" do ảnh đã cuộn khuất phía trên viewport trước khi hiệu
+   *  ứng thu tay kịp chạy xong. Vào và ra dùng 2 đường xoay/di chuyển khác
+   *  nhau để tạo cảm giác "vươn tay ra đón" rồi "vươn tay ra khỏi màn hình"
+   *  chứ không phải tua ngược cùng một chuyển động.
+   *  Đo theo vị trí section (không phải chính phần tử bị transform) nên không
+   *  bị vòng lặp phản hồi như đã gặp ở setupRingsMergeScroll. */
+  function setupStoryArmReveal() {
+    var section = document.getElementById("story");
+    var photoWrap = document.querySelector(".story__photo-wrap");
+    if (!section || !photoWrap || prefersReduced) return;
+
+    var ticking = false;
+
+    function clamp01(n) {
+      return Math.max(0, Math.min(1, n));
+    }
+    function smoothstep(t) {
+      return t * t * (3 - 2 * t);
+    }
+
+    // Vào: tay xoay nghiêng, hơi lùi xa + nhỏ, "vươn ra" và xoay thẳng dần
+    // về vị trí nghỉ khi t: 0 (chưa thấy) → 1 (đã yên vị đón nhẫn).
+    function enterPose(t) {
+      return {
+        rot: -15 + 11 * t,
+        tx: 18 * (1 - t),
+        ty: 7 * (1 - t),
+        scale: 0.78 + 0.22 * t,
+      };
+    }
+    // Ra: từ vị trí nghỉ xoay ngược hướng và trượt lên trên như đang rụt tay
+    // ra khỏi khung hình, t: 1 (đang nghỉ) → 0 (đã rút hẳn).
+    function exitPose(t) {
+      return {
+        rot: -4 + 13 * (1 - t),
+        tx: -11 * (1 - t),
+        ty: -13 * (1 - t),
+        scale: 1 - 0.24 * (1 - t),
+      };
+    }
+
+    function update() {
+      var rect = section.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var anchorY = rect.top + rect.height / 2;
+
+      // Nhô ra: từ lúc tâm ảnh còn ở đáy màn hình tới lúc gần giữa màn hình —
+      // cùng vùng thời điểm nhẫn bay tới trong setupRingFlyScroll.
+      var enterStart = vh * 1.05;
+      var enterEnd = vh * 0.55;
+      var enterT = clamp01((enterStart - anchorY) / (enterStart - enterEnd));
+
+      // Thu lại: giữ nguyên một đoạn (đang ở vùng giữa-dưới màn hình), rồi
+      // thu lại xong TRƯỚC KHI tâm ảnh cuộn khuất khỏi mép trên viewport
+      // (exitEnd > 0) để luôn thấy trọn hiệu ứng, không bị cắt cụt.
+      var exitStart = vh * 0.36;
+      var exitEnd = vh * 0.06;
+      var exitT = clamp01((anchorY - exitEnd) / (exitStart - exitEnd));
+
+      var opacity = smoothstep(Math.min(enterT, exitT));
+      var pose =
+        enterT < 1
+          ? enterPose(smoothstep(enterT))
+          : exitPose(smoothstep(exitT));
+
+      photoWrap.style.opacity = opacity.toFixed(3);
+      photoWrap.style.transform =
+        "translateY(-50%) translate(" +
+        pose.tx.toFixed(1) +
+        "%," +
+        pose.ty.toFixed(1) +
+        "%) rotate(" +
+        pose.rot.toFixed(1) +
+        "deg) scale(" +
+        pose.scale.toFixed(3) +
+        ")";
+
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      window.requestAnimationFrame(update);
+      ticking = true;
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
+  }
+  setupStoryArmReveal();
+
   /** Nhẫn cưới "gắn kết" theo scroll — khi cuộn qua khỏi section Nhẫn cưới,
    *  2 chiếc nhẫn trôi dần về phía nhau, lệch xuống dưới và đè so le lên
    *  nhau (như 2 chiếc nhẫn lồng vào nhau). Ánh xạ trực tiếp theo vị trí
