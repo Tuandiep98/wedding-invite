@@ -18,6 +18,7 @@
     "Cormorant Garamond", "Playfair Display", "Times New Roman", serif;
   --font-serif: "Playfair Display", "Times New Roman", serif;
   --font-body: "Be Vietnam Pro", "Segoe UI", sans-serif;
+  --font-script: "Alex Brush", "Brush Script MT", cursive;
   --content-max: 44rem;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -80,6 +81,11 @@ a:focus-visible {
   pointer-events: none;
   z-index: 2;
   overflow: hidden;
+  transition: opacity 0.5s ease;
+}
+
+.is-petal-paused #petals {
+  opacity: 0;
 }
 
 .petal {
@@ -357,12 +363,16 @@ a:focus-visible {
 }
 
 .hero__date {
-  font-family: var(--font-body);
-  font-size: clamp(0.65rem, 1.5vw, 0.82rem);
-  letter-spacing: 0.52em;
-  color: rgba(253, 248, 240, 0.8);
-  margin: 0.3rem 0 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.05rem, 3.4vw, 1.55rem);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--color-text-light);
+  margin: 0.7rem 0 0;
   text-transform: uppercase;
+  text-shadow:
+    0 2px 16px rgba(0, 0, 0, 0.55),
+    0 0 1px rgba(0, 0, 0, 0.3);
 }
 
 .hero__ornament {
@@ -624,42 +634,42 @@ a:focus-visible {
 .countdown__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  max-width: 32rem;
+  gap: clamp(0.5rem, 2.5vw, 0.85rem);
+  max-width: 26rem;
   margin: 0 auto;
 }
 
 .countdown__unit {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(212, 175, 55, 0.32);
-  backdrop-filter: blur(16px);
-  padding: 1.75rem 0.5rem 1.4rem;
+  background: #14100e;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1rem 0.35rem 0.85rem;
 }
 
 .countdown__value {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 7vw, 4rem);
-  font-weight: 600;
-  color: var(--color-gold);
-  line-height: 1;
-  text-shadow: 0 0 28px rgba(212, 175, 55, 0.38);
+  font-family: var(--font-body);
+  font-size: clamp(1.15rem, 4.5vw, 1.5rem);
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.1;
   transition: opacity 0.3s var(--ease-out);
 }
 
 .countdown__label {
   font-family: var(--font-body);
-  font-size: 0.56rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--color-text-dim);
-  margin-top: 0.65rem;
+  font-size: clamp(0.78rem, 3vw, 0.95rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #fff;
+  margin-top: 0.15rem;
 }
 
 .countdown__done {
   text-align: center;
-  font-family: var(--font-display);
-  font-size: 1.8rem;
-  color: var(--color-gold);
+  font-family: var(--font-script);
+  font-size: 2.2rem;
+  color: var(--ir-maroon, #6d1620);
   display: none;
   padding: 2rem 0;
 }
@@ -671,49 +681,512 @@ a:focus-visible {
   display: block;
 }
 
-/* ══ Event ══ */
-.event-section {
+/* ══ Invite (Trân trọng kính mời) ══ */
+/* ══ Invite — thiệp giấy trên nền đỏ (receipt card) ══ */
+.invite {
+  --ir-red: #7b1f22;
+  --ir-red-deep: #5d1418;
+  --ir-maroon: #6d1620;
+  --ir-cream: #fdf8ee;
+  --ir-ink: #1f1512;
+  --ir-pad: clamp(1.25rem, 5vw, 2.5rem);
+  background: var(--ir-red);
+  color: var(--ir-ink);
   text-align: center;
+  padding-block: 0 0;
+  padding-inline: 0;
+  overflow: hidden;
 }
 
-.event-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-  max-width: 34rem;
-  margin: 0 auto 2.25rem;
+.invite__card {
+  max-width: 30rem;
+  margin: 0 auto;
 }
 
-.event-card {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(212, 175, 55, 0.28);
-  padding: 2rem 1.25rem;
-  backdrop-filter: blur(12px);
+/* Tab đầu thiệp — hẹp hơn thân, bo góc lớn */
+.invite__tab {
+  background: var(--ir-cream);
+  border-radius: 2.5rem 2.5rem 0 0;
+  margin: clamp(1.5rem, 5vw, 2.75rem) clamp(0.75rem, 3vw, 1.5rem) 0;
+  padding: 1.75rem 1.25rem 1.4rem;
 }
 
-.event-card__icon {
-  font-size: 1.75rem;
-  margin-bottom: 0.85rem;
+.invite__title {
+  font-family: var(--font-script);
+  font-size: clamp(2rem, 7vw, 2.9rem);
+  font-weight: 400;
+  color: var(--ir-ink);
+  letter-spacing: 0.06em;
+  margin: 0;
+  line-height: 1.2;
 }
 
-.event-card__label {
+/* Thân thiệp — rộng hơn tab */
+.invite__body {
+  background: var(--ir-cream);
+  padding: 2rem var(--ir-pad) 2.5rem;
+  position: relative;
+}
+
+/* Đường xé vé: kẻ ngang + 2 nửa tròn khoét vào mép */
+.invite__notch {
+  position: relative;
+  height: 2px;
+  background: var(--ir-maroon);
+  margin: 2.25rem calc(var(--ir-pad) * -1);
+}
+.invite__notch::before,
+.invite__notch::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 1.75rem;
+  height: 1.75rem;
+  background: var(--ir-red);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+.invite__notch::before {
+  left: calc(-1.75rem / 2);
+}
+.invite__notch::after {
+  right: calc(-1.75rem / 2);
+}
+
+/* Tiêu đề viết tay dùng chung */
+.invite__script-heading {
+  font-family: var(--font-script);
+  font-size: clamp(2rem, 6.5vw, 2.8rem);
+  font-weight: 400;
+  color: var(--ir-ink);
+  margin: 0 0 1.5rem;
+  line-height: 1.25;
+}
+
+/* ── Gia đình hai bên ── */
+.invite__families {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem 1rem;
+  margin: 0 auto 1.75rem;
+}
+
+.invite__family {
+  flex: 1 1 10rem;
+}
+
+.invite__family-label {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ir-ink);
+  margin: 0 0 0.5rem;
+}
+
+.invite__family-names {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--ir-ink);
+  line-height: 1.7;
+  margin: 0 0 0.35rem;
+}
+
+.invite__family-address {
   font-family: var(--font-body);
-  font-size: 0.58rem;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--color-gold);
-  margin: 0 0 0.6rem;
-}
-
-.event-card__value {
-  font-size: 0.92rem;
-  color: var(--color-text-dim);
-  line-height: 1.8;
+  font-size: 0.78rem;
+  color: rgba(31, 21, 18, 0.6);
+  line-height: 1.55;
   margin: 0;
 }
 
-.event-map {
+/* ── Tên cô dâu chú rể ── */
+.invite__couple {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1.75rem;
+}
+
+.invite__couple-name {
+  font-family: var(--font-script);
+  font-size: clamp(1.6rem, 5.5vw, 2.2rem);
+  color: var(--ir-maroon);
+  line-height: 1.3;
+}
+
+.invite__couple-amp {
+  font-family: var(--font-serif);
+  font-size: clamp(1.3rem, 4vw, 1.7rem);
+  font-style: italic;
+  color: #c0201a;
+}
+
+/* ── Ba tấm ảnh so le ── */
+.invite__photos {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0 0 2rem;
+}
+
+.invite__photo {
+  width: 30%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0 6px 16px rgba(31, 21, 18, 0.2);
+  margin-top: 1.75rem;
+}
+
+.invite__photo--b {
+  width: 36%;
+  margin-top: 0;
+  aspect-ratio: 3 / 4.4;
+  box-shadow: 0 10px 24px rgba(31, 21, 18, 0.28);
+  z-index: 1;
+}
+
+/* ── Dòng dẫn + khung giờ ── */
+.invite__lead {
+  font-family: var(--font-serif);
+  font-size: clamp(0.95rem, 3vw, 1.15rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ir-ink);
+  margin: 0 0 0.75rem;
+}
+
+.invite__lead-sub {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--ir-ink);
+  margin: 0 0 1.25rem;
+}
+
+.invite__time-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 4vw, 1.75rem);
+  margin: 0 auto 2.25rem;
+}
+
+.invite__time-side {
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 4vw, 1.45rem);
+  color: var(--ir-ink);
+}
+
+.invite__time-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0 clamp(0.75rem, 4vw, 1.75rem);
+  border-left: 1px solid var(--ir-ink);
+  border-right: 1px solid var(--ir-ink);
+}
+
+.invite__time-weekday,
+.invite__time-month {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 3.6vw, 1.3rem);
+  color: var(--ir-ink);
+}
+
+.invite__time-day {
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 5vw, 1.9rem);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--ir-ink);
+  line-height: 1.1;
+}
+
+/* ── Lịch ── */
+.invite__calendar {
+  border: 1px solid rgba(31, 21, 18, 0.5);
+  background: #fff;
+  margin: 0 auto 1rem;
+  overflow: hidden;
+}
+
+.invite__calendar-title {
+  font-family: var(--font-body);
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--ir-maroon);
+  margin: 0.4rem 0 0;
+  padding: 0.5rem 1.1rem;
+  text-align: left;
+}
+
+.invite__calendar-inner {
+  position: relative;
+  padding: 0.5rem 1rem 1.1rem;
+}
+
+.invite__calendar-ghost {
+  position: absolute;
+  inset: 2.4rem 0 auto;
+  font-family: var(--font-body);
+  font-size: clamp(4.5rem, 20vw, 7rem);
+  font-weight: 700;
+  color: rgba(123, 31, 34, 0.07);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+.invite__calendar-grid {
+  position: relative;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.invite__calendar-grid th {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: rgba(31, 21, 18, 0.75);
+  font-weight: 500;
+  padding: 0.8rem 0 0.6rem;
+}
+
+.invite__calendar-grid td {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--ir-ink);
+  padding: 0.42rem 0;
   text-align: center;
+}
+
+.invite__calendar-grid td.is-marked {
+  position: relative;
+}
+
+.invite__calendar-grid td.is-marked span {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  color: #9c0f13;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.invite__calendar-grid td.is-marked span::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(203, 42, 44, 0.3);
+  clip-path: polygon(
+    50% 100%,
+    6% 52%,
+    6% 26%,
+    27% 8%,
+    50% 25%,
+    73% 8%,
+    94% 26%,
+    94% 52%
+  );
+  z-index: -1;
+}
+
+/* ── Địa điểm ── */
+.invite__venue-heading {
+  margin-bottom: 1rem;
+}
+
+.invite__venue-pin {
+  font-size: 0.8em;
+  margin-left: 0.35rem;
+}
+
+.invite__venue-name {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 3.4vw, 1.2rem);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--ir-ink);
+  line-height: 1.6;
+  margin: 0 auto 1.35rem;
+}
+
+.invite__map {
+  position: relative;
+  width: 100%;
+  margin: 0 auto 1.25rem;
+  padding-top: 62%;
+  overflow: hidden;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(31, 21, 18, 0.15);
+}
+
+.invite__map iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.invite .btn--gold {
+  background: #c0201a;
+  background-image: none;
+  color: #fff;
+  border-radius: 0.4rem;
+  box-shadow: none;
+  font-size: 0.78rem;
+}
+.invite .btn--gold:hover {
+  filter: brightness(1.1);
+  color: #fff;
+}
+
+/* ── Con dấu 囍 ── */
+.invite__stamp {
+  width: 7.5rem;
+  height: 7.5rem;
+  margin: 0 auto 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #b3161a;
+  border-radius: 0.35rem;
+  box-shadow: 0 3px 10px rgba(31, 21, 18, 0.25);
+}
+
+.invite__stamp span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 1.1rem);
+  height: calc(100% - 1.1rem);
+  border: 3px solid var(--ir-cream);
+  color: var(--ir-cream);
+  font-size: 3.4rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+/* ── Vùng minh hoạ nền đỏ cuối thiệp ── */
+.invite__flourish {
+  padding: 3.5rem 1.5rem 3rem;
+}
+
+.invite__flourish-art {
+  position: relative;
+  max-width: 22rem;
+  height: 11rem;
+  margin: 0 auto 1.5rem;
+}
+
+.invite__ico {
+  position: absolute;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+}
+.invite__dress {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 8.5rem;
+  height: 11.5rem;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
+}
+.invite__dress-veil {
+  fill: rgba(255, 255, 255, 0.34);
+}
+.invite__dress-skirt,
+.invite__dress-bodice {
+  fill: #fdfbf7;
+}
+.invite__dress-fold path {
+  stroke: rgba(123, 31, 34, 0.16);
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+}
+.invite__dress-bloom circle {
+  fill: #fdfbf7;
+}
+.invite__ico--envelope {
+  font-size: 2.2rem;
+  left: 4%;
+  top: 0;
+  transform: rotate(-12deg);
+}
+.invite__ico--ring {
+  font-size: 2.2rem;
+  right: 5%;
+  top: 0.5rem;
+}
+.invite__ico--heels {
+  font-size: 2rem;
+  left: 2%;
+  bottom: 0.5rem;
+  transform: rotate(-8deg);
+}
+.invite__ico--bouquet {
+  font-size: 2.3rem;
+  right: 3%;
+  bottom: 0;
+}
+
+.invite__flourish-quote {
+  font-family: var(--font-script);
+  font-size: clamp(1.35rem, 4.5vw, 1.8rem);
+  color: var(--ir-cream);
+  max-width: 26rem;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.invite__rsvp {
+  margin-top: 0;
+}
+
+.form__fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 1.3rem;
+}
+
+.form__fieldset legend {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #3a3a3a;
+  margin-bottom: 0.5rem;
+  padding: 0;
+}
+
+.form__radio {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: #1f1512;
+  margin-bottom: 0.35rem;
+  cursor: pointer;
+}
+
+.form__radio input {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: #1a73e8;
+  cursor: pointer;
 }
 
 /* ══ Buttons ══ */
@@ -943,79 +1416,92 @@ a:focus-visible {
 }
 
 /* ══ RSVP ══ */
-.rsvp {
-  text-align: center;
-}
-
 .form {
-  max-width: 28rem;
+  max-width: 26rem;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  padding: 2.25rem 2rem;
-  backdrop-filter: blur(18px);
+  background: #fff;
+  border: 1px solid rgba(31, 21, 18, 0.12);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 16px rgba(31, 21, 18, 0.08);
+  padding: 1.75rem 1.5rem;
   text-align: left;
 }
 
+.form__title {
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ir-ink, #1f1512);
+  text-align: center;
+  margin: 0 0 1.5rem;
+}
+
 .form__row {
-  margin-bottom: 1.3rem;
+  margin-bottom: 1.15rem;
 }
 
 .form label {
   display: block;
   font-family: var(--font-body);
-  font-size: 0.6rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--color-gold);
-  margin-bottom: 0.45rem;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #3a3a3a;
+  margin-bottom: 0.5rem;
 }
 
-.form input,
+.form input:not([type="radio"]):not([type="checkbox"]),
 .form textarea,
 .form select {
   width: 100%;
-  padding: 0.85rem 1rem;
-  border: 1px solid rgba(212, 175, 55, 0.22);
-  background: rgba(253, 248, 240, 0.07);
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #d8d8d8;
+  border-radius: 0.4rem;
+  background: #fff;
   font-family: var(--font-body);
-  font-size: 0.95rem;
-  color: var(--color-text-light);
+  font-size: 1rem;
+  color: #1f1512;
   appearance: none;
-  border-radius: 0;
 }
 
 .form input::placeholder,
 .form textarea::placeholder {
-  color: rgba(253, 248, 240, 0.28);
+  color: #a9a9a9;
 }
 .form select option {
-  background: var(--color-dark-mid);
-  color: var(--color-text-light);
+  background: #fff;
+  color: #1f1512;
 }
 
-.form input:focus,
+.form input:not([type="radio"]):not([type="checkbox"]):focus,
 .form textarea:focus,
 .form select:focus {
   outline: none;
-  border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+  border-color: #c0201a;
+  box-shadow: 0 0 0 3px rgba(192, 32, 26, 0.12);
 }
 
 .form textarea {
-  min-height: 7rem;
+  min-height: 6rem;
   resize: vertical;
 }
 .form .btn--gold {
   width: 100%;
   text-align: center;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
+  padding-block: 0.95rem;
+  font-size: 1rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 500;
+  font-family: var(--font-body);
 }
 
 .form__status {
   margin-top: 1rem;
   font-size: 0.88rem;
-  color: var(--color-rose);
+  color: #c0201a;
   display: none;
   text-align: center;
 }
@@ -1608,15 +2094,8 @@ html.has-ring-gate body {
     padding-top: 6rem;
   }
 
-  .countdown__grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-    max-width: 22rem;
-  }
-
-  .event-cards {
-    grid-template-columns: 1fr;
-    max-width: 24rem;
+  .invite__families {
+    gap: 1.25rem 0.75rem;
   }
   .gift__grid {
     grid-template-columns: 1fr;

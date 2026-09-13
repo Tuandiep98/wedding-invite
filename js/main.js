@@ -271,6 +271,25 @@
   }
   initPetals();
 
+  /** Tắt cánh hoa khi đang ở section thiệp — nền giấy kem sáng khiến cánh hoa
+   *  trông như vết bẩn chứ không còn là hiệu ứng lãng mạn như trên nền tối. */
+  function setupPetalPause() {
+    var invite = document.getElementById("invite");
+    if (!invite || !("IntersectionObserver" in window)) return;
+    new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          document.documentElement.classList.toggle(
+            "is-petal-paused",
+            entry.isIntersecting,
+          );
+        });
+      },
+      { threshold: 0 },
+    ).observe(invite);
+  }
+  setupPetalPause();
+
   /** Gallery parallax + caption */
   function setupGalleryStoryEffects() {
     var panels = document.querySelectorAll(".gallery__panel");
@@ -328,7 +347,8 @@
     var startEl = document.querySelector(".hero__ring");
     var endEl = document.getElementById("story-ring-target");
     var flyer = document.getElementById("ring-fly-scroll");
-    if (!startEl || !endEl || !flyer || prefersReduced) return;
+    var storySection = document.getElementById("story");
+    if (!startEl || !endEl || !flyer || !storySection || prefersReduced) return;
 
     var cur = { x: 0, y: 0, w: 0, rot: 0, opacity: 0 };
     var inited = false;
@@ -341,21 +361,36 @@
     function frame() {
       var startRect = startEl.getBoundingClientRect();
       var endRect = endEl.getBoundingClientRect();
-      var refY = window.innerHeight * 0.55;
+      var secRect = storySection.getBoundingClientRect();
+      var vh = window.innerHeight;
 
-      var total = endRect.top - startRect.top;
-      var traveled = refY - startRect.top;
-      var rawT = total > 0 ? Math.max(0, Math.min(1, traveled / total)) : 0;
+      // Dùng CHUNG đồng hồ với setupStoryArmReveal (tâm section Story đi từ
+      // 1.05vh lên 0.55vh) để nhẫn đáp xuống đúng lúc cánh tay đã vươn ra hẳn.
+      // Trước đây mỗi hiệu ứng đo theo một mốc riêng nên nhẫn hạ cánh khi cánh
+      // tay còn vô hình. Vị trí đáp vẫn bám endRect nên luôn trúng nhẫn trên ảnh.
+      var anchorY = secRect.top + secRect.height / 2;
+      var enterStart = vh * 1.05;
+      var enterEnd = vh * 0.55;
+      var rawT = Math.max(
+        0,
+        Math.min(1, (enterStart - anchorY) / (enterStart - enterEnd)),
+      );
       var t = easeInOutCubic(rawT);
 
+      // Giữ nhẫn hiện gần trọn hành trình, chỉ tan đi ngay khoảnh khắc chạm đích.
       var fade;
-      if (rawT <= 0 || rawT >= 1) fade = 0;
-      else if (rawT < 0.14) fade = rawT / 0.14;
-      else if (rawT > 0.82) fade = (1 - rawT) / 0.18;
+      if (rawT <= 0) fade = 0;
+      else if (rawT < 0.12) fade = rawT / 0.12;
+      else if (rawT > 0.93) fade = Math.max(0, (1 - rawT) / 0.07);
       else fade = 1;
 
       var startX = startRect.left + startRect.width / 2;
-      var startY = startRect.top + startRect.height / 2;
+      // Khi nhẫn Hero đã cuộn khuất phía trên, lấy mốc xuất phát ngay trên mép
+      // màn hình để nhẫn "bay vào" từ trên xuống thay vì từ ngoài xa tít.
+      var startY = Math.max(
+        startRect.top + startRect.height / 2,
+        -window.innerHeight * 0.12,
+      );
       var endX = endRect.left + endRect.width / 2;
       var endY = endRect.top + endRect.height / 2;
 
@@ -399,7 +434,9 @@
       // Ẩn dần nhẫn tĩnh ở Hero đúng lúc nhẫn bay xuất hiện, tránh thấy 2 nhẫn cùng lúc
       startEl.style.opacity = (1 - fade * 0.95).toFixed(3);
 
-      endEl.style.setProperty("--ring-arrival", fade.toFixed(3));
+      // Quầng sáng trên ảnh mạnh dần theo hành trình và sáng nhất lúc nhẫn đáp,
+      // để chỗ nhẫn vừa tan đi vẫn còn dấu vết thay vì tắt phụt cùng lúc.
+      endEl.style.setProperty("--ring-arrival", rawT.toFixed(3));
 
       var settled = rawT <= 0.001 || rawT >= 0.999;
       var atRest = shownOpacity === 0 && Math.abs(fade - cur.opacity) < 0.004;
