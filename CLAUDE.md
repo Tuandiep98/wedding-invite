@@ -27,7 +27,7 @@ Single-page static site with three core files:
 **Key JS modules (all inside one IIFE in `main.js`):**
 
 - Countdown timer targeting `WEDDING_ISO` constant (line 5)
-- Ring intro gate — opening animation (ring box float → tap to open → crossfade from closed-box photo to open-box photo + a real ring photo lifts up and hovers above it, sparkle burst + `open.mp3`/`whoosh.mp3` SFX → auto-plays background music → crossfade into hero), gated via native `<dialog>`, shown once per browser session (`sessionStorage`)
+- Ring intro gate — opening animation (ring box float → tap to open → crossfade from closed-box photo to open-box photo + a real ring lifts up → hand appears and the ring flies into it → proposal photo and message reveal → fade into Hero; includes sparkle burst + `open.mp3`/`whoosh.mp3` SFX and auto-plays background music), gated via native `<dialog>`, shown once per browser session (`sessionStorage`)
 - `setupRingFlyScroll()` — scroll-linked "flying ring" effect: the small ring icon between the names in Hero (`.hero__ring`) travels (with a gentle arc + fade) toward the real ring's position in the Story section's proposal photo (`#story-ring-target`) as the user scrolls between the two sections; progress is derived purely from live `getBoundingClientRect()` deltas each scroll tick (rAF-throttled, same pattern as `setupGalleryStoryEffects()`), no cached scroll anchors
 - IntersectionObserver-based scroll reveal
 - Gallery parallax + lightbox via native `<dialog>`

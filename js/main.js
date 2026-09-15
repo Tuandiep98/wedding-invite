@@ -60,6 +60,10 @@
 
     ringGateTrigger.addEventListener("click", openRingGate);
     if (ringGateSkip) ringGateSkip.addEventListener("click", skipRingGate);
+    ringGate.addEventListener("click", function () {
+      // Một lần chạm ở cảnh cầu hôn được xem là người xem đã đọc xong.
+      if (ringGate.getAttribute("data-step") === "proposal") leaveRingGate();
+    });
     ringGate.addEventListener("cancel", function (e) {
       e.preventDefault();
       skipRingGate();
@@ -86,8 +90,29 @@
       );
     }
 
-    var holdMs = prefersReduced ? 0 : 1700;
-    setTimeout(leaveRingGate, holdMs);
+    var holdMs = prefersReduced ? 0 : 1350;
+    setTimeout(startProposalSequence, holdMs);
+  }
+
+  /** Chuỗi mở đầu: bàn tay xuất hiện, nhẫn bay vào tay, rồi hé lộ khoảnh khắc cầu hôn. */
+  function startProposalSequence() {
+    if (prefersReduced) {
+      leaveRingGate();
+      return;
+    }
+
+    ringGate.setAttribute("data-step", "hand");
+    setTimeout(function () {
+      whooshSfx.play().catch(function () {});
+      var flightMs = flyRingToHand();
+      setTimeout(showProposalMoment, flightMs + 120);
+    }, 420);
+  }
+
+  function showProposalMoment() {
+    ringGate.setAttribute("data-step", "proposal");
+    // Đủ thời gian để xem ảnh và đọc trọn lời cầu hôn trước khi vào trang chính.
+    setTimeout(leaveRingGate, 8000);
   }
 
   function leaveRingGate() {
@@ -95,24 +120,22 @@
     ringGate.setAttribute("data-step", "leaving");
     if (ringGateInner) ringGateInner.classList.add("is-leaving");
 
-    var flightMs = flyRingToHero();
-    setTimeout(closeRingGate, flightMs > 0 ? flightMs + 80 : 750);
+    setTimeout(closeRingGate, prefersReduced ? 0 : 850);
   }
 
-  /** Nhẫn tách khỏi hộp và bay xuống đúng vị trí nhẫn giữa 2 tên ở Hero,
-   *  đồng bộ với lúc dialog đóng — cùng pattern easing/arc với setupRingFlyScroll().
+  /** Nhẫn tách khỏi hộp và bay tới đúng vị trí nhẫn trên bàn tay.
    *  Trả về thời lượng animation (ms), hoặc 0 nếu bỏ qua (rút gọn chuyển động / thiếu phần tử). */
-  function flyRingToHero() {
-    var duration = 950;
+  function flyRingToHand() {
+    var duration = 1050;
     if (prefersReduced || !ringGateFly) return 0;
 
     var ringLift = document.querySelector(".ring-gate__ring-lift");
     var ringImg = ringLift && ringLift.querySelector(".ring-gate__ring");
-    var heroRing = document.querySelector(".hero__ring");
-    if (!ringLift || !ringImg || !heroRing) return 0;
+    var handTarget = document.getElementById("ring-gate-hand-target");
+    if (!ringLift || !ringImg || !handTarget) return 0;
 
     var startRect = ringImg.getBoundingClientRect();
-    var endRect = heroRing.getBoundingClientRect();
+    var endRect = handTarget.getBoundingClientRect();
     if (!startRect.width || !endRect.width) return 0;
 
     ringLift.classList.add("is-hidden");
@@ -122,7 +145,7 @@
     var endX = endRect.left + endRect.width / 2;
     var endY = endRect.top + endRect.height / 2;
     var startW = startRect.width;
-    var endW = endRect.width;
+    var endW = Math.max(endRect.width * 1.25, startW * 0.46);
 
     function easeInOutCubic(t) {
       return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -137,14 +160,14 @@
       var t = easeInOutCubic(raw);
 
       var envelope = Math.sin(raw * Math.PI); // 0 ở 2 đầu, đỉnh giữa hành trình
-      var arc = envelope * -46;
-      var sway = Math.sin(raw * Math.PI * 1.6) * 14 * envelope;
-      var wobble = Math.sin(raw * Math.PI * 2.2) * 10 * envelope;
+      var arc = envelope * -64;
+      var sway = Math.sin(raw * Math.PI * 1.6) * 18 * envelope;
+      var wobble = Math.sin(raw * Math.PI * 2.2) * 14 * envelope;
 
       var x = startX + (endX - startX) * t + sway;
       var y = startY + (endY - startY) * t + arc;
       var w = startW + (endW - startW) * t;
-      var fade = raw > 0.76 ? Math.max(0, 1 - (raw - 0.76) / 0.24) : 1;
+      var fade = raw > 0.82 ? Math.max(0, 1 - (raw - 0.82) / 0.18) : 1;
 
       ringGateFly.style.width = w.toFixed(1) + "px";
       ringGateFly.style.transform =
@@ -182,7 +205,7 @@
     if (ringGate.open) ringGate.close();
   }
 
-  /** Sparkle burst khi mở hộp — cùng pattern với initPetals() */
+  /** Sparkle burst khi mở hộp */
   function spawnRingGateSparkles() {
     if (prefersReduced || !ringGateSparkles) return;
     var count = 16;
@@ -251,46 +274,7 @@
     });
   }
 
-  /** Cánh hoa rơi */
-  function initPetals() {
-    if (prefersReduced) return;
-    var container = document.getElementById("petals");
-    if (!container) return;
-    var count = 22;
-    for (var i = 0; i < count; i++) {
-      var p = document.createElement("div");
-      var size = (9 + Math.random() * 10).toFixed(1);
-      p.className = "petal";
-      p.style.left = Math.random() * 100 + "vw";
-      p.style.animationDuration = 7 + Math.random() * 9 + "s";
-      p.style.animationDelay = -Math.random() * 18 + "s";
-      p.style.opacity = (0.45 + Math.random() * 0.55).toFixed(2);
-      p.style.setProperty("--petal-size", size + "px");
-      container.appendChild(p);
-    }
-  }
-  initPetals();
-
-  /** Tắt cánh hoa khi đang ở section thiệp — nền giấy kem sáng khiến cánh hoa
-   *  trông như vết bẩn chứ không còn là hiệu ứng lãng mạn như trên nền tối. */
-  function setupPetalPause() {
-    var invite = document.getElementById("invite");
-    if (!invite || !("IntersectionObserver" in window)) return;
-    new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          document.documentElement.classList.toggle(
-            "is-petal-paused",
-            entry.isIntersecting,
-          );
-        });
-      },
-      { threshold: 0 },
-    ).observe(invite);
-  }
-  setupPetalPause();
-
-  /** Gallery parallax + caption */
+  /** Gallery caption — ảnh xếp nối tiếp để luôn nhìn thấy ảnh kế tiếp khi cuộn. */
   function setupGalleryStoryEffects() {
     var panels = document.querySelectorAll(".gallery__panel");
     if (!panels.length || prefersReduced) return;
@@ -312,30 +296,6 @@
         panelObserver.observe(p);
       });
     }
-
-    var ticking = false;
-    function updateParallax() {
-      var vc = window.innerHeight / 2;
-      panels.forEach(function (panel) {
-        var rect = panel.getBoundingClientRect();
-        var delta = (rect.top + rect.height / 2 - vc) * -0.08;
-        var capped = Math.max(-42, Math.min(42, delta));
-        var img = panel.querySelector("img");
-        if (img)
-          img.style.setProperty("--img-parallax", capped.toFixed(2) + "px");
-      });
-      ticking = false;
-    }
-
-    function onScroll() {
-      if (ticking) return;
-      window.requestAnimationFrame(updateParallax);
-      ticking = true;
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    updateParallax();
   }
   setupGalleryStoryEffects();
 

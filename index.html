@@ -80,9 +80,50 @@
             Bỏ qua
           </button>
         </div>
+
+        <div class="ring-gate__proposal" aria-hidden="true">
+          <div class="ring-gate__hand-scene">
+            <div class="ring-gate__hand-wrap">
+              <img
+                class="ring-gate__hand"
+                src="assets/proposal-ring.webp"
+                alt=""
+                width="960"
+                height="1200"
+              />
+              <span
+                class="ring-gate__hand-target"
+                id="ring-gate-hand-target"
+              ></span>
+            </div>
+          </div>
+          <div class="ring-gate__proposal-memory">
+            <p class="ring-gate__proposal-kicker">Khoảnh khắc cầu hôn</p>
+            <p class="ring-gate__proposal-ornament">❧ ✦ ❧</p>
+            <div class="ring-gate__proposal-photos">
+              <img
+                src="assets/proposal-moment-1.jpg"
+                alt=""
+                width="1488"
+                height="2047"
+              />
+              <img
+                src="assets/proposal-moment-2.jpg"
+                alt=""
+                width="1185"
+                height="1600"
+              />
+            </div>
+            <p class="ring-gate__proposal-text">
+              Một buổi chiều rất bình thường, anh hỏi em một câu. Em gật đầu.
+              Chiếc nhẫn nhỏ hôm ấy trở thành lời hứa cho cả chặng đường phía
+              trước.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <!-- Nhẫn bay từ hộp xuống đúng vị trí nhẫn giữa 2 tên ở Hero -->
+      <!-- Nhẫn bay từ hộp tới bàn tay trong màn mở đầu -->
       <span class="ring-gate__fly" id="ring-gate-fly" aria-hidden="true">
         <span class="ring-gate__fly-glow"></span>
         <img
@@ -94,9 +135,6 @@
         />
       </span>
     </dialog>
-
-    <!-- Cánh hoa rơi -->
-    <div id="petals" aria-hidden="true"></div>
 
     <!-- Chiếc nhẫn bay theo scroll, từ Hero tới ảnh cầu hôn -->
     <div class="ring-fly-scroll" id="ring-fly-scroll" aria-hidden="true">
@@ -152,6 +190,7 @@
             Wedding Invitation
           </h2>
         </div>
+        <div class="invite__open-flaps" aria-hidden="true"></div>
 
         <div class="invite__body">
           <div class="invite__families reveal" style="--d: 0.22s">
@@ -215,35 +254,34 @@
             Trân Trọng Kính Mời
           </h3>
 
-          <div
-            class="invite__photos reveal"
-            style="--d: 0.46s"
-            aria-hidden="true"
-          >
+          <div class="invite__photos" aria-hidden="true">
             <img
-              class="invite__photo invite__photo--a"
+              class="invite__photo invite__photo--a reveal reveal--from-left"
               src="assets/gallery-3.jpg"
               alt=""
               width="480"
               height="600"
+              style="--d: 0.46s"
               loading="lazy"
               decoding="async"
             />
             <img
-              class="invite__photo invite__photo--b"
+              class="invite__photo invite__photo--b reveal reveal--rise"
               src="assets/gallery-5.jpg"
               alt=""
               width="480"
               height="600"
+              style="--d: 0.58s"
               loading="lazy"
               decoding="async"
             />
             <img
-              class="invite__photo invite__photo--c"
+              class="invite__photo invite__photo--c reveal reveal--from-right"
               src="assets/gallery-6.jpg"
               alt=""
               width="480"
               height="600"
+              style="--d: 0.7s"
               loading="lazy"
               decoding="async"
             />
@@ -363,77 +401,6 @@
               >Mở bằng Google Maps</a
             >
           </div>
-
-          <div class="invite__notch" aria-hidden="true"></div>
-
-          <div class="invite__rsvp reveal" style="--d: 0.78s">
-            <h3 id="rsvp-heading" class="invite__script-heading">
-              Xác nhận tham dự
-            </h3>
-            <div class="invite__stamp" aria-hidden="true">
-              <span>囍</span>
-            </div>
-            <form
-              class="form"
-              id="rsvp-form"
-              action="https://formspree.io/f/YOUR_FORM_ID"
-              method="POST"
-            >
-              <p class="form__title">Xác nhận tham dự</p>
-              <input
-                type="hidden"
-                name="_subject"
-                value="RSVP đám cưới — Tuấn Điệp &amp; Thu Thảo"
-              />
-              <div class="form__row">
-                <label for="name">Họ và tên</label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  required
-                  autocomplete="name"
-                  placeholder="Nhập tên của bạn"
-                />
-              </div>
-              <fieldset class="form__row form__fieldset">
-                <legend>Bạn sẽ tham dự chứ?</legend>
-                <label class="form__radio">
-                  <input type="radio" name="attending" value="yes" checked />
-                  Có, tôi sẽ tham dự
-                </label>
-                <label class="form__radio">
-                  <input type="radio" name="attending" value="no" />
-                  Tôi bận, rất tiếc không thể tham dự
-                </label>
-              </fieldset>
-              <div class="form__row">
-                <label for="guests">Số khách đi cùng</label>
-                <select id="guests" name="guests">
-                  <option value="0">Chỉ mình tôi</option>
-                  <option value="1">+1 người</option>
-                  <option value="2">+2 người</option>
-                  <option value="3">+3 người trở lên</option>
-                </select>
-              </div>
-              <div class="form__row">
-                <label for="message">Lời nhắn (tùy chọn)</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows="4"
-                  placeholder="Chúc mừng hạnh phúc..."
-                ></textarea>
-              </div>
-              <button class="btn btn--gold" type="submit">Gửi xác nhận</button>
-              <p
-                class="form__status"
-                id="form-status"
-                role="status"
-                aria-live="polite"
-              ></p>
-            </form>
-          </div>
         </div>
       </div>
 
@@ -479,6 +446,10 @@
           Hạnh phúc là được nắm tay nhau đi hết quãng đường còn lại
         </p>
       </div>
+      <a class="invite__continue" href="#story">
+        <span>Khám phá câu chuyện của chúng mình</span>
+        <span class="invite__continue-arrow" aria-hidden="true">↓</span>
+      </a>
     </section>
 
     <!-- ═══ Khoảnh khắc cầu hôn ═══ -->
@@ -635,12 +606,15 @@
           Chạm vào ảnh để phóng to.
         </p>
         <div
-          class="gallery__story reveal"
-          style="--d: 0.4s"
+          class="gallery__story"
           role="list"
           aria-label="Album ảnh theo từng khoảnh khắc"
         >
-          <article class="gallery__panel is-active" role="listitem">
+          <article
+            class="gallery__panel is-active reveal reveal--rise"
+            style="--d: 0.1s"
+            role="listitem"
+          >
             <button
               type="button"
               class="gallery__slide-btn"
@@ -664,7 +638,10 @@
             </button>
           </article>
           <div class="gallery__separator" aria-hidden="true"></div>
-          <article class="gallery__panel" role="listitem">
+          <article
+            class="gallery__panel reveal reveal--from-right"
+            role="listitem"
+          >
             <button
               type="button"
               class="gallery__slide-btn"
@@ -688,7 +665,10 @@
             </button>
           </article>
           <div class="gallery__separator" aria-hidden="true"></div>
-          <article class="gallery__panel" role="listitem">
+          <article
+            class="gallery__panel reveal reveal--from-left"
+            role="listitem"
+          >
             <button
               type="button"
               class="gallery__slide-btn"
@@ -712,31 +692,7 @@
             </button>
           </article>
           <div class="gallery__separator" aria-hidden="true"></div>
-          <article class="gallery__panel" role="listitem">
-            <button
-              type="button"
-              class="gallery__slide-btn"
-              aria-label='Xem ảnh "Nhìn nhau" lớn hơn'
-              data-lightbox
-            >
-              <img
-                src="assets/gallery-3.jpg"
-                alt="Nhìn nhau"
-                width="1200"
-                height="1600"
-                loading="lazy"
-                decoding="async"
-              />
-              <span class="gallery__caption">
-                <span class="gallery__caption-title">Nhìn nhau</span>
-                <span class="gallery__caption-desc"
-                  >Chỉ cần nhìn nhau là thấy đủ.</span
-                >
-              </span>
-            </button>
-          </article>
-          <div class="gallery__separator" aria-hidden="true"></div>
-          <article class="gallery__panel" role="listitem">
+          <article class="gallery__panel reveal reveal--rise" role="listitem">
             <button
               type="button"
               class="gallery__slide-btn"
@@ -755,54 +711,6 @@
                 <span class="gallery__caption-title">Sau tấm voan</span>
                 <span class="gallery__caption-desc"
                   >Một khoảnh khắc rất đời thường của hai đứa.</span
-                >
-              </span>
-            </button>
-          </article>
-          <div class="gallery__separator" aria-hidden="true"></div>
-          <article class="gallery__panel" role="listitem">
-            <button
-              type="button"
-              class="gallery__slide-btn"
-              aria-label='Xem ảnh "Nụ hôn lên trán" lớn hơn'
-              data-lightbox
-            >
-              <img
-                src="assets/gallery-5.jpg"
-                alt="Nụ hôn lên trán"
-                width="1200"
-                height="1600"
-                loading="lazy"
-                decoding="async"
-              />
-              <span class="gallery__caption">
-                <span class="gallery__caption-title">Nụ hôn lên trán</span>
-                <span class="gallery__caption-desc"
-                  >Bình yên nhất là lúc này.</span
-                >
-              </span>
-            </button>
-          </article>
-          <div class="gallery__separator" aria-hidden="true"></div>
-          <article class="gallery__panel" role="listitem">
-            <button
-              type="button"
-              class="gallery__slide-btn"
-              aria-label='Xem ảnh "Vòng tay phía sau" lớn hơn'
-              data-lightbox
-            >
-              <img
-                src="assets/gallery-6.jpg"
-                alt="Vòng tay phía sau"
-                width="1200"
-                height="1600"
-                loading="lazy"
-                decoding="async"
-              />
-              <span class="gallery__caption">
-                <span class="gallery__caption-title">Vòng tay phía sau</span>
-                <span class="gallery__caption-desc"
-                  >Đi đâu cũng được, miễn là có nhau.</span
                 >
               </span>
             </button>
@@ -860,12 +768,82 @@
             </div>
           </div>
         </div>
+
+        <div class="gift__rsvp reveal" style="--d: 0.56s">
+          <p class="gift__rsvp-kicker">Hẹn gặp bạn trong ngày vui</p>
+          <h3 id="rsvp-heading" class="invite__script-heading">
+            Xác nhận tham dự
+          </h3>
+          <div class="invite__stamp" aria-hidden="true">
+            <span>囍</span>
+          </div>
+          <form
+            class="form"
+            id="rsvp-form"
+            action="https://formspree.io/f/YOUR_FORM_ID"
+            method="POST"
+          >
+            <p class="form__title">Xác nhận tham dự</p>
+            <input
+              type="hidden"
+              name="_subject"
+              value="RSVP đám cưới — Tuấn Điệp &amp; Thu Thảo"
+            />
+            <div class="form__row">
+              <label for="name">Họ và tên</label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                autocomplete="name"
+                placeholder="Nhập tên của bạn"
+              />
+            </div>
+            <fieldset class="form__row form__fieldset">
+              <legend>Bạn sẽ tham dự chứ?</legend>
+              <label class="form__radio">
+                <input type="radio" name="attending" value="yes" checked />
+                Có, tôi sẽ tham dự
+              </label>
+              <label class="form__radio">
+                <input type="radio" name="attending" value="no" />
+                Tôi bận, rất tiếc không thể tham dự
+              </label>
+            </fieldset>
+            <div class="form__row">
+              <label for="guests">Số khách đi cùng</label>
+              <select id="guests" name="guests">
+                <option value="0">Chỉ mình tôi</option>
+                <option value="1">+1 người</option>
+                <option value="2">+2 người</option>
+                <option value="3">+3 người trở lên</option>
+              </select>
+            </div>
+            <div class="form__row">
+              <label for="message">Lời nhắn (tùy chọn)</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="4"
+                placeholder="Chúc mừng hạnh phúc..."
+              ></textarea>
+            </div>
+            <button class="btn btn--gold" type="submit">Gửi xác nhận</button>
+            <p
+              class="form__status"
+              id="form-status"
+              role="status"
+              aria-live="polite"
+            ></p>
+          </form>
+        </div>
       </div>
     </section>
 
     <!-- ═══ Footer ═══ -->
     <footer class="footer">
-      <div class="footer__monogram" aria-hidden="true">T &amp; T</div>
+      <div class="footer__monogram" aria-hidden="true">T &amp; Đ</div>
       <p class="footer__text">Trân trọng cảm ơn · Hẹn gặp bạn trong ngày vui</p>
       <p class="footer__date">13 · 10 · 2026</p>
     </footer>

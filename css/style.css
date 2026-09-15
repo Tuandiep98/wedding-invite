@@ -1,19 +1,19 @@
 /* Wedding Invite — Dark Red & Gold — cinelove-style */
 :root {
-  --color-dark: #120707;
-  --color-dark-mid: #2a1212;
-  --color-dark-soft: #3a1c1c;
-  --color-gold: #d4af37;
-  --color-gold-light: #f0d060;
-  --color-gold-muted: #a67c52;
-  --color-rose: #e8b4b8;
-  --color-rose-deep: #c9717a;
-  --color-paper: #fdf8f0;
-  --color-paper-deep: #f5ece0;
-  --color-ink: #2c1a1a;
-  --color-ink-muted: #7a5c5c;
-  --color-text-light: #fdf8f0;
-  --color-text-dim: rgba(253, 248, 240, 0.6);
+  --color-dark: #5a1d2a;
+  --color-dark-mid: #42151f;
+  --color-dark-soft: #7a3441;
+  --color-gold: #c4a166;
+  --color-gold-light: #e4d1a6;
+  --color-gold-muted: #99764e;
+  --color-rose: #d7a5aa;
+  --color-rose-deep: #b77981;
+  --color-paper: #fcf8f2;
+  --color-paper-deep: #f0e5d7;
+  --color-ink: #2b1d20;
+  --color-ink-muted: #766569;
+  --color-text-light: #fff9f2;
+  --color-text-dim: rgba(255, 249, 242, 0.68);
   --font-display:
     "Cormorant Garamond", "Playfair Display", "Times New Roman", serif;
   --font-serif: "Playfair Display", "Times New Roman", serif;
@@ -74,67 +74,6 @@ a:focus-visible {
   outline-offset: 3px;
 }
 
-/* ══ Petals ══ */
-#petals {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 2;
-  overflow: hidden;
-  transition: opacity 0.5s ease;
-}
-
-.is-petal-paused #petals {
-  opacity: 0;
-}
-
-.petal {
-  position: absolute;
-  top: -8vh;
-  pointer-events: none;
-  will-change: transform, opacity;
-  animation: petal-fall linear infinite;
-}
-
-.petal::before {
-  content: "";
-  display: block;
-  width: var(--petal-size, 12px);
-  height: var(--petal-size, 12px);
-  background: radial-gradient(
-    ellipse at 35% 30%,
-    #fce0e3,
-    var(--color-rose-deep) 78%
-  );
-  border-radius: 150% 0 150% 0;
-  box-shadow:
-    inset -1px -2px 3px rgba(0, 0, 0, 0.12),
-    0 1px 5px rgba(201, 113, 122, 0.3);
-}
-
-@keyframes petal-fall {
-  0% {
-    transform: translateY(-8vh) rotate(0deg) translateX(0);
-    opacity: 1;
-  }
-  25% {
-    transform: translateY(25vh) rotate(180deg) translateX(20px);
-    opacity: 0.9;
-  }
-  50% {
-    transform: translateY(55vh) rotate(360deg) translateX(-12px);
-    opacity: 0.7;
-  }
-  75% {
-    transform: translateY(85vh) rotate(540deg) translateX(18px);
-    opacity: 0.4;
-  }
-  100% {
-    transform: translateY(115vh) rotate(720deg) translateX(-6px);
-    opacity: 0;
-  }
-}
-
 /* ══ Layout ══ */
 .container {
   width: 100%;
@@ -149,11 +88,7 @@ a:focus-visible {
 }
 
 .section--dark {
-  background: linear-gradient(
-    160deg,
-    var(--color-dark) 0%,
-    var(--color-dark-mid) 100%
-  );
+  background: var(--color-dark);
   color: var(--color-text-light);
 }
 
@@ -168,6 +103,23 @@ a:focus-visible {
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Biến thể reveal cho ảnh: mỗi ảnh có hướng đi vào riêng để nhịp cuộn tự nhiên hơn. */
+.reveal--from-left {
+  transform: translateX(-3.5rem) rotate(-3deg);
+}
+.reveal--from-right {
+  transform: translateX(3.5rem) rotate(3deg);
+}
+.reveal--rise {
+  transform: translateY(3.5rem) scale(0.94);
+}
+.reveal--from-left.is-visible,
+.reveal--from-right.is-visible,
+.reveal--rise.is-visible {
+  opacity: 1;
+  transform: translate(0) scale(1) rotate(0deg);
 }
 @media (prefers-reduced-motion: reduce) {
   .reveal {
@@ -243,18 +195,18 @@ a:focus-visible {
   z-index: 0;
 }
 
-/* Gradient veil — transparent top, very dark bottom */
+/* Gradient veil — giữ ảnh sáng ở đầu, chuyển dần về xám than dịu ở đáy. */
 .hero__veil {
   position: absolute;
   inset: 0;
   z-index: 1;
   background: linear-gradient(
     to bottom,
-    rgba(10, 3, 3, 0.1) 0%,
-    rgba(10, 3, 3, 0.08) 28%,
-    rgba(18, 7, 7, 0.6) 60%,
-    rgba(18, 7, 7, 0.92) 82%,
-    var(--color-dark) 100%
+    rgba(47, 43, 43, 0.02) 0%,
+    rgba(47, 43, 43, 0.1) 28%,
+    rgba(48, 43, 44, 0.48) 60%,
+    rgba(42, 37, 38, 0.83) 82%,
+    #302a2b 100%
   );
 }
 
@@ -303,12 +255,12 @@ a:focus-visible {
   font-family: var(--font-display);
   font-size: clamp(3.8rem, 13vw, 8.5rem);
   font-weight: 400;
-  color: var(--color-gold);
+  color: #fff;
   margin: 0;
   line-height: 0.95;
   letter-spacing: 0.01em;
   text-shadow:
-    0 0 80px rgba(212, 175, 55, 0.28),
+    0 0 80px rgba(255, 255, 255, 0.2),
     0 2px 12px rgba(0, 0, 0, 0.7);
 }
 
@@ -376,7 +328,7 @@ a:focus-visible {
 }
 
 .hero__ornament {
-  color: rgba(212, 175, 55, 0.5);
+  color: rgba(255, 255, 255, 0.62);
   font-size: 0.78rem;
   letter-spacing: 0.6em;
   margin: 0.5rem 0 0;
@@ -388,7 +340,7 @@ a:focus-visible {
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
-  color: rgba(212, 175, 55, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 1.5rem;
   animation: bounce 2.6s ease-in-out infinite;
   animation-delay: 1.5s;
@@ -640,8 +592,8 @@ a:focus-visible {
 }
 
 .countdown__unit {
-  background: #14100e;
-  border: none;
+  background: var(--color-dark);
+  border: 1px solid rgba(255, 237, 221, 0.18);
   border-radius: 0.5rem;
   padding: 1rem 0.35rem 0.85rem;
 }
@@ -684,11 +636,11 @@ a:focus-visible {
 /* ══ Invite (Trân trọng kính mời) ══ */
 /* ══ Invite — thiệp giấy trên nền đỏ (receipt card) ══ */
 .invite {
-  --ir-red: #7b1f22;
-  --ir-red-deep: #5d1418;
-  --ir-maroon: #6d1620;
-  --ir-cream: #fdf8ee;
-  --ir-ink: #1f1512;
+  --ir-red: #6e2433;
+  --ir-red-deep: #501823;
+  --ir-maroon: #5a1e2b;
+  --ir-cream: #fcf7ef;
+  --ir-ink: #2b1d20;
   --ir-pad: clamp(1.25rem, 5vw, 2.5rem);
   background: var(--ir-red);
   color: var(--ir-ink);
@@ -709,6 +661,36 @@ a:focus-visible {
   border-radius: 2.5rem 2.5rem 0 0;
   margin: clamp(1.5rem, 5vw, 2.75rem) clamp(0.75rem, 3vw, 1.5rem) 0;
   padding: 1.75rem 1.25rem 1.4rem;
+}
+
+/* Hai vạt giấy mở rộng ra hai bên, biến phần chuyển tiếp thành miệng phong bì mở. */
+.invite__open-flaps {
+  position: relative;
+  height: clamp(1.35rem, 4vw, 2rem);
+  margin: 0 clamp(0.75rem, 3vw, 1.5rem);
+  background: var(--ir-cream);
+  border-bottom: 1px solid rgba(109, 22, 32, 0.16);
+}
+
+.invite__open-flaps::before,
+.invite__open-flaps::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  width: clamp(0.75rem, 3vw, 1.5rem);
+  height: 100%;
+  background: var(--ir-cream);
+  border-bottom: 1px solid rgba(109, 22, 32, 0.16);
+}
+
+.invite__open-flaps::before {
+  right: 100%;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.invite__open-flaps::after {
+  left: 100%;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
 }
 
 .invite__title {
@@ -822,7 +804,7 @@ a:focus-visible {
   font-family: var(--font-serif);
   font-size: clamp(1.3rem, 4vw, 1.7rem);
   font-style: italic;
-  color: #c0201a;
+  color: var(--ir-red);
 }
 
 /* ── Ba tấm ảnh so le ── */
@@ -977,7 +959,7 @@ a:focus-visible {
   justify-content: center;
   width: 2.4rem;
   height: 2.4rem;
-  color: #9c0f13;
+  color: var(--ir-red-deep);
   font-weight: 700;
   z-index: 1;
 }
@@ -986,7 +968,7 @@ a:focus-visible {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(203, 42, 44, 0.3);
+  background: rgba(110, 36, 51, 0.22);
   clip-path: polygon(
     50% 100%,
     6% 52%,
@@ -1039,7 +1021,7 @@ a:focus-visible {
 }
 
 .invite .btn--gold {
-  background: #c0201a;
+  background: #883143;
   background-image: none;
   color: #fff;
   border-radius: 0.4rem;
@@ -1059,7 +1041,7 @@ a:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #b3161a;
+  background: #7a2737;
   border-radius: 0.35rem;
   box-shadow: 0 3px 10px rgba(31, 21, 18, 0.25);
 }
@@ -1150,8 +1132,50 @@ a:focus-visible {
   line-height: 1.5;
 }
 
-.invite__rsvp {
-  margin-top: 0;
+/* Lời mời chuyển tiếp giúp phần minh hoạ cuối thiệp không bị hiểu là cuối trang. */
+.invite__continue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  width: max-content;
+  max-width: calc(100% - 3rem);
+  margin: -0.25rem auto 0;
+  padding: 0.7rem 1.25rem 1rem;
+  color: rgba(253, 248, 238, 0.92);
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1.45;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.invite__continue:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.invite__continue-arrow {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  line-height: 1;
+  animation: inviteContinueNudge 1.7s ease-in-out infinite;
+}
+
+@keyframes inviteContinueNudge {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translateY(0.35rem);
+    opacity: 1;
+  }
 }
 
 .form__fieldset {
@@ -1166,7 +1190,7 @@ a:focus-visible {
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
-  color: #3a3a3a;
+  color: var(--color-ink-muted);
   margin-bottom: 0.5rem;
   padding: 0;
 }
@@ -1177,7 +1201,7 @@ a:focus-visible {
   gap: 0.55rem;
   font-family: var(--font-body);
   font-size: 1rem;
-  color: #1f1512;
+  color: var(--color-ink);
   margin-bottom: 0.35rem;
   cursor: pointer;
 }
@@ -1185,7 +1209,7 @@ a:focus-visible {
 .form__radio input {
   width: 1.15rem;
   height: 1.15rem;
-  accent-color: #1a73e8;
+  accent-color: #7a2737;
   cursor: pointer;
 }
 
@@ -1259,16 +1283,14 @@ a:focus-visible {
 .gallery__panel {
   position: relative;
   margin: 0;
-  min-height: 118vh;
 }
 
 .gallery__slide-btn {
-  position: sticky;
-  top: 10vh;
+  position: relative;
   display: block;
   width: 100vw;
   border: 0;
-  background: #111;
+  background: var(--color-dark);
   padding: 0;
   cursor: zoom-in;
   overflow: hidden;
@@ -1282,8 +1304,8 @@ a:focus-visible {
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(0, 0, 0, 0.3) 45%,
-    rgba(0, 0, 0, 0.65) 100%
+    rgba(73, 68, 69, 0.2) 45%,
+    rgba(48, 43, 44, 0.76) 100%
   );
   pointer-events: none;
   z-index: 1;
@@ -1293,9 +1315,7 @@ a:focus-visible {
   width: 100vw;
   aspect-ratio: 4/5;
   object-fit: cover;
-  transform: translateY(var(--img-parallax, 0px)) scale(1.04);
-  transition: transform 0.16s linear;
-  will-change: transform;
+  transform: none;
 }
 
 .gallery__caption {
@@ -1336,15 +1356,7 @@ a:focus-visible {
 }
 
 .gallery__separator {
-  height: 1px;
-  margin: 0;
-  width: 100vw;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(212, 175, 55, 0.4),
-    transparent
-  );
+  display: none;
 }
 
 /* ══ Gift ══ */
@@ -1415,6 +1427,35 @@ a:focus-visible {
   margin-bottom: 0.25rem;
 }
 
+.gift__rsvp {
+  margin: clamp(3rem, 8vw, 4.5rem) auto 0;
+  padding-top: clamp(2.5rem, 7vw, 3.5rem);
+  border-top: 1px solid rgba(212, 175, 55, 0.45);
+  max-width: 36rem;
+}
+
+.gift__rsvp-kicker {
+  margin: 0 0 0.7rem;
+  color: var(--color-gold-muted);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.gift__rsvp .invite__script-heading {
+  color: var(--color-ink);
+  margin-bottom: 1.25rem;
+}
+
+.gift__rsvp .invite__stamp {
+  margin-bottom: 1.5rem;
+}
+
+.gift__rsvp .invite__stamp span {
+  color: #fdf8ee;
+}
+
 /* ══ RSVP ══ */
 .form {
   max-width: 26rem;
@@ -1447,7 +1488,7 @@ a:focus-visible {
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
-  color: #3a3a3a;
+  color: var(--color-ink-muted);
   margin-bottom: 0.5rem;
 }
 
@@ -1461,7 +1502,7 @@ a:focus-visible {
   background: #fff;
   font-family: var(--font-body);
   font-size: 1rem;
-  color: #1f1512;
+  color: var(--color-ink);
   appearance: none;
 }
 
@@ -1471,15 +1512,15 @@ a:focus-visible {
 }
 .form select option {
   background: #fff;
-  color: #1f1512;
+  color: var(--color-ink);
 }
 
 .form input:not([type="radio"]):not([type="checkbox"]):focus,
 .form textarea:focus,
 .form select:focus {
   outline: none;
-  border-color: #c0201a;
-  box-shadow: 0 0 0 3px rgba(192, 32, 26, 0.12);
+  border-color: #883143;
+  box-shadow: 0 0 0 3px rgba(136, 49, 67, 0.12);
 }
 
 .form textarea {
@@ -1501,7 +1542,7 @@ a:focus-visible {
 .form__status {
   margin-top: 1rem;
   font-size: 0.88rem;
-  color: #c0201a;
+  color: #883143;
   display: none;
   text-align: center;
 }
@@ -1553,7 +1594,7 @@ a:focus-visible {
   height: 3rem;
   border-radius: 50%;
   border: 1px solid rgba(212, 175, 55, 0.45);
-  background: rgba(18, 7, 7, 0.9);
+  background: rgba(90, 29, 42, 0.92);
   color: var(--color-gold);
   cursor: pointer;
   display: flex;
@@ -1568,7 +1609,7 @@ a:focus-visible {
 
 .audio-toggle:hover {
   transform: scale(1.08);
-  background: rgba(42, 18, 18, 0.96);
+  background: rgba(66, 21, 31, 0.96);
 }
 .audio-toggle:active {
   transform: scale(0.96);
@@ -1591,7 +1632,7 @@ a:focus-visible {
 }
 
 .lightbox::backdrop {
-  background: rgba(8, 3, 3, 0.94);
+  background: rgba(45, 41, 42, 0.94);
 }
 
 .lightbox__inner {
@@ -1692,11 +1733,17 @@ html.has-ring-gate body {
   margin: 0;
   padding: 0;
   border: none;
-  background: linear-gradient(
-    160deg,
-    var(--color-dark) 0%,
-    var(--color-dark-mid) 100%
-  );
+  background:
+    radial-gradient(
+      circle at 50% 47%,
+      rgba(196, 161, 102, 0.14) 0%,
+      rgba(196, 161, 102, 0) 34%
+    ),
+    linear-gradient(
+      160deg,
+      var(--color-dark-soft) 0%,
+      var(--color-dark-mid) 100%
+    );
   color: var(--color-text-light);
 }
 .ring-gate[open] {
@@ -1710,7 +1757,10 @@ html.has-ring-gate body {
 
 .ring-gate__inner {
   position: relative;
+  width: 100%;
   height: 100%;
+  max-width: none;
+  align-self: stretch;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1726,6 +1776,175 @@ html.has-ring-gate body {
   transform: scale(1.08);
 }
 
+/* Cảnh cầu hôn xuất hiện sau khi nhẫn rời khỏi hộp. */
+.ring-gate__proposal {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.ring-gate__hand-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.ring-gate__hand-wrap {
+  position: absolute;
+  top: 50%;
+  right: -4%;
+  width: clamp(16rem, 58vw, 30rem);
+  opacity: 0;
+  transform: translate(24%, -50%) rotate(-4deg);
+  transition:
+    opacity 0.75s var(--ease-out),
+    transform 1s var(--ease-out);
+}
+
+.ring-gate__hand {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 20px 32px rgba(43, 20, 28, 0.34));
+}
+
+.ring-gate__hand-target {
+  position: absolute;
+  /* Cùng toạ độ nhẫn trên ảnh ở phần Story; target đi theo ảnh khi responsive. */
+  left: 46%;
+  top: 64%;
+  width: clamp(1.25rem, 4vw, 2rem);
+  aspect-ratio: 1;
+}
+
+.ring-gate__proposal-memory {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(calc(100% - 2.5rem), 34rem);
+  opacity: 0;
+  text-align: center;
+  transform: translate(-50%, calc(-50% + 3rem));
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+}
+
+.ring-gate__proposal-memory > * {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition:
+    opacity 0.65s var(--ease-out),
+    transform 0.65s var(--ease-out);
+}
+
+.ring-gate__proposal-kicker {
+  margin: 0;
+  color: var(--color-gold-light);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+}
+
+.ring-gate__proposal-ornament {
+  margin: 0.65rem 0 1rem;
+  color: rgba(228, 209, 166, 0.72);
+  font-size: 0.78rem;
+  letter-spacing: 0.55em;
+}
+
+.ring-gate__proposal-photos {
+  display: flex;
+  justify-content: center;
+  gap: clamp(0.65rem, 2vw, 1.25rem);
+  margin: 0 0 1.15rem;
+}
+
+.ring-gate__proposal-photos img {
+  display: block;
+  width: clamp(7rem, 17vw, 10rem);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border: 0.22rem solid var(--color-paper);
+  border-radius: 0.35rem;
+  box-shadow: 0 0.75rem 1.75rem rgba(43, 20, 28, 0.35);
+}
+
+.ring-gate__proposal-photos img:first-child {
+  opacity: 0;
+  transform: translateX(-2rem) rotate(-9deg);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+}
+
+.ring-gate__proposal-photos img:last-child {
+  opacity: 0;
+  transform: translateX(2rem) rotate(9deg);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+}
+
+.ring-gate__proposal-text {
+  margin: 0;
+  color: var(--color-text-light);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.25vw, 1.35rem);
+  line-height: 1.55;
+}
+
+.ring-gate[data-step="hand"] .ring-gate__proposal,
+.ring-gate[data-step="proposal"] .ring-gate__proposal {
+  opacity: 1;
+}
+
+.ring-gate[data-step="hand"] .ring-gate__hand-wrap,
+.ring-gate[data-step="proposal"] .ring-gate__hand-wrap {
+  opacity: 1;
+  transform: translateY(-50%) rotate(-4deg);
+}
+
+.ring-gate[data-step="proposal"] .ring-gate__proposal-memory {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.ring-gate[data-step="proposal"] .ring-gate__proposal-memory > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ring-gate[data-step="proposal"] .ring-gate__proposal-kicker {
+  transition-delay: 0.15s;
+}
+.ring-gate[data-step="proposal"] .ring-gate__proposal-ornament {
+  transition-delay: 0.28s;
+}
+.ring-gate[data-step="proposal"] .ring-gate__proposal-photos {
+  transition-delay: 0.4s;
+}
+.ring-gate[data-step="proposal"] .ring-gate__proposal-photos img:first-child {
+  opacity: 1;
+  transform: rotate(-5deg) translateY(0.35rem);
+  transition-delay: 0.55s;
+}
+.ring-gate[data-step="proposal"] .ring-gate__proposal-photos img:last-child {
+  opacity: 1;
+  transform: rotate(4deg) translateY(-0.25rem);
+  transition-delay: 0.68s;
+}
+.ring-gate[data-step="proposal"] .ring-gate__proposal-text {
+  transition-delay: 0.82s;
+}
+
+.ring-gate[data-step="proposal"] {
+  cursor: pointer;
+}
+
 .ring-gate__trigger {
   position: relative;
   width: clamp(8.5rem, min(42vw, 32vh), 13rem);
@@ -1738,6 +1957,14 @@ html.has-ring-gate body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition:
+    opacity 0.45s var(--ease-out),
+    transform 0.6s var(--ease-out);
+}
+.ring-gate[data-step="hand"] .ring-gate__trigger,
+.ring-gate[data-step="proposal"] .ring-gate__trigger {
+  opacity: 0;
+  transform: scale(0.86);
 }
 .ring-gate__trigger:focus-visible {
   outline: none;
@@ -1755,9 +1982,9 @@ html.has-ring-gate body {
   transform: translateX(-50%);
   background: radial-gradient(
     ellipse at center,
-    rgba(20, 8, 6, 0.92) 0%,
-    rgba(150, 98, 48, 0.32) 48%,
-    rgba(150, 98, 48, 0) 78%
+    rgba(43, 20, 28, 0.92) 0%,
+    rgba(196, 161, 102, 0.3) 48%,
+    rgba(196, 161, 102, 0) 78%
   );
   filter: blur(3px);
   border-radius: 50%;
@@ -1795,6 +2022,8 @@ html.has-ring-gate body {
   animation: ringFloat 3.4s ease-in-out infinite;
 }
 .ring-gate[data-step="opening"] .ring-gate__floater,
+.ring-gate[data-step="hand"] .ring-gate__floater,
+.ring-gate[data-step="proposal"] .ring-gate__floater,
 .ring-gate[data-step="leaving"] .ring-gate__floater {
   animation: none;
 }
@@ -1840,6 +2069,8 @@ html.has-ring-gate body {
 }
 
 .ring-gate[data-step="opening"] .ring-gate__glow,
+.ring-gate[data-step="hand"] .ring-gate__glow,
+.ring-gate[data-step="proposal"] .ring-gate__glow,
 .ring-gate[data-step="leaving"] .ring-gate__glow {
   animation: ringGlowBurst 1.1s var(--ease-out) forwards;
 }
@@ -1883,6 +2114,8 @@ html.has-ring-gate body {
   opacity: 1;
 }
 .ring-gate[data-step="opening"] .ring-gate__photo--closed,
+.ring-gate[data-step="hand"] .ring-gate__photo--closed,
+.ring-gate[data-step="proposal"] .ring-gate__photo--closed,
 .ring-gate[data-step="leaving"] .ring-gate__photo--closed {
   opacity: 0;
   transform: scale(1.03);
@@ -1894,6 +2127,8 @@ html.has-ring-gate body {
   transform: scale(1.02);
 }
 .ring-gate[data-step="opening"] .ring-gate__photo--open,
+.ring-gate[data-step="hand"] .ring-gate__photo--open,
+.ring-gate[data-step="proposal"] .ring-gate__photo--open,
 .ring-gate[data-step="leaving"] .ring-gate__photo--open {
   opacity: 1;
   transform: scale(1.06);
@@ -1920,6 +2155,8 @@ html.has-ring-gate body {
     opacity 0.55s var(--ease-out) 0.35s;
 }
 .ring-gate[data-step="opening"] .ring-gate__ring-lift,
+.ring-gate[data-step="hand"] .ring-gate__ring-lift,
+.ring-gate[data-step="proposal"] .ring-gate__ring-lift,
 .ring-gate[data-step="leaving"] .ring-gate__ring-lift {
   opacity: 1;
   transform: translateY(-38%) scale(1);
@@ -1946,6 +2183,8 @@ html.has-ring-gate body {
 
 /* Ẩn nhanh nhẫn lơ lửng trong hộp ngay khi bản sao "bay" (.ring-gate__fly) tiếp quản,
    ghi đè transition-delay 0.35s mặc định của .ring-gate__ring-lift để tránh thấy 2 nhẫn cùng lúc */
+.ring-gate[data-step="hand"] .ring-gate__ring-lift.is-hidden,
+.ring-gate[data-step="proposal"] .ring-gate__ring-lift.is-hidden,
 .ring-gate[data-step="leaving"] .ring-gate__ring-lift.is-hidden {
   opacity: 0;
   transition: opacity 0.15s var(--ease-out);
@@ -1998,7 +2237,7 @@ html.has-ring-gate body {
   font-family: var(--font-display);
   font-size: clamp(0.82rem, 4.2vw, 1.3rem);
   white-space: nowrap;
-  color: var(--color-gold-light);
+  color: #fff;
   margin: 0;
   min-height: 1.6em;
   transition: opacity 0.35s var(--ease-out);
@@ -2022,14 +2261,18 @@ html.has-ring-gate body {
 
 /* Ẩn prompt/skip khi ảnh reveal đang hiện — tránh đè chữ lên khung ảnh, cũng không còn cần thiết vì user đã tap */
 .ring-gate[data-step="opening"] .ring-gate__prompt,
+.ring-gate[data-step="hand"] .ring-gate__prompt,
+.ring-gate[data-step="proposal"] .ring-gate__prompt,
 .ring-gate[data-step="leaving"] .ring-gate__prompt,
 .ring-gate[data-step="opening"] .ring-gate__skip,
+.ring-gate[data-step="hand"] .ring-gate__skip,
+.ring-gate[data-step="proposal"] .ring-gate__skip,
 .ring-gate[data-step="leaving"] .ring-gate__skip {
   opacity: 0;
   pointer-events: none;
 }
 
-/* Sparkle burst — tái dùng đúng pattern của .petal */
+/* Sparkle burst khi mở hộp */
 .ring-gate__sparkles {
   position: absolute;
   inset: 0;
@@ -2094,6 +2337,18 @@ html.has-ring-gate body {
     padding-top: 6rem;
   }
 
+  .ring-gate__hand-wrap {
+    width: clamp(11rem, 62vw, 15rem);
+    top: 30%;
+    right: -6%;
+  }
+  .ring-gate__proposal-memory {
+    width: min(calc(100% - 2.5rem), 30rem);
+  }
+  .ring-gate__proposal-photos img {
+    width: clamp(6rem, 25vw, 8rem);
+  }
+
   .invite__families {
     gap: 1.25rem 0.75rem;
   }
@@ -2102,12 +2357,6 @@ html.has-ring-gate body {
     max-width: 22rem;
   }
 
-  .gallery__panel {
-    min-height: 108vh;
-  }
-  .gallery__slide-btn {
-    top: 0;
-  }
   .gallery__slide-btn img {
     width: 100vw;
     max-width: 100vw;
@@ -2116,9 +2365,6 @@ html.has-ring-gate body {
     left: 0.75rem;
     right: 0.75rem;
     bottom: 0.75rem;
-  }
-  .gallery__separator {
-    width: 100%;
   }
   .gallery-section .container {
     max-width: 100%;
@@ -2162,10 +2408,5 @@ html.has-ring-gate body {
   .gallery__slide-btn img {
     width: 100%;
     object-position: center;
-  }
-
-  .gallery__separator {
-    width: min(100%, 68rem);
-    margin-inline: auto;
   }
 }
