@@ -136,12 +136,6 @@
       </span>
     </dialog>
 
-    <!-- Chiếc nhẫn bay theo scroll, từ Hero tới ảnh cầu hôn -->
-    <div class="ring-fly-scroll" id="ring-fly-scroll" aria-hidden="true">
-      <span class="ring-fly-scroll__glow"></span>
-      <img src="assets/ring-fly.webp" alt="" width="520" height="535" />
-    </div>
-
     <!-- ═══ HERO — Ảnh chân dung full màn hình ═══ -->
     <header class="hero" id="top">
       <img
@@ -173,7 +167,7 @@
         <p class="hero__date">Thứ Ba · 13 · 10 · 2026</p>
         <p class="hero__ornament" aria-hidden="true">❧ ✦ ❧</p>
       </div>
-      <a class="hero__scroll-hint" href="#story" aria-label="Cuộn xuống"
+      <a class="hero__scroll-hint" href="#rings" aria-label="Cuộn xuống"
         >&#8595;</a
       >
     </header>
@@ -193,6 +187,28 @@
         <div class="invite__open-flaps" aria-hidden="true"></div>
 
         <div class="invite__body">
+          <section class="invite__message" aria-labelledby="invitation-heading">
+            <h3 id="invitation-heading" class="section__title reveal">
+              Lời mời
+            </h3>
+            <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
+              ❧ ✦ ❧
+            </p>
+            <div class="invitation__text">
+              <p class="reveal" style="--d: 0.26s">
+                Trước đây cứ nghĩ đám cưới chỉ là một thông báo chính thức,<br />
+                Giờ mới hiểu đó là một dịp hiếm hoi để mọi người tụ họp.<br />
+                Là những chuyến đi xa chỉ để có mặt bên nhau,<br />
+                Là sự ủng hộ vô điều kiện từ những người thương yêu.<br />
+                Cảm ơn gia đình, bạn bè đã luôn đồng hành.<br />
+                Lâu rồi không gặp, thật sự rất nhớ mọi người!
+              </p>
+              <p class="reveal invitation__date" style="--d: 0.38s">
+                13 · 10 · 2026
+              </p>
+            </div>
+          </section>
+
           <div class="invite__families reveal" style="--d: 0.22s">
             <div class="invite__family">
               <p class="invite__family-label">Nhà trai</p>
@@ -446,74 +462,10 @@
           Hạnh phúc là được nắm tay nhau đi hết quãng đường còn lại
         </p>
       </div>
-      <a class="invite__continue" href="#story">
+      <a class="invite__continue" href="#rings">
         <span>Khám phá câu chuyện của chúng mình</span>
         <span class="invite__continue-arrow" aria-hidden="true">↓</span>
       </a>
-    </section>
-
-    <!-- ═══ Khoảnh khắc cầu hôn ═══ -->
-    <section
-      class="section section--dark story"
-      id="story"
-      aria-labelledby="story-heading"
-    >
-      <div class="story__photo-wrap">
-        <img
-          class="story__photo"
-          src="assets/proposal-ring.webp"
-          alt="Khoảnh khắc Tuấn Điệp cầu hôn — nhẫn trên tay Thu Thảo"
-          width="950"
-          height="1185"
-          loading="lazy"
-          decoding="async"
-          onerror="this.parentElement.style.display = 'none'"
-        />
-        <span
-          class="story__ring-target"
-          id="story-ring-target"
-          aria-hidden="true"
-        ></span>
-      </div>
-
-      <div class="container story__container">
-        <h2 id="story-heading" class="section__title reveal">
-          Khoảnh khắc cầu hôn
-        </h2>
-        <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
-          ❧ ✦ ❧
-        </p>
-
-        <div
-          class="story__mockups reveal"
-          style="--d: 0.26s"
-          aria-hidden="true"
-        >
-          <img
-            class="story__mockup story__mockup--a"
-            src="assets/gallery-3.jpg"
-            alt=""
-            width="480"
-            height="600"
-            loading="lazy"
-            decoding="async"
-          />
-          <img
-            class="story__mockup story__mockup--b"
-            src="assets/gallery-6.jpg"
-            alt=""
-            width="480"
-            height="600"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-
-        <p class="story__paragraph reveal" style="--d: 0.4s">
-          Một buổi chiều rất bình thường, anh hỏi em một câu. Em gật đầu. Chiếc
-          nhẫn nhỏ hôm ấy trở thành lời hứa cho cả chặng đường phía trước.
-        </p>
-      </div>
     </section>
 
     <!-- ═══ Nhẫn cưới ═══ -->
@@ -561,33 +513,6 @@
         <p class="section__lead rings__lead reveal" style="--d: 0.4s">
           Hai chiếc nhẫn nhỏ, cho một lời hứa dài.
         </p>
-      </div>
-    </section>
-
-    <!-- ═══ Lời mời ═══ -->
-    <section
-      class="section invitation"
-      id="invitation"
-      aria-labelledby="invitation-heading"
-    >
-      <div class="container">
-        <h2 id="invitation-heading" class="section__title reveal">Lời mời</h2>
-        <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
-          ❧ ✦ ❧
-        </p>
-        <div class="invitation__text">
-          <p class="reveal" style="--d: 0.26s">
-            Trước đây cứ nghĩ đám cưới chỉ là một thông báo chính thức,<br />
-            Giờ mới hiểu đó là một dịp hiếm hoi để mọi người tụ họp.<br />
-            Là những chuyến đi xa chỉ để có mặt bên nhau,<br />
-            Là sự ủng hộ vô điều kiện từ những người thương yêu.<br />
-            Cảm ơn gia đình, bạn bè đã luôn đồng hành.<br />
-            Lâu rồi không gặp, thật sự rất nhớ mọi người!
-          </p>
-          <p class="reveal invitation__date" style="--d: 0.38s">
-            13 · 10 · 2026
-          </p>
-        </div>
       </div>
     </section>
 

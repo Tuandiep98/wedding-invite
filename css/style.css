@@ -358,128 +358,6 @@ a:focus-visible {
   }
 }
 
-/* ══ Chiếc nhẫn bay theo scroll (Hero → Story) ══ */
-.ring-fly-scroll {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: clamp(2.2rem, 7vw, 3.4rem);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 40;
-  will-change: transform, opacity;
-}
-.ring-fly-scroll__glow {
-  position: absolute;
-  inset: -55%;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(212, 175, 55, 0.4) 0%,
-    rgba(212, 175, 55, 0) 70%
-  );
-  filter: blur(5px);
-}
-.ring-fly-scroll img {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5))
-    drop-shadow(0 0 14px rgba(212, 175, 55, 0.55));
-}
-
-/* ══ Story — khoảnh khắc cầu hôn ══ */
-.story {
-  position: relative;
-  overflow-x: hidden;
-  min-height: clamp(32rem, 92vw, 46rem);
-  display: flex;
-  align-items: center;
-}
-
-.story__photo-wrap {
-  position: absolute;
-  right: -4%;
-  top: 50%;
-  transform: translateY(-50%) rotate(-4deg);
-  width: clamp(16rem, 58vw, 30rem);
-  z-index: 1;
-  pointer-events: none;
-}
-.story__photo {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.55));
-}
-.story__ring-target {
-  position: absolute;
-  left: 46%;
-  top: 64%;
-  width: clamp(1.6rem, 5vw, 2.4rem);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(212, 175, 55, 0.5) 0%,
-    rgba(212, 175, 55, 0) 72%
-  );
-  opacity: calc(0.18 + var(--ring-arrival, 0) * 0.7);
-}
-
-.story__container {
-  position: relative;
-  z-index: 0;
-  max-width: 30rem;
-}
-
-.story__mockups {
-  display: flex;
-  gap: 1.25rem;
-  margin: 0 0 1.75rem;
-  justify-content: center;
-}
-.story__mockup {
-  width: clamp(5.5rem, 16vw, 7rem);
-  height: auto;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  border-radius: 8px;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
-}
-.story__mockup--a {
-  transform: rotate(-5deg) translateY(0.4rem);
-}
-.story__mockup--b {
-  transform: rotate(4deg) translateY(-0.3rem);
-}
-
-.story__paragraph {
-  text-align: center;
-  font-size: 1rem;
-  line-height: 1.9;
-  color: var(--color-text-dim);
-  margin: 0 auto;
-}
-
-@media (min-width: 769px) {
-  .story__container {
-    text-align: left;
-  }
-  .story__container .section__title,
-  .story__container .ornament {
-    text-align: left;
-  }
-  .story__mockups {
-    justify-content: flex-start;
-  }
-  .story__paragraph {
-    text-align: left;
-    margin: 0;
-  }
-}
-
 /* ══ Nhẫn cưới ══ */
 .rings {
   text-align: center;
@@ -552,9 +430,14 @@ a:focus-visible {
   }
 }
 
-/* ══ Invitation ══ */
-.invitation {
+/* ══ Lời mời trong thiệp ══ */
+.invite__message {
   text-align: center;
+  padding: 0 0 2.25rem;
+}
+
+.invite__message .section__title {
+  font-size: clamp(1.8rem, 5.5vw, 2.5rem);
 }
 
 .invitation__text {
@@ -2191,7 +2074,7 @@ html.has-ring-gate body {
 }
 
 /* Nhẫn "bay" tách khỏi hộp, di chuyển tự do bằng toạ độ JS (fixed theo viewport)
-   từ vị trí trong hộp tới đúng vị trí nhẫn giữa 2 tên ở Hero — cùng pattern với .ring-fly-scroll */
+   tới đúng vị trí nhẫn trên bàn tay trong cảnh mở đầu. */
 .ring-gate__fly {
   position: fixed;
   left: 0;
@@ -2322,19 +2205,6 @@ html.has-ring-gate body {
   }
   .hero__ring {
     width: clamp(2.2rem, 9vw, 3.4rem);
-  }
-
-  .story {
-    min-height: clamp(30rem, 130vw, 40rem);
-    padding-top: 3rem;
-  }
-  .story__photo-wrap {
-    width: clamp(11rem, 62vw, 15rem);
-    top: 30%;
-    right: -6%;
-  }
-  .story__container {
-    padding-top: 6rem;
   }
 
   .ring-gate__hand-wrap {
