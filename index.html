@@ -669,6 +669,28 @@
         <p class="section__lead reveal" style="--d: 0.26s">
           Chạm vào ảnh để phóng to.
         </p>
+        <!-- Video phát sẽ tạm dừng nhạc nền, dừng video thì nhạc bật lại (main.js) -->
+        <figure class="gallery__video reveal reveal--rise">
+          <div class="gallery__video-frame">
+            <video
+              id="gallery-video"
+              controls
+              playsinline
+              preload="none"
+              poster="assets/video-poster.jpg"
+              width="720"
+              height="960"
+            >
+              <source src="assets/video.mp4" type="video/mp4" />
+            </video>
+            <figcaption class="gallery__video-caption">
+              <span class="gallery__caption-title">Lễ Dạm Ngõ</span>
+              <span class="gallery__caption-desc"
+                >29.06.2026 · Ngày hai gia đình chính thức gặp mặt.</span
+              >
+            </figcaption>
+          </div>
+        </figure>
         <div
           class="gallery__story"
           role="list"
@@ -686,7 +708,7 @@
               data-lightbox
             >
               <img
-                src="assets/gallery-1.jpg"
+                src="assets/save-the-date-1310.jpg"
                 alt="Save the date"
                 width="1718"
                 height="2576"
@@ -787,6 +809,87 @@
             <button
               type="button"
               class="gallery__slide-btn"
+              aria-label='Xem ảnh "Nhìn nhau" lớn hơn'
+              data-lightbox
+            >
+              <img
+                src="assets/gallery-3.jpg"
+                alt="Nhìn nhau"
+                width="1717"
+                height="2576"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="gallery__caption">
+                <span class="gallery__caption-title">Nhìn nhau</span>
+                <span class="gallery__caption-desc"
+                  >Chỉ một ánh mắt là đủ hiểu nhau.</span
+                >
+              </span>
+            </button>
+          </article>
+          <div class="gallery__separator" aria-hidden="true"></div>
+          <article
+            class="gallery__panel reveal reveal--from-left"
+            role="listitem"
+          >
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label='Xem ảnh "Bình yên" lớn hơn'
+              data-lightbox
+            >
+              <img
+                src="assets/gallery-5.jpg"
+                alt="Bình yên"
+                width="1717"
+                height="2576"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="gallery__caption">
+                <span class="gallery__caption-title">Bình yên</span>
+                <span class="gallery__caption-desc"
+                  >Tựa trán vào nhau, lòng thật nhẹ nhàng.</span
+                >
+              </span>
+            </button>
+          </article>
+          <div class="gallery__separator" aria-hidden="true"></div>
+          <article
+            class="gallery__panel reveal reveal--rise"
+            role="listitem"
+          >
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label='Xem ảnh "Vòng tay" lớn hơn'
+              data-lightbox
+            >
+              <img
+                src="assets/gallery-6.jpg"
+                alt="Vòng tay"
+                width="1717"
+                height="2576"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="gallery__caption">
+                <span class="gallery__caption-title">Vòng tay</span>
+                <span class="gallery__caption-desc"
+                  >Phía sau luôn có một vòng tay chờ sẵn.</span
+                >
+              </span>
+            </button>
+          </article>
+          <div class="gallery__separator" aria-hidden="true"></div>
+          <article
+            class="gallery__panel reveal reveal--from-right"
+            role="listitem"
+          >
+            <button
+              type="button"
+              class="gallery__slide-btn"
               aria-label='Xem ảnh "Phiên bản tí hon" lớn hơn'
               data-lightbox
             >
@@ -835,33 +938,6 @@
           </article>
           <div class="gallery__separator" aria-hidden="true"></div>
           <article
-            class="gallery__panel reveal reveal--rise"
-            role="listitem"
-          >
-            <button
-              type="button"
-              class="gallery__slide-btn"
-              aria-label='Xem ảnh "Tay trong tay" lớn hơn'
-              data-lightbox
-            >
-              <img
-                src="assets/gallery-9.jpg"
-                alt="Tay trong tay"
-                width="1086"
-                height="1448"
-                loading="lazy"
-                decoding="async"
-              />
-              <span class="gallery__caption">
-                <span class="gallery__caption-title">Tay trong tay</span>
-                <span class="gallery__caption-desc"
-                  >Khoác tay nhau, sẵn sàng bước vào lễ đường.</span
-                >
-              </span>
-            </button>
-          </article>
-          <div class="gallery__separator" aria-hidden="true"></div>
-          <article
             class="gallery__panel reveal reveal--from-right"
             role="listitem"
           >
@@ -888,28 +964,6 @@
             </button>
           </article>
         </div>
-        <!-- Video phát sẽ tạm dừng nhạc nền, dừng video thì nhạc bật lại (main.js) -->
-        <figure class="gallery__video reveal reveal--rise">
-          <div class="gallery__video-frame">
-            <video
-              id="gallery-video"
-              controls
-              playsinline
-              preload="none"
-              poster="assets/video-poster.jpg"
-              width="720"
-              height="960"
-            >
-              <source src="assets/video.mp4" type="video/mp4" />
-            </video>
-            <figcaption class="gallery__video-caption">
-              <span class="gallery__caption-title">Lễ Dạm Ngõ</span>
-              <span class="gallery__caption-desc"
-                >29.06.2026 · Ngày hai gia đình chính thức gặp mặt.</span
-              >
-            </figcaption>
-          </div>
-        </figure>
       </div>
     </section>
 
@@ -980,7 +1034,7 @@
           </div>
         </div>
 
-        <div class="gift__rsvp reveal" style="--d: 0.56s">
+        <div class="gift__rsvp reveal" style="--d: 0.56s" id="rsvp">
           <p class="gift__rsvp-kicker" data-bind="rsvp-kicker">
             Hẹn gặp quý khách trong ngày vui
           </p>
@@ -1026,7 +1080,7 @@
               </label>
               <label class="form__radio">
                 <input type="radio" name="attending" value="no" />
-                Rất tiếc, không thể tham dự
+                Gửi lời chúc hạnh phúc hai vợ chồng nhé
               </label>
             </fieldset>
             <div class="form__row">
@@ -1067,6 +1121,22 @@
       </p>
       <p class="footer__date" data-bind="date-short"></p>
     </footer>
+
+    <!-- Nút đi nhanh tới từng mục, xếp theo thứ tự trên trang (main.js ẩn mục chưa có) -->
+    <nav class="quick-nav" id="quick-nav" aria-label="Đi nhanh tới">
+      <button type="button" class="quick-nav__btn" data-target="gallery" aria-label="Album ảnh">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" /></svg>
+        <span class="quick-nav__label">Album ảnh</span>
+      </button>
+      <button type="button" class="quick-nav__btn" data-target="gift" aria-label="QR mừng cưới">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><path d="M14 14h3v3h-3zM21 14v.01M14 21h.01M17 21h4v-4" /></svg>
+        <span class="quick-nav__label">QR mừng cưới</span>
+      </button>
+      <button type="button" class="quick-nav__btn" data-target="rsvp" aria-label="Xác nhận tham dự">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><path d="M17 11l2 2 4-4" /></svg>
+        <span class="quick-nav__label">Xác nhận tham dự</span>
+      </button>
+    </nav>
 
     <!-- Nút nhạc nền -->
     <button

@@ -89,9 +89,11 @@
   }
 
   function bindText(key, text) {
-    document.querySelectorAll('[data-bind="' + key + '"]').forEach(function (el) {
-      el.textContent = text;
-    });
+    document
+      .querySelectorAll('[data-bind="' + key + '"]')
+      .forEach(function (el) {
+        el.textContent = text;
+      });
   }
 
   /** Gán các dòng văn bản, xuống dòng bằng <br> (không dùng innerHTML vì có tên khách). */
@@ -151,7 +153,10 @@
     bindText("name-second", COUPLE[second]);
     var heroNames = document.getElementById("hero-names");
     if (heroNames)
-      heroNames.setAttribute("aria-label", COUPLE[first] + " & " + COUPLE[second]);
+      heroNames.setAttribute(
+        "aria-label",
+        COUPLE[first] + " & " + COUPLE[second],
+      );
     var families = document.getElementById("invite-families");
     var firstFamily =
       families && families.querySelector('[data-side="' + first + '"]');
@@ -166,9 +171,11 @@
 
     bindText("date-long", p ? p.weekday + " · " + dateShort : "");
     bindText("date-short", p ? dateShort : TBD);
-    document.querySelectorAll(".hero__date, .footer__date").forEach(function (el) {
-      show(el, !!p);
-    });
+    document
+      .querySelectorAll(".hero__date, .footer__date")
+      .forEach(function (el) {
+        show(el, !!p);
+      });
 
     // Thẻ giờ + lịch tháng
     var timeTbd = document.getElementById("time-tbd");
@@ -182,11 +189,18 @@
       bindText("year", String(p.y));
       bindText("calendar-title", pad(p.m) + "." + p.y);
       var lunarEl = document.querySelector('[data-bind="lunar"]');
-      var lunar = window.solarToLunar ? window.solarToLunar(p.d, p.m, p.y) : null;
+      var lunar = window.solarToLunar
+        ? window.solarToLunar(p.d, p.m, p.y)
+        : null;
       if (lunarEl && lunar) {
         lunarEl.textContent =
-          "Tức ngày " + pad(lunar.day) + " tháng " + pad(lunar.month) +
-          (lunar.leap ? " nhuận" : "") + " năm " + lunar.yearName;
+          "Tức ngày " +
+          pad(lunar.day) +
+          " tháng " +
+          pad(lunar.month) +
+          (lunar.leap ? " nhuận" : "") +
+          " năm " +
+          lunar.yearName;
       }
       show(lunarEl, !!lunar);
       var tbody = document.getElementById("calendar-body");
@@ -209,8 +223,11 @@
     var mapLink = document.getElementById("venue-link");
     setLines(venueName, venue ? [venue.name + ",", venue.address] : [TBD]);
     if (venue) {
-      var q = encodeURIComponent(venue.mapQuery || venue.name + ", " + venue.address);
-      if (mapFrame) mapFrame.src = "https://www.google.com/maps?q=" + q + "&output=embed";
+      var q = encodeURIComponent(
+        venue.mapQuery || venue.name + ", " + venue.address,
+      );
+      if (mapFrame)
+        mapFrame.src = "https://www.google.com/maps?q=" + q + "&output=embed";
       if (mapLink)
         mapLink.href = "https://www.google.com/maps/search/?api=1&query=" + q;
     }
@@ -229,8 +246,31 @@
     if (desc)
       desc.setAttribute(
         "content",
-        "Thiệp cưới " + title + (p ? " · " + dateShort.replace(/ · /g, ".") : ""),
+        "Thiệp cưới " +
+          title +
+          (p ? " · " + dateShort.replace(/ · /g, ".") : ""),
       );
+
+    dropHeroFromGallery();
+  }
+
+  /** Ảnh đã làm Hero của biến thể này thì không lặp lại trong gallery. */
+  function dropHeroFromGallery() {
+    if (!EVENT.heroImage) return;
+    var imgs = document.querySelectorAll(".gallery__panel img");
+    for (var i = 0; i < imgs.length; i++) {
+      if (imgs[i].getAttribute("src") !== EVENT.heroImage) continue;
+      var panel = imgs[i].closest(".gallery__panel");
+      var sep = panel.previousElementSibling;
+      if (!sep || !sep.classList.contains("gallery__separator"))
+        sep = panel.nextElementSibling;
+      if (sep && sep.classList.contains("gallery__separator"))
+        sep.parentNode.removeChild(sep);
+      var wasActive = panel.classList.contains("is-active");
+      panel.parentNode.removeChild(panel);
+      var firstPanel = document.querySelector(".gallery__panel");
+      if (wasActive && firstPanel) firstPanel.classList.add("is-active");
+    }
   }
 
   function applyGuest() {
@@ -254,14 +294,20 @@
       "Nếu muốn gửi thêm chút tấm lòng, " + MINH + " xin trân trọng nhận.",
     ]);
     bindText("rsvp-kicker", "Hẹn gặp " + xung + " trong ngày vui");
-    bindText("footer-text", "Trân trọng cảm ơn · Hẹn gặp " + xung + " trong ngày vui");
+    bindText(
+      "footer-text",
+      "Trân trọng cảm ơn · Hẹn gặp " + xung + " trong ngày vui",
+    );
     var rsvpNameInput = document.getElementById("name");
     if (rsvpNameInput) rsvpNameInput.placeholder = "Nhập tên của " + xung;
 
     if (!GUEST) return;
     document.title = document.title + " · Mời " + name;
     if (ringGate)
-      ringGate.setAttribute("aria-label", "Thiệp mời gửi " + name + ", mở hộp nhẫn để xem");
+      ringGate.setAttribute(
+        "aria-label",
+        "Thiệp mời gửi " + name + ", mở hộp nhẫn để xem",
+      );
     var rsvpGuest = document.getElementById("rsvp-guest");
     if (rsvpGuest) rsvpGuest.value = GUEST.code;
     var rsvpName = document.getElementById("name");
@@ -830,6 +876,97 @@
     });
   }
 
+  /** Nút đi nhanh: hiện sau khi cuộn qua Hero, ẩn mục biến thể chưa có, tô mục đang xem. */
+  function setupQuickNav() {
+    var nav = document.getElementById("quick-nav");
+    if (!nav) return;
+    var btns = nav.querySelectorAll(".quick-nav__btn");
+    var available = { rsvp: !!WEDDING_ISO };
+    var targets = [];
+
+    Array.prototype.forEach.call(btns, function (btn) {
+      var id = btn.getAttribute("data-target");
+      var target = document.getElementById(id);
+      if (!target || available[id] === false) {
+        btn.hidden = true;
+        return;
+      }
+      targets.push(target);
+      btn.addEventListener("click", function () {
+        scrollToTarget(target, 0);
+        // Màn cảm ứng không có hover: loé nhãn chữ một chút để biết đã tới đâu
+        btn.classList.add("is-flash");
+        clearTimeout(btn._flashTimer);
+        btn._flashTimer = setTimeout(function () {
+          btn.classList.remove("is-flash");
+        }, 1400);
+      });
+    });
+
+    // Ảnh lazy phía trên tải xong giữa chừng làm mục bị đẩy xuống: cuộn bù thêm vài lần
+    function scrollToTarget(target, attempt) {
+      target.scrollIntoView({
+        behavior: prefersReduced ? "auto" : "smooth",
+        block: "start",
+      });
+      if (attempt >= 3) return;
+      clearTimeout(scrollFixTimer);
+      scrollFixTimer = setTimeout(function () {
+        var margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+        var atBottom =
+          window.innerHeight + window.pageYOffset >=
+          document.documentElement.scrollHeight - 2;
+        if (Math.abs(target.getBoundingClientRect().top - margin) > 8 && !atBottom)
+          scrollToTarget(target, attempt + 1);
+      }, 900);
+    }
+    var scrollFixTimer;
+
+    var hero = document.getElementById("top");
+    var ticking = false;
+    function updateShown() {
+      ticking = false;
+      var limit = hero ? hero.offsetHeight * 0.6 : window.innerHeight * 0.6;
+      nav.classList.toggle("is-shown", window.pageYOffset > limit);
+    }
+    window.addEventListener(
+      "scroll",
+      function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(updateShown);
+      },
+      { passive: true },
+    );
+    updateShown();
+
+    if (!("IntersectionObserver" in window)) return;
+    // #rsvp nằm trong #gift: chọn mục sâu nhất đang chạm đường giữa màn hình
+    var intersecting = {};
+    var currentObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          intersecting[entry.target.id] = entry.isIntersecting;
+        });
+        var current = null;
+        targets.forEach(function (t) {
+          if (intersecting[t.id]) current = t.id;
+        });
+        Array.prototype.forEach.call(btns, function (btn) {
+          btn.classList.toggle(
+            "is-current",
+            btn.getAttribute("data-target") === current,
+          );
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" },
+    );
+    targets.forEach(function (t) {
+      currentObserver.observe(t);
+    });
+  }
+  setupQuickNav();
+
   /** Video Lễ Dạm Ngõ: không phát chồng tiếng với nhạc nền. */
   var galleryVideo = document.getElementById("gallery-video");
   if (galleryVideo && audio) {
@@ -886,11 +1023,19 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!rsvpUrl) {
-        setFormStatus("Chưa mở nhận xác nhận, " + rsvpXung + " vui lòng thử lại sau nhé.");
+        setFormStatus(
+          "Chưa mở nhận xác nhận, " + rsvpXung + " vui lòng thử lại sau nhé.",
+        );
         return;
       }
       if (typeof window.fetch !== "function") {
-        setFormStatus("Trình duyệt chưa hỗ trợ gửi, " + rsvpXung + " nhắn trực tiếp cho " + MINH + " nhé.");
+        setFormStatus(
+          "Trình duyệt chưa hỗ trợ gửi, " +
+            rsvpXung +
+            " nhắn trực tiếp cho " +
+            MINH +
+            " nhé.",
+        );
         return;
       }
 
@@ -907,13 +1052,29 @@
           if (!result || !result.ok) throw new Error("rsvp failed");
           setFormStatus(
             attending
-              ? "Cảm ơn " + rsvpXung + "! " + cap(MINH) + " đã nhận được xác nhận, hẹn gặp " + rsvpXung + " nhé."
-              : "Cảm ơn " + rsvpXung + " đã báo. " + cap(MINH) + " đã nhận được lời nhắn của " + rsvpXung + ".",
+              ? "Cảm ơn " +
+                  rsvpXung +
+                  "! " +
+                  cap(MINH) +
+                  " đã nhận được xác nhận, hẹn gặp " +
+                  rsvpXung +
+                  " nhé."
+              : "Cảm ơn " +
+                  rsvpXung +
+                  " đã gửi lời chúc! " +
+                  cap(MINH) +
+                  " trân trọng tấm lòng của " +
+                  rsvpXung +
+                  " và mong sớm được gặp " +
+                  rsvpXung +
+                  " nhé.",
           );
           if (submitBtn) submitBtn.textContent = "Gửi lại";
         })
         .catch(function () {
-          setFormStatus("Gửi chưa được, " + rsvpXung + " thử lại giúp " + MINH + " nhé.");
+          setFormStatus(
+            "Gửi chưa được, " + rsvpXung + " thử lại giúp " + MINH + " nhé.",
+          );
         })
         .then(function () {
           if (submitBtn) submitBtn.disabled = false;

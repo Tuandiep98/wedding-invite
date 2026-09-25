@@ -1300,6 +1300,8 @@ a:focus-visible {
 /* ══ Gallery ══ */
 .gallery-section {
   background: var(--color-dark);
+  /* Ảnh trượt vào từ mép phải không được đẩy trang cuộn ngang */
+  overflow-x: clip;
 }
 .gallery-section .section__title {
   color: var(--color-gold);
@@ -1319,9 +1321,7 @@ a:focus-visible {
   --vh: 1vh;
   --frame-pad: clamp(6px, 1.6vw, 12px);
   --cap-h: clamp(4.6rem, calc(11 * var(--vh)), 6.2rem);
-  --photo-max-h: calc(
-    78 * var(--vh) - var(--cap-h) - 2 * var(--frame-pad)
-  );
+  --photo-max-h: calc(78 * var(--vh) - var(--cap-h) - 2 * var(--frame-pad));
   --photo-max-w: calc(88vw - 2 * var(--frame-pad));
   display: flex;
   flex-direction: column;
@@ -1433,9 +1433,11 @@ a:focus-visible {
 }
 
 /* ── Video dưới album: cùng khung ảnh in nhưng không nghiêng (dễ bấm điều khiển) ── */
+/* Video đứng đầu gallery, cách ảnh đầu tiên bằng khoảng giữa các ảnh */
 .gallery__video {
   margin: 0;
-  padding-top: clamp(1rem, calc(4 * var(--vh)), 3rem);
+  padding-top: 1rem;
+  padding-bottom: clamp(1.5rem, calc(4 * var(--vh)), 3rem);
 }
 
 .gallery__video-frame {
@@ -1801,6 +1803,169 @@ a:focus-visible {
 .audio-toggle svg {
   width: 1.2rem;
   height: 1.2rem;
+}
+
+/* Đang phát nhạc: viền vàng sáng + hai vòng sóng lan ra, nốt nhạc lắc nhẹ theo nhịp */
+.audio-toggle[aria-pressed="true"] {
+  border-color: var(--color-gold);
+  box-shadow:
+    0 4px 18px rgba(0, 0, 0, 0.38),
+    0 0 14px rgba(212, 175, 55, 0.45);
+}
+
+.audio-toggle::before,
+.audio-toggle::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-gold);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.audio-toggle[aria-pressed="true"]::before,
+.audio-toggle[aria-pressed="true"]::after {
+  animation: audio-ripple 2.4s var(--ease-out) infinite;
+}
+.audio-toggle[aria-pressed="true"]::after {
+  animation-delay: 1.2s;
+}
+
+.audio-toggle[aria-pressed="true"] svg {
+  animation: audio-note-sway 1.2s ease-in-out infinite;
+  transform-origin: 50% 80%;
+}
+
+@keyframes audio-ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.75);
+    opacity: 0;
+  }
+}
+
+@keyframes audio-note-sway {
+  0%,
+  100% {
+    transform: rotate(-8deg) translateY(0);
+  }
+  50% {
+    transform: rotate(8deg) translateY(-1.5px);
+  }
+}
+
+/* ══ Nút đi nhanh (xếp trên nút nhạc) ══ */
+#rsvp,
+#gallery,
+#gift {
+  scroll-margin-top: 1.5rem;
+}
+
+.quick-nav {
+  position: fixed;
+  right: 1.5rem;
+  bottom: calc(1.5rem + 3rem + 0.6rem);
+  z-index: 100;
+  width: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.75rem);
+  transition:
+    opacity 0.35s var(--ease-out),
+    transform 0.35s var(--ease-out),
+    visibility 0s linear 0.35s;
+}
+
+.quick-nav.is-shown {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+
+.quick-nav__btn {
+  position: relative;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: rgba(90, 29, 42, 0.82);
+  color: var(--color-gold);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  transition:
+    transform 0.3s var(--ease-out),
+    background 0.3s,
+    border-color 0.3s;
+}
+
+.quick-nav__btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.quick-nav__btn:hover,
+.quick-nav__btn.is-current {
+  background: rgba(66, 21, 31, 0.96);
+  border-color: var(--color-gold);
+}
+.quick-nav__btn:hover {
+  transform: scale(1.08);
+}
+.quick-nav__btn:active {
+  transform: scale(0.96);
+}
+.quick-nav__btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* Nhãn chữ hiện bên trái khi rê chuột / focus bàn phím */
+.quick-nav__label {
+  position: absolute;
+  right: calc(100% + 0.6rem);
+  top: 50%;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(66, 21, 31, 0.94);
+  color: var(--color-gold);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(0.4rem, -50%);
+  transition:
+    opacity 0.25s,
+    transform 0.25s var(--ease-out);
+}
+
+.quick-nav__btn:hover .quick-nav__label,
+.quick-nav__btn:focus-visible .quick-nav__label,
+.quick-nav__btn.is-flash .quick-nav__label {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+@media (hover: none) {
+  .quick-nav__btn:hover {
+    transform: none;
+  }
+  .quick-nav__btn:hover:not(.is-flash) .quick-nav__label {
+    opacity: 0;
+  }
 }
 
 /* ══ Lightbox ══ */
@@ -2576,7 +2741,6 @@ html.has-ring-gate body {
     max-width: 22rem;
   }
 
-
   .lightbox__nav--prev {
     left: -0.25rem;
     background: rgba(0, 0, 0, 0.65);
@@ -2590,4 +2754,3 @@ html.has-ring-gate body {
     padding: 1.75rem 1.25rem;
   }
 }
-

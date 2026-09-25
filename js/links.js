@@ -83,10 +83,29 @@
     return location.origin + location.pathname.replace(/[^/]*$/, "");
   }
 
+  // GitHub Pages không có rewrite: link /nha-trai/mã trả về 404.html (HTTP 404, không có og:*),
+  // Zalo/Messenger không hiện ảnh xem trước. Trên github.io luôn dùng dạng ?e=…&k=….
+  function isGithubPages(base) {
+    return /^https?:\/\/[^/]+\.github\.io(\/|$)/i.test(base);
+  }
+
+  function syncFormat() {
+    var gh = isGithubPages(baseInput.value.trim() || defaultBase());
+    formatSelect.disabled = gh;
+    formatSelect.title = gh ? "GitHub Pages chỉ hiện ảnh xem trước với dạng ?e=…&k=…" : "";
+    formatSelect.value = gh
+      ? "query"
+      : load("links:format", location.protocol === "file:" ? "query" : "path");
+  }
+
   function linkFor(g, eventId) {
     var base = baseInput.value.trim() || defaultBase();
     var code = encodeURIComponent(g.data.code);
-    if (formatSelect.value === "query" || location.protocol === "file:" && !baseInput.value.trim()) {
+    if (
+      formatSelect.value === "query" ||
+      isGithubPages(base) ||
+      (location.protocol === "file:" && !baseInput.value.trim())
+    ) {
       return base + (base.indexOf("?") === -1 ? "?" : "&") + "e=" + eventId + "&k=" + code;
     }
     return base.replace(/\/?$/, "/") + eventId + "/" + code;
@@ -246,10 +265,11 @@
 
   baseInput.value = load("links:base", "");
   baseInput.placeholder = defaultBase();
-  formatSelect.value = load("links:format", location.protocol === "file:" ? "query" : "path");
+  syncFormat();
 
   baseInput.addEventListener("change", function () {
     save("links:base", baseInput.value.trim() || null);
+    syncFormat();
     render();
   });
   formatSelect.addEventListener("change", function () {
