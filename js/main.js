@@ -157,6 +157,14 @@
       bindText("month", "Tháng " + p.m);
       bindText("year", String(p.y));
       bindText("calendar-title", pad(p.m) + "." + p.y);
+      var lunarEl = document.querySelector('[data-bind="lunar"]');
+      var lunar = window.solarToLunar ? window.solarToLunar(p.d, p.m, p.y) : null;
+      if (lunarEl && lunar) {
+        lunarEl.textContent =
+          "Tức ngày " + pad(lunar.day) + " tháng " + pad(lunar.month) +
+          (lunar.leap ? " nhuận" : "") + " năm " + lunar.yearName;
+      }
+      show(lunarEl, !!lunar);
       var tbody = document.getElementById("calendar-body");
       if (tbody) buildCalendar(tbody, p);
       if (timeTbd) timeTbd.textContent = "Giờ đón khách sẽ thông báo sau";

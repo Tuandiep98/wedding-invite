@@ -3,7 +3,8 @@
  *
  * - iso: ngày giờ tiệc (GMT+7), null = chưa chốt → hiện "Sẽ thông báo sau".
  * - time: giờ hiển thị trên thẻ giờ, null = chưa chốt.
- * - venue: { name, address, mapQuery } hoặc null = chưa chốt.
+ * - venue: { name, address, mapQuery } hoặc null = chưa chốt. mapQuery là chuỗi tìm
+ *   trên Google Maps hoặc toạ độ "vĩ độ,kinh độ" để ghim đúng vị trí.
  * - heroImage: ảnh đầu tiên của trang. heroPoster = true khi ảnh đã in sẵn tên + ngày
  *   (ẩn phần chữ Hero để không bị lặp). heroPosition: object-position để giữ phần chữ
  *   trên poster khi ảnh bị cắt. heroFallback dùng khi file ảnh chưa có.
@@ -42,7 +43,8 @@
       venue: {
         name: "Tư gia nhà trai",
         address: "Số nhà 05, thôn Phước Lộc, xã Phước Sơn, TP. Đồng Nai",
-        mapQuery: "Thôn Phước Lộc, xã Phước Sơn, Đồng Nai",
+        // Toạ độ chính xác của nhà (ghim tên thôn/xã trên Google Maps bị lệch)
+        mapQuery: "11.713685,107.206789",
       },
       heroImage: "assets/save-the-date-1310.jpg",
       heroPoster: true,

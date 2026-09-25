@@ -39,6 +39,7 @@ Plain static servers only understand the query form of links (`/?e=nha-gai&k=phu
 - `index.html`: all content and structure. Sections: Ring intro gate, Hero, Invite card (guest line, families, countdown, ceremony, time card, calendar, venue), Rings, Gallery, Gift + RSVP, Footer.
   - Values that change per variant or per guest are marked with `data-bind="…"` or stable ids (`invite-time-card`, `calendar-body`, `venue-name`, `rsvp-form`…). Their HTML text is only a default. JS overwrites it.
 - `js/events.js`: `window.WEDDING_EVENTS` config per variant + route resolution. Loaded **synchronously** in `<head>` (the Hero inline script needs it).
+- `js/lunar.js`: `window.solarToLunar(d, m, y)` (Hồ Ngọc Đức algorithm, UTC+7). `applyEvent()` uses it for the "Tức ngày … năm Bính Ngọ" line under the time card (`data-bind="lunar"`). Loaded with `defer` before `main.js`.
 - `js/guests/nha-trai.js`, `js/guests/nha-gai.js`: guest lists pushed into `window.WEDDING_GUESTS`. Loaded with `defer` before `main.js`.
 - `js/main.js`: Vanilla JS IIFE. `applyEvent()` and `applyGuest()` run first, then the existing modules:
   - Countdown targeting `EVENT.iso` (skipped when `iso` is null).
@@ -72,7 +73,8 @@ Each entry in `js/guests/*.js`:
 |---|---|
 | Dates, times, venues, wording, Hero photo per variant | `js/events.js` (`iso`, `time`, `venue: { name, address, mapQuery }`, `ceremony`, `inviteVerb`, `lead`, `heroImage`, `heroPoster`, `heroPosition`, `firstSide`). When swapping a poster, resize to ~1718×2576 JPEG first and re-check `heroPosition` so the printed text is not cropped on portrait and landscape screens |
 | Gift QR (bank transfer) | `window.WEDDING_GIFT` in `js/events.js` (`trai`/`gai`: `{ bankId, bankName, account, holder }`, `null` shows "Sẽ cập nhật"). `renderGift()` in `main.js` builds the VietQR image URL (`img.vietqr.io`, `compact` template) with the guest name pre-filled as the transfer note, orders cards by `firstSide`, and wires the "Sao chép STK" button |
-| Open TODOs | báo hỉ date/venue |
+| Link preview + favicon | `assets/og-image.jpg` (1200×630, shared by every variant since crawlers don't run JS), `og:*` meta in `<head>`. `favicon.ico`, `assets/favicon-32.png`, `assets/apple-touch-icon.png` (囍 gold on dark red), `theme-color` |
+| Open TODOs | báo hỉ date/venue; after deploy set `og:image` to an absolute URL (Zalo/Facebook ignore relative) |
 | Guest lists | `js/guests/nha-trai.js`, `js/guests/nha-gai.js` |
 | Couple names | `COUPLE` in `js/main.js` + defaults in `index.html` |
 | Ring intro gate photos + SFX | `assets/ring-box.webp`, `assets/ring-box-open.webp`, `assets/ring-fly.webp`, `assets/proposal-ring.webp`, `assets/proposal-moment-*.jpg`, `assets/open.mp3`, `assets/whoosh.mp3` |
