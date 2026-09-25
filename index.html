@@ -2,12 +2,25 @@
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Link dạng /nha-trai/<mã> (host có rewrite): đặt <base> về thư mục gốc của site
+      // để css/js/assets tương đối vẫn load đúng. Phải chạy trước mọi link tài nguyên.
+      (function () {
+        var m = location.pathname.match(
+          /^(.*?\/)(?:nha-trai|nha-gai|bao-hi)(?:\/|$)/,
+        );
+        if (!m) return;
+        var base = document.createElement("base");
+        base.href = m[1];
+        document.head.appendChild(base);
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Thiệp cưới Tuấn Điệp &amp; Thu Thảo — 13 tháng 10 năm 2026"
+      content="Thiệp cưới Tuấn Điệp &amp; Thu Thảo"
     />
-    <title>Tuấn Điệp &amp; Thu Thảo — Thiệp cưới</title>
+    <title>Tuấn Điệp &amp; Thu Thảo · Thiệp cưới</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,6 +28,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/style.css" />
+    <script src="js/events.js"></script>
   </head>
   <body>
     <!-- Hiệu ứng mở đầu: nhẫn cầu hôn -->
@@ -73,8 +87,14 @@
         </button>
 
         <div class="ring-gate__caption">
+          <p class="ring-gate__to">
+            <span class="ring-gate__to-kicker">Thân gửi</span>
+            <span class="ring-gate__to-name" data-bind="guest-name"
+              >Quý khách</span
+            >
+          </p>
           <p class="ring-gate__prompt" id="ring-gate-prompt">
-            ✦ Chạm vào hộp để mở lời mời
+            ✦ Chạm vào hộp để mở ✦
           </p>
           <button type="button" class="ring-gate__skip" id="ring-gate-skip">
             Bỏ qua
@@ -140,17 +160,51 @@
     <header class="hero" id="top">
       <img
         class="hero__photo"
-        src="assets/gallery-5.jpg"
+        id="hero-photo"
         alt=""
         width="1718"
         height="2576"
         aria-hidden="true"
         fetchpriority="high"
       />
+      <script>
+        // Ảnh Hero theo loại thiệp, gán ngay khi parse để không tải thừa ảnh mặc định.
+        (function () {
+          var ev = window.WEDDING_EVENTS[window.WEDDING_ROUTE.eventId];
+          var img = document.getElementById("hero-photo");
+          var hero = document.getElementById("top");
+          if (ev.heroPoster) hero.classList.add("hero--poster");
+          if (ev.heroPosition) img.style.objectPosition = ev.heroPosition;
+          if (ev.heroFallback) {
+            img.onerror = function () {
+              img.onerror = null;
+              hero.classList.remove("hero--poster");
+              img.style.objectPosition = "";
+              img.src = ev.heroFallback;
+            };
+          }
+          img.src = ev.heroImage;
+        })();
+      </script>
+      <noscript
+        ><img
+          class="hero__photo"
+          src="assets/gallery-5.jpg"
+          alt=""
+          width="1718"
+          height="2576"
+          aria-hidden="true"
+      /></noscript>
       <div class="hero__veil" aria-hidden="true"></div>
       <div class="hero__content">
-        <h1 class="hero__names" aria-label="Tuấn Điệp &amp; Thu Thảo">
-          <span class="hero__groom" aria-hidden="true">Tuấn Điệp</span>
+        <h1
+          class="hero__names"
+          id="hero-names"
+          aria-label="Tuấn Điệp &amp; Thu Thảo"
+        >
+          <span class="hero__groom" aria-hidden="true" data-bind="name-first"
+            >Tuấn Điệp</span
+          >
           <span class="hero__ring" aria-hidden="true">
             <span class="hero__ring-glow"></span>
             <img
@@ -162,9 +216,11 @@
               onerror="this.style.display = 'none'"
             />
           </span>
-          <span class="hero__bride" aria-hidden="true">Thu Thảo</span>
+          <span class="hero__bride" aria-hidden="true" data-bind="name-second"
+            >Thu Thảo</span
+          >
         </h1>
-        <p class="hero__date">Thứ Ba · 13 · 10 · 2026</p>
+        <p class="hero__date" data-bind="date-long">Thứ Ba · 13 · 10 · 2026</p>
         <p class="hero__ornament" aria-hidden="true">❧ ✦ ❧</p>
       </div>
       <a class="hero__scroll-hint" href="#rings" aria-label="Cuộn xuống"
@@ -188,29 +244,38 @@
 
         <div class="invite__body">
           <section class="invite__message" aria-labelledby="invitation-heading">
-            <h3 id="invitation-heading" class="section__title reveal">
-              Lời mời
+            <h3 id="invitation-heading" class="invite__guest reveal">
+              <span class="invite__guest-verb" data-bind="invite-verb"
+                >Trân trọng báo tin vui đến</span
+              >
+              <span class="invite__guest-name" data-bind="guest-name"
+                >Quý khách</span
+              >
             </h3>
             <p class="ornament reveal" style="--d: 0.13s" aria-hidden="true">
               ❧ ✦ ❧
             </p>
             <div class="invitation__text">
-              <p class="reveal" style="--d: 0.26s">
-                Trước đây cứ nghĩ đám cưới chỉ là một thông báo chính thức,<br />
-                Giờ mới hiểu đó là một dịp hiếm hoi để mọi người tụ họp.<br />
-                Là những chuyến đi xa chỉ để có mặt bên nhau,<br />
-                Là sự ủng hộ vô điều kiện từ những người thương yêu.<br />
-                Cảm ơn gia đình, bạn bè đã luôn đồng hành.<br />
-                Lâu rồi không gặp, thật sự rất nhớ mọi người!
+              <p class="reveal" style="--d: 0.26s" data-bind="invite-message">
+                Cảm ơn bạn đã luôn đồng hành cùng chúng mình.<br />
+                Lâu rồi không gặp, mong nhận được lời chúc phúc từ bạn.
               </p>
-              <p class="reveal invitation__date" style="--d: 0.38s">
-                13 · 10 · 2026
+              <p
+                class="reveal invitation__date"
+                style="--d: 0.38s"
+                data-bind="date-short"
+              >
+                Sẽ thông báo sau
               </p>
             </div>
           </section>
 
-          <div class="invite__families reveal" style="--d: 0.22s">
-            <div class="invite__family">
+          <div
+            class="invite__families reveal"
+            style="--d: 0.22s"
+            id="invite-families"
+          >
+            <div class="invite__family" data-side="trai">
               <p class="invite__family-label">Nhà trai</p>
               <p class="invite__family-names">
                 Ông Đặng Văn Chung<br />Bà Mông Thị Xuân
@@ -219,7 +284,7 @@
                 Thôn Phước Lộc, xã Phước Sơn, tỉnh Đồng Nai
               </p>
             </div>
-            <div class="invite__family">
+            <div class="invite__family" data-side="gai">
               <p class="invite__family-label">Nhà gái</p>
               <p class="invite__family-names">
                 Ông Nguyễn Đức Ngọc<br />Bà Hoàng Thị Len
@@ -231,9 +296,13 @@
           </div>
 
           <p class="invite__couple reveal" style="--d: 0.3s">
-            <span class="invite__couple-name">Tuấn Điệp</span>
+            <span class="invite__couple-name" data-bind="name-first"
+              >Tuấn Điệp</span
+            >
             <span class="invite__couple-amp" aria-hidden="true">&amp;</span>
-            <span class="invite__couple-name">Thu Thảo</span>
+            <span class="invite__couple-name" data-bind="name-second"
+              >Thu Thảo</span
+            >
           </p>
 
           <div class="countdown" id="countdown">
@@ -262,12 +331,19 @@
             <p class="countdown__done" id="countdown-done" hidden>
               Hôm nay là ngày vui của chúng mình
             </p>
+            <p class="invite__tbd" id="countdown-tbd" hidden>
+              Ngày chung vui sẽ thông báo sau
+            </p>
           </div>
 
           <div class="invite__notch" aria-hidden="true"></div>
 
-          <h3 class="invite__script-heading reveal" style="--d: 0.44s">
-            Trân Trọng Kính Mời
+          <h3
+            class="invite__script-heading reveal"
+            style="--d: 0.44s"
+            data-bind="ceremony"
+          >
+            Lễ Thành Hôn
           </h3>
 
           <div class="invite__photos" aria-hidden="true">
@@ -303,31 +379,34 @@
             />
           </div>
 
-          <p class="invite__lead reveal" style="--d: 0.52s">
-            Tham dự tiệc mừng lễ thành hôn
+          <p class="invite__lead reveal" style="--d: 0.52s" data-bind="lead">
+            Chung vui cùng hai gia đình
           </p>
           <p class="invite__lead-sub reveal" style="--d: 0.54s">Vào lúc</p>
 
           <div class="invite__time reveal" style="--d: 0.58s">
-            <div class="invite__time-card">
-              <div class="invite__time-side">11:00</div>
+            <div class="invite__time-card" id="invite-time-card" hidden>
+              <div class="invite__time-side" data-bind="time">--:--</div>
               <div class="invite__time-center">
-                <span class="invite__time-weekday">Thứ Ba</span>
-                <span class="invite__time-day">13</span>
-                <span class="invite__time-month">Tháng 10</span>
+                <span class="invite__time-weekday" data-bind="weekday"></span>
+                <span class="invite__time-day" data-bind="day"></span>
+                <span class="invite__time-month" data-bind="month"></span>
               </div>
-              <div class="invite__time-side">2026</div>
+              <div class="invite__time-side" data-bind="year"></div>
             </div>
+            <p class="invite__tbd" id="time-tbd">Sẽ thông báo sau</p>
           </div>
 
           <div
             class="invite__calendar reveal"
             style="--d: 0.64s"
             aria-hidden="true"
+            id="invite-calendar"
+            hidden
           >
-            <p class="invite__calendar-title">10.2026</p>
+            <p class="invite__calendar-title" data-bind="calendar-title"></p>
             <div class="invite__calendar-inner">
-              <span class="invite__calendar-ghost">2026</span>
+              <span class="invite__calendar-ghost" data-bind="year"></span>
               <table class="invite__calendar-grid">
                 <thead>
                   <tr>
@@ -340,53 +419,7 @@
                     <th>CN</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td>6</td>
-                    <td>7</td>
-                    <td>8</td>
-                    <td>9</td>
-                    <td>10</td>
-                    <td>11</td>
-                  </tr>
-                  <tr>
-                    <td>12</td>
-                    <td class="is-marked"><span>13</span></td>
-                    <td>14</td>
-                    <td>15</td>
-                    <td>16</td>
-                    <td>17</td>
-                    <td>18</td>
-                  </tr>
-                  <tr>
-                    <td>19</td>
-                    <td>20</td>
-                    <td>21</td>
-                    <td>22</td>
-                    <td>23</td>
-                    <td>24</td>
-                    <td>25</td>
-                  </tr>
-                  <tr>
-                    <td>26</td>
-                    <td>27</td>
-                    <td>28</td>
-                    <td>29</td>
-                    <td>30</td>
-                    <td>31</td>
-                    <td></td>
-                  </tr>
-                </tbody>
+                <tbody id="calendar-body"></tbody>
               </table>
             </div>
           </div>
@@ -398,22 +431,24 @@
               Địa Điểm Tổ Chức
               <span class="invite__venue-pin" aria-hidden="true">📍</span>
             </h3>
-            <p class="invite__venue-name">
-              Nhà hàng Diamond Place,<br />15A Hồ Văn Huê, Phú Nhuận, TP.HCM
+            <p class="invite__venue-name" id="venue-name">
+              Sẽ thông báo sau
             </p>
-            <div class="invite__map">
+            <div class="invite__map" id="venue-map" hidden>
               <iframe
-                src="https://www.google.com/maps?q=Diamond%20Place%2C%2015A%20H%E1%BB%93%20V%C4%83n%20Hu%C3%AA%2C%20Ph%C6%B0%E1%BB%9Dng%209%2C%20Qu%E1%BA%ADn%20Ph%C3%BA%20Nhu%E1%BA%ADn%2C%20TP.HCM&output=embed"
-                title="Bản đồ đường đến Diamond Place"
+                id="venue-map-frame"
+                title="Bản đồ đường đến địa điểm tổ chức"
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"
               ></iframe>
             </div>
             <a
               class="btn btn--gold"
-              href="https://www.google.com/maps/search/?api=1&query=Diamond%20Place%2C%2015A%20H%E1%BB%93%20V%C4%83n%20Hu%C3%AA%2C%20Ph%C6%B0%E1%BB%9Dng%209%2C%20Qu%E1%BA%ADn%20Ph%C3%BA%20Nhu%E1%BA%ADn%2C%20TP.HCM"
+              id="venue-link"
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
+              hidden
               >Mở bằng Google Maps</a
             >
           </div>
@@ -557,7 +592,7 @@
               <span class="gallery__caption">
                 <span class="gallery__caption-title">Save the date</span>
                 <span class="gallery__caption-desc"
-                  >Ngày chúng mình về chung một nhà — 13.10.2026.</span
+                  >Ngày chúng mình về chung một nhà.</span
                 >
               </span>
             </button>
@@ -702,6 +737,9 @@
           <div class="invite__stamp" aria-hidden="true">
             <span>囍</span>
           </div>
+          <p class="invite__tbd" id="rsvp-tbd" hidden>
+            Sẽ mở xác nhận tham dự khi có ngày chính thức
+          </p>
           <form
             class="form"
             id="rsvp-form"
@@ -712,7 +750,10 @@
             <input
               type="hidden"
               name="_subject"
-              value="RSVP đám cưới — Tuấn Điệp &amp; Thu Thảo"
+              value="RSVP đám cưới · Tuấn Điệp &amp; Thu Thảo"
+            />
+            <input type="hidden" name="event" id="rsvp-event" value="" />
+            <input type="hidden" name="guest" id="rsvp-guest" value=""
             />
             <div class="form__row">
               <label for="name">Họ và tên</label>
@@ -770,7 +811,7 @@
     <footer class="footer">
       <div class="footer__monogram" aria-hidden="true">T &amp; Đ</div>
       <p class="footer__text">Trân trọng cảm ơn · Hẹn gặp bạn trong ngày vui</p>
-      <p class="footer__date">13 · 10 · 2026</p>
+      <p class="footer__date" data-bind="date-short"></p>
     </footer>
 
     <!-- Nút nhạc nền -->
@@ -853,6 +894,8 @@
       </div>
     </dialog>
 
+    <script src="js/guests/nha-trai.js" defer></script>
+    <script src="js/guests/nha-gai.js" defer></script>
     <script src="js/main.js" defer></script>
   </body>
 </html>

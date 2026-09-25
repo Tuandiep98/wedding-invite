@@ -1,8 +1,12 @@
 (function () {
   "use strict";
 
-  /** Ngày giờ đám cưới (GMT+7) — chỉnh tại đây */
-  var WEDDING_ISO = "2026-10-13T11:00:00+07:00";
+  /** Loại thiệp + khách mời theo link (cấu hình ở js/events.js, js/guests/*.js) */
+  var ROUTE = window.WEDDING_ROUTE;
+  var EVENT_ID = ROUTE.eventId;
+  var EVENT = window.WEDDING_EVENTS[EVENT_ID];
+  var GUEST = findGuest(ROUTE.code);
+  var WEDDING_ISO = EVENT.iso;
 
   var cdDays = document.getElementById("cd-days");
   var cdHours = document.getElementById("cd-hours");
@@ -33,8 +37,210 @@
     return String(n).padStart(2, "0");
   }
 
-  /** Ring nhẫn mở đầu */
-  var RING_GATE_KEY = "ringGateSeen";
+  var COUPLE = { trai: "Tuấn Điệp", gai: "Thu Thảo" };
+  var WEEKDAYS = [
+    "Chủ Nhật",
+    "Thứ Hai",
+    "Thứ Ba",
+    "Thứ Tư",
+    "Thứ Năm",
+    "Thứ Sáu",
+    "Thứ Bảy",
+  ];
+  var TBD = "Sẽ thông báo sau";
+
+  function findGuest(code) {
+    if (!code) return null;
+    var lists = window.WEDDING_GUESTS || [];
+    for (var i = 0; i < lists.length; i++) {
+      var groups = lists[i].groups || [];
+      for (var j = 0; j < groups.length; j++) {
+        var guests = groups[j].guests || [];
+        for (var k = 0; k < guests.length; k++) {
+          if (String(guests[k].code).toLowerCase() === code) return guests[k];
+        }
+      }
+    }
+    return null;
+  }
+
+  function bindText(key, text) {
+    document.querySelectorAll('[data-bind="' + key + '"]').forEach(function (el) {
+      el.textContent = text;
+    });
+  }
+
+  /** Gán các dòng văn bản, xuống dòng bằng <br> (không dùng innerHTML vì có tên khách). */
+  function setLines(el, lines) {
+    if (!el) return;
+    el.textContent = "";
+    lines.forEach(function (line, i) {
+      if (i) el.appendChild(document.createElement("br"));
+      el.appendChild(document.createTextNode(line));
+    });
+  }
+
+  function show(el, visible) {
+    if (el) el.hidden = !visible;
+  }
+
+  /** Ngày theo giờ Việt Nam, đọc thẳng từ chuỗi ISO để không phụ thuộc múi giờ người xem. */
+  function dateParts(iso) {
+    var y = Number(iso.slice(0, 4));
+    var m = Number(iso.slice(5, 7));
+    var d = Number(iso.slice(8, 10));
+    return {
+      y: y,
+      m: m,
+      d: d,
+      weekday: WEEKDAYS[new Date(Date.UTC(y, m - 1, d)).getUTCDay()],
+    };
+  }
+
+  function buildCalendar(tbody, p) {
+    tbody.textContent = "";
+    // Tuần bắt đầu từ Thứ Hai.
+    var lead = (new Date(Date.UTC(p.y, p.m - 1, 1)).getUTCDay() + 6) % 7;
+    var days = new Date(Date.UTC(p.y, p.m, 0)).getUTCDate();
+    var row = null;
+    for (var cell = 0; cell < lead + days || cell % 7; cell++) {
+      if (cell % 7 === 0) row = tbody.appendChild(document.createElement("tr"));
+      var td = row.appendChild(document.createElement("td"));
+      var day = cell - lead + 1;
+      if (day < 1 || day > days) continue;
+      if (day === p.d) {
+        td.className = "is-marked";
+        td.appendChild(document.createElement("span")).textContent = day;
+      } else {
+        td.textContent = day;
+      }
+    }
+  }
+
+  function applyEvent() {
+    document.documentElement.setAttribute("data-event", EVENT_ID);
+
+    // Bên mời đứng trước: tên cô dâu/chú rể và khối gia đình.
+    var first = EVENT.firstSide === "gai" ? "gai" : "trai";
+    var second = first === "gai" ? "trai" : "gai";
+    bindText("name-first", COUPLE[first]);
+    bindText("name-second", COUPLE[second]);
+    var heroNames = document.getElementById("hero-names");
+    if (heroNames)
+      heroNames.setAttribute("aria-label", COUPLE[first] + " & " + COUPLE[second]);
+    var families = document.getElementById("invite-families");
+    var firstFamily =
+      families && families.querySelector('[data-side="' + first + '"]');
+    if (firstFamily) families.insertBefore(firstFamily, families.firstChild);
+
+    bindText("ceremony", EVENT.ceremony);
+    bindText("lead", EVENT.lead);
+    bindText("invite-verb", EVENT.inviteVerb);
+
+    var p = WEDDING_ISO ? dateParts(WEDDING_ISO) : null;
+    var dateShort = p ? pad(p.d) + " · " + pad(p.m) + " · " + p.y : "";
+
+    bindText("date-long", p ? p.weekday + " · " + dateShort : "");
+    bindText("date-short", p ? dateShort : TBD);
+    document.querySelectorAll(".hero__date, .footer__date").forEach(function (el) {
+      show(el, !!p);
+    });
+
+    // Thẻ giờ + lịch tháng
+    var timeTbd = document.getElementById("time-tbd");
+    show(document.getElementById("invite-time-card"), !!p);
+    show(document.getElementById("invite-calendar"), !!p);
+    if (p) {
+      bindText("time", EVENT.time || "--:--");
+      bindText("weekday", p.weekday);
+      bindText("day", String(p.d));
+      bindText("month", "Tháng " + p.m);
+      bindText("year", String(p.y));
+      bindText("calendar-title", pad(p.m) + "." + p.y);
+      var tbody = document.getElementById("calendar-body");
+      if (tbody) buildCalendar(tbody, p);
+      if (timeTbd) timeTbd.textContent = "Giờ đón khách sẽ thông báo sau";
+      show(timeTbd, !EVENT.time);
+    } else {
+      if (timeTbd) timeTbd.textContent = TBD;
+      show(timeTbd, true);
+    }
+
+    // Đếm ngược
+    show(document.getElementById("countdown-grid"), !!p);
+    show(document.getElementById("countdown-tbd"), !p);
+
+    // Địa điểm
+    var venue = EVENT.venue;
+    var venueName = document.getElementById("venue-name");
+    var mapFrame = document.getElementById("venue-map-frame");
+    var mapLink = document.getElementById("venue-link");
+    setLines(venueName, venue ? [venue.name + ",", venue.address] : [TBD]);
+    if (venue) {
+      var q = encodeURIComponent(venue.mapQuery || venue.name + ", " + venue.address);
+      if (mapFrame) mapFrame.src = "https://www.google.com/maps?q=" + q + "&output=embed";
+      if (mapLink)
+        mapLink.href = "https://www.google.com/maps/search/?api=1&query=" + q;
+    }
+    show(document.getElementById("venue-map"), !!venue);
+    show(mapLink, !!venue);
+
+    // RSVP chỉ mở khi đã có ngày
+    var rsvpEvent = document.getElementById("rsvp-event");
+    if (rsvpEvent) rsvpEvent.value = EVENT_ID;
+    show(document.getElementById("rsvp-form"), !!p);
+    show(document.getElementById("rsvp-tbd"), !p);
+
+    var title = COUPLE[first] + " & " + COUPLE[second] + " · " + EVENT.ceremony;
+    document.title = title;
+    var desc = document.querySelector('meta[name="description"]');
+    if (desc)
+      desc.setAttribute(
+        "content",
+        "Thiệp cưới " + title + (p ? " · " + dateShort.replace(/ · /g, ".") : ""),
+      );
+  }
+
+  function applyGuest() {
+    var name = GUEST ? GUEST.name : "Quý khách";
+    var xung = (GUEST && GUEST.xung) || "bạn";
+
+    bindText("guest-name", name);
+    setLines(document.querySelector('[data-bind="invite-message"]'), [
+      "Cảm ơn " + xung + " đã luôn đồng hành cùng chúng mình.",
+      EVENT.iso && EVENT_ID !== "bao-hi"
+        ? "Lâu rồi không gặp, mong được gặp " + xung + " trong ngày vui này."
+        : "Lâu rồi không gặp, mong nhận được lời chúc phúc từ " + xung + ".",
+    ]);
+
+    if (!GUEST) return;
+    document.title = document.title + " · Mời " + name;
+    if (ringGate)
+      ringGate.setAttribute("aria-label", "Thiệp mời gửi " + name + ", mở hộp nhẫn để xem");
+    var rsvpGuest = document.getElementById("rsvp-guest");
+    if (rsvpGuest) rsvpGuest.value = GUEST.code;
+    var rsvpName = document.getElementById("name");
+    if (rsvpName && !rsvpName.value) rsvpName.value = name;
+  }
+
+  /** Khi có <base> (link dạng /nha-trai/<mã>), "#section" sẽ trỏ về trang gốc:
+   *  gắn lại path hiện tại để anchor vẫn cuộn trong trang. */
+  function fixHashLinksUnderBase() {
+    if (!document.querySelector("base")) return;
+    var here = location.pathname + location.search;
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      var href = a.getAttribute("href");
+      if (href.length > 1) a.setAttribute("href", here + href);
+    });
+  }
+
+  fixHashLinksUnderBase();
+  applyEvent();
+  applyGuest();
+
+  /** Ring nhẫn mở đầu (mỗi link khách xem lại một lần trong phiên) */
+  var RING_GATE_KEY =
+    "ringGateSeen:" + EVENT_ID + ":" + (GUEST ? GUEST.code : "");
 
   function initRingGate() {
     if (!ringGate || !ringGateTrigger) return;
@@ -246,7 +452,7 @@
     return true;
   }
 
-  if (tickCountdown() !== false) {
+  if (WEDDING_ISO && tickCountdown() !== false) {
     var timer = setInterval(function () {
       if (!tickCountdown()) clearInterval(timer);
     }, 1000);

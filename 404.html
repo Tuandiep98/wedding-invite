@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <title>Đang mở thiệp…</title>
+    <script>
+      // GitHub Pages không có rewrite: đổi /nha-trai/<mã> thành ?e=nha-trai&k=<mã>
+      // rồi chuyển về trang chính. Link khác thì về trang chủ.
+      (function () {
+        var m = location.pathname.match(
+          /^(.*?\/)(nha-trai|nha-gai|bao-hi)(?:\/([^/?#]+))?\/?$/,
+        );
+        if (!m) {
+          var root = location.pathname.match(/^(\/[^/]+\/)?/)[0] || "/";
+          location.replace(root);
+          return;
+        }
+        var q = "?e=" + m[2] + (m[3] ? "&k=" + m[3] : "");
+        location.replace(m[1] + q + location.hash);
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Đang mở thiệp…</p>
+  </body>
+</html>

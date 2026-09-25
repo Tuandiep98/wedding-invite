@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Link thiệp mời · Quản lý</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Cormorant+Garamond:ital,wght@1,600&display=swap&subset=vietnamese"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --dark: #5a1d2a;
+        --gold: #c4a166;
+        --gold-deep: #99764e;
+        --paper: #fcf8f2;
+        --paper-deep: #f0e5d7;
+        --ink: #2b1d20;
+        --muted: #766569;
+        --ok: #2f7a4b;
+        --warn: #a4462f;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--ink);
+        background: var(--paper);
+      }
+      header {
+        background: var(--dark);
+        color: #fff9f2;
+        padding: 20px 16px 16px;
+      }
+      header h1 {
+        margin: 0;
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 28px;
+        color: #e4d1a6;
+      }
+      header p {
+        margin: 4px 0 0;
+        font-size: 13px;
+        opacity: 0.75;
+      }
+      main {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 16px;
+      }
+      .panel {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr;
+        background: #fff;
+        border: 1px solid var(--paper-deep);
+        border-radius: 10px;
+        padding: 14px;
+        margin-bottom: 14px;
+      }
+      @media (min-width: 640px) {
+        .panel {
+          grid-template-columns: 2fr 1fr;
+        }
+      }
+      label {
+        display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      input[type="text"],
+      input[type="search"],
+      select {
+        width: 100%;
+        font: inherit;
+        padding: 9px 11px;
+        border: 1px solid #d9cbbb;
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+      }
+      input:focus-visible,
+      select:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--gold);
+        outline-offset: 2px;
+      }
+      #search {
+        font-size: 17px;
+        padding: 12px 14px;
+      }
+      .stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 16px;
+        font-size: 13px;
+        color: var(--muted);
+        margin: 0 0 12px;
+      }
+      .stats b {
+        color: var(--ink);
+      }
+      .warn {
+        background: #fbeae4;
+        color: var(--warn);
+        border: 1px solid #efc6b8;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 13px;
+        margin-bottom: 14px;
+      }
+      .warn:empty {
+        display: none;
+      }
+      h2 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--gold-deep);
+        margin: 22px 0 8px;
+      }
+      h2 small {
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--muted);
+        font-weight: 400;
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+      }
+      li {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 4px 12px;
+        align-items: center;
+        background: #fff;
+        border: 1px solid var(--paper-deep);
+        border-radius: 10px;
+        padding: 10px 12px;
+      }
+      li.is-sent {
+        background: #f3f8f4;
+        border-color: #cfe3d5;
+      }
+      .sent {
+        grid-row: span 2;
+        width: 20px;
+        height: 20px;
+        accent-color: var(--ok);
+      }
+      .who {
+        min-width: 0;
+      }
+      .name {
+        font-weight: 600;
+      }
+      .meta {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .actions {
+        grid-column: 2;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+        min-width: 0;
+      }
+      .actions select {
+        width: auto;
+        padding: 5px 8px;
+        font-size: 13px;
+      }
+      .link {
+        flex: 1 1 200px;
+        min-width: 0;
+        font-size: 12px;
+        color: var(--muted);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      button {
+        font: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        border: 1px solid var(--gold);
+        background: var(--gold);
+        color: #fff;
+        border-radius: 8px;
+        padding: 6px 12px;
+        cursor: pointer;
+      }
+      button.ghost {
+        background: #fff;
+        color: var(--gold-deep);
+      }
+      button.done {
+        background: var(--ok);
+        border-color: var(--ok);
+      }
+      .empty {
+        color: var(--muted);
+        text-align: center;
+        padding: 24px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Link thiệp mời</h1>
+      <p>Trang nội bộ cho cô dâu chú rể · không chia sẻ link trang này</p>
+    </header>
+    <main>
+      <div class="panel">
+        <div>
+          <label for="base-url">Địa chỉ site (BASE URL)</label>
+          <input type="text" id="base-url" spellcheck="false" />
+        </div>
+        <div>
+          <label for="link-format">Dạng link</label>
+          <select id="link-format">
+            <option value="path">/nha-trai/mã (Netlify, Vercel, Cloudflare)</option>
+            <option value="query">?e=nha-trai&amp;k=mã (mọi host)</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="search">Tìm theo tên, biệt danh, mã hoặc nhóm (gõ không dấu cũng được)</label>
+      <input
+        type="search"
+        id="search"
+        placeholder="vd: hieu, ha noi, cap 3…"
+        autocomplete="off"
+        autofocus
+      />
+
+      <p class="stats" id="stats"></p>
+      <div class="warn" id="warnings" role="alert"></div>
+      <div id="results"></div>
+    </main>
+
+    <script src="js/events.js"></script>
+    <script src="js/guests/nha-trai.js"></script>
+    <script src="js/guests/nha-gai.js"></script>
+    <script src="js/links.js"></script>
+  </body>
+</html>

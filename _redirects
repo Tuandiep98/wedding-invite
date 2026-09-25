@@ -1,0 +1,7 @@
+# Netlify / Cloudflare Pages: link /nha-trai/<mã> dùng chung index.html
+/nha-trai/*  /index.html  200
+/nha-gai/*   /index.html  200
+/bao-hi/*    /index.html  200
+/nha-trai    /index.html  200
+/nha-gai     /index.html  200
+/bao-hi      /index.html  200

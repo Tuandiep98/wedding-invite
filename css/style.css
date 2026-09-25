@@ -57,6 +57,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Thuộc tính hidden luôn thắng các display của component (JS bật/tắt theo loại thiệp) */
+[hidden] {
+  display: none !important;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -217,6 +222,30 @@ a:focus-visible {
   flex-direction: column;
   align-items: center;
   gap: 0.35rem;
+}
+
+/* Ảnh Hero là poster đã in sẵn tên + ngày: ẩn chữ đè lên ảnh (vẫn giữ cho screen reader),
+   bỏ lớp phủ tối để poster hiện rõ. */
+/* Vị trí neo riêng cho từng poster: heroPosition trong js/events.js */
+.hero--poster .hero__photo {
+  object-position: center top;
+}
+.hero--poster .hero__veil {
+  background: linear-gradient(
+    to bottom,
+    rgba(47, 43, 43, 0) 0%,
+    rgba(47, 43, 43, 0) 80%,
+    rgba(42, 37, 38, 0.45) 100%
+  );
+}
+.hero--poster .hero__content {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 /* Cascade in on page load — no scroll trigger needed */
@@ -438,6 +467,45 @@ a:focus-visible {
 
 .invite__message .section__title {
   font-size: clamp(1.8rem, 5.5vw, 2.5rem);
+}
+
+/* Dòng mời đích danh: "Trân trọng kính mời" + tên khách */
+.invite__guest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.2rem;
+  font-weight: 400;
+}
+.invite__guest-verb {
+  font-family: var(--font-serif);
+  font-size: clamp(0.82rem, 2.8vw, 0.95rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+.invite__guest-name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(2rem, 7vw, 2.8rem);
+  line-height: 1.15;
+  color: var(--color-dark-mid);
+  text-wrap: balance;
+}
+
+/* Trạng thái chưa chốt ngày / giờ / địa điểm */
+.invite__tbd {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1rem, 3.4vw, 1.15rem);
+  color: var(--color-ink-muted);
+  text-align: center;
+  margin: 0 auto 1.5rem;
+}
+.invite__tbd[hidden] {
+  display: none;
 }
 
 .invitation__text {
@@ -883,6 +951,7 @@ a:focus-visible {
   color: var(--ir-ink);
   line-height: 1.6;
   margin: 0 auto 1.35rem;
+  text-wrap: balance;
 }
 
 .invite__map {
@@ -2116,9 +2185,37 @@ html.has-ring-gate body {
   gap: 0.6rem;
 }
 
+/* Tên khách được mời, điểm nhấn chính của màn mở đầu */
+.ring-gate__to {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  text-align: center;
+  transition: opacity 0.35s var(--ease-out);
+}
+.ring-gate__to-kicker {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+}
+.ring-gate__to-name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(1.9rem, 8.5vw, 2.8rem);
+  line-height: 1.15;
+  color: var(--color-gold-light);
+  max-width: 88vw;
+  text-wrap: balance;
+}
+
 .ring-gate__prompt {
   font-family: var(--font-display);
-  font-size: clamp(0.82rem, 4.2vw, 1.3rem);
+  font-size: clamp(0.78rem, 3.6vw, 1.05rem);
+  opacity: 0.8;
   white-space: nowrap;
   color: #fff;
   margin: 0;
@@ -2143,6 +2240,9 @@ html.has-ring-gate body {
 }
 
 /* Ẩn prompt/skip khi ảnh reveal đang hiện — tránh đè chữ lên khung ảnh, cũng không còn cần thiết vì user đã tap */
+.ring-gate[data-step="hand"] .ring-gate__to,
+.ring-gate[data-step="proposal"] .ring-gate__to,
+.ring-gate[data-step="leaving"] .ring-gate__to,
 .ring-gate[data-step="opening"] .ring-gate__prompt,
 .ring-gate[data-step="hand"] .ring-gate__prompt,
 .ring-gate[data-step="proposal"] .ring-gate__prompt,

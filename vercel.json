@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/(nha-trai|nha-gai|bao-hi)", "destination": "/index.html" },
+    { "source": "/(nha-trai|nha-gai|bao-hi)/:code", "destination": "/index.html" }
+  ]
+}
