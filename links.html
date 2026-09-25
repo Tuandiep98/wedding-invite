@@ -68,10 +68,13 @@
         padding: 14px;
         margin-bottom: 14px;
       }
-      @media (min-width: 640px) {
-        .panel {
-          grid-template-columns: 2fr 1fr;
-        }
+      .panel[hidden],
+      .panel [hidden] {
+        display: none;
+      }
+      .migrate p {
+        margin: 0;
+        font-size: 14px;
       }
       label {
         display: block;
@@ -228,18 +231,11 @@
       <p>Trang nội bộ cho cô dâu chú rể · không chia sẻ link trang này</p>
     </header>
     <main>
-      <div class="panel">
-        <div>
-          <label for="base-url">Địa chỉ site (BASE URL)</label>
-          <input type="text" id="base-url" spellcheck="false" />
-        </div>
-        <div>
-          <label for="link-format">Dạng link</label>
-          <select id="link-format">
-            <option value="path">/nha-trai/mã (Netlify, Vercel, Cloudflare)</option>
-            <option value="query">?e=nha-trai&amp;k=mã (mọi host)</option>
-          </select>
-        </div>
+      <!-- Chỉ hiện ở trang github.io cũ: dấu "Đã gửi" lưu theo từng địa chỉ trang,
+           nút này mang chúng sang trang trên tên miền mới (links.js). -->
+      <div class="panel migrate" id="migrate" hidden>
+        <p id="migrate-text"></p>
+        <button type="button" id="migrate-btn" hidden>Sao chép link chuyển dấu Đã gửi</button>
       </div>
 
       <label for="search">Tìm theo tên, biệt danh, mã hoặc nhóm (gõ không dấu cũng được)</label>

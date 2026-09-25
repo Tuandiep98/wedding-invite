@@ -5,8 +5,7 @@
   var EVENTS = window.WEDDING_EVENTS || {};
   var LISTS = window.WEDDING_GUESTS || [];
 
-  var baseInput = document.getElementById("base-url");
-  var formatSelect = document.getElementById("link-format");
+  var SITE_URL = window.WEDDING_SITE_URL;
   var searchInput = document.getElementById("search");
   var statsEl = document.getElementById("stats");
   var warningsEl = document.getElementById("warnings");
@@ -77,38 +76,11 @@
     warningsEl.textContent = problems.length ? "⚠ " + problems.join(" · ") : "";
   }
 
-  function defaultBase() {
-    if (location.protocol === "file:")
-      return location.href.replace(/[^/]*([?#].*)?$/, "index.html");
-    return location.origin + location.pathname.replace(/[^/]*$/, "");
-  }
-
-  // GitHub Pages không có rewrite: link /nha-trai/mã trả về 404.html (HTTP 404, không có og:*),
-  // Zalo/Messenger không hiện ảnh xem trước. Trên github.io luôn dùng dạng ?e=…&k=….
-  function isGithubPages(base) {
-    return /^https?:\/\/[^/]+\.github\.io(\/|$)/i.test(base);
-  }
-
-  function syncFormat() {
-    var gh = isGithubPages(baseInput.value.trim() || defaultBase());
-    formatSelect.disabled = gh;
-    formatSelect.title = gh ? "GitHub Pages chỉ hiện ảnh xem trước với dạng ?e=…&k=…" : "";
-    formatSelect.value = gh
-      ? "query"
-      : load("links:format", location.protocol === "file:" ? "query" : "path");
-  }
-
+  /** Link gửi khách: ?<mã> khi dùng loại thiệp mặc định của khách, chọn loại khác thì ?e=…&k=…. */
   function linkFor(g, eventId) {
-    var base = baseInput.value.trim() || defaultBase();
     var code = encodeURIComponent(g.data.code);
-    if (
-      formatSelect.value === "query" ||
-      isGithubPages(base) ||
-      (location.protocol === "file:" && !baseInput.value.trim())
-    ) {
-      return base + (base.indexOf("?") === -1 ? "?" : "&") + "e=" + eventId + "&k=" + code;
-    }
-    return base.replace(/\/?$/, "/") + eventId + "/" + code;
+    if (eventId === g.defaultEvent) return SITE_URL + "?" + code;
+    return SITE_URL + "?e=" + eventId + "&k=" + code;
   }
 
   function sentKey(g) {
@@ -263,21 +235,57 @@
     });
   }
 
-  baseInput.value = load("links:base", "");
-  baseInput.placeholder = defaultBase();
-  syncFormat();
+  /**
+   * Dấu "Đã gửi" nằm trong localStorage, tách riêng theo từng địa chỉ trang. Trang github.io cũ
+   * có nút mở trang mới kèm #sent=<bên>:<mã>,…; trang mới nhận rồi xoá hash khỏi URL.
+   */
+  function setupMigrate() {
+    var box = document.getElementById("migrate");
+    var text = document.getElementById("migrate-text");
+    var btn = document.getElementById("migrate-btn");
+    var m = location.hash.match(/^#sent=(.*)$/);
+    if (m) {
+      var n = 0;
+      decodeURIComponent(m[1])
+        .split(",")
+        .forEach(function (item) {
+          if (/^(trai|gai):[a-z0-9-]+$/.test(item)) {
+            save("sent:" + item, "1");
+            n++;
+          }
+        });
+      history.replaceState(null, "", location.pathname + location.search);
+      text.textContent = "Đã nhận " + n + " dấu Đã gửi từ trang cũ.";
+      box.hidden = false;
+      return;
+    }
+    if (!/\.github\.io$/i.test(location.hostname)) return;
+    var sent = guests
+      .filter(function (g) {
+        return load(sentKey(g), "") === "1";
+      })
+      .map(function (g) {
+        return g.side + ":" + g.data.code;
+      });
+    if (!sent.length) return;
+    // Gắn tên miền xong thì trang github.io tự chuyển sang tên miền mới, không mở lại được:
+    // sao chép link trước, mở link đó sau khi tên miền đã chạy.
+    text.textContent =
+      "Trang sắp chuyển sang " +
+      SITE_URL.replace(/^https:\/\/|\/$/g, "") +
+      ". Trước khi gắn tên miền, sao chép link dưới đây và lưu lại (" +
+      sent.length +
+      " dấu Đã gửi); mở link đó khi tên miền đã chạy để giữ các dấu này.";
+    btn.hidden = false;
+    btn.addEventListener("click", function () {
+      copy(SITE_URL + "links.html#sent=" + encodeURIComponent(sent.join(",")), btn);
+    });
+    box.hidden = false;
+  }
 
-  baseInput.addEventListener("change", function () {
-    save("links:base", baseInput.value.trim() || null);
-    syncFormat();
-    render();
-  });
-  formatSelect.addEventListener("change", function () {
-    save("links:format", formatSelect.value);
-    render();
-  });
   searchInput.addEventListener("input", render);
 
+  setupMigrate();
   checkData();
   renderStats();
   render();

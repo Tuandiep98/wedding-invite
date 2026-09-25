@@ -97,10 +97,15 @@
   /** Loại thiệp khi URL không chỉ định. */
   window.WEDDING_DEFAULT_EVENT = "bao-hi";
 
+  /** Địa chỉ chính thức của site, dùng cho link gửi khách (links.html). */
+  window.WEDDING_SITE_URL = "https://tuandiepthuthao.date/";
+
   /**
-   * Đọc loại thiệp + mã khách từ URL. Hỗ trợ cả 2 dạng:
+   * Đọc loại thiệp + mã khách từ URL. Hỗ trợ các dạng:
+   *   ?phu                 (link ngắn gửi khách: loại thiệp lấy theo khách)
+   *   ?e=nha-trai&k=phu    (chọn loại thiệp khác mặc định của khách, link cũ)
    *   /nha-trai/phu        (host có rewrite, xem _redirects / vercel.json)
-   *   ?e=nha-trai&k=phu    (GitHub Pages qua 404.html, mở file:// khi dev)
+   * Link ngắn cần danh sách khách nên js/guests/*.js phải load trước file này.
    */
   window.WEDDING_ROUTE = (function () {
     var eventId = null;
@@ -121,7 +126,32 @@
     var params = new URLSearchParams(location.search);
     if (!eventId) eventId = params.get("e");
     if (!code) code = params.get("k");
+    // Link ngắn ?<mã>: tham số đầu tiên không có giá trị
+    // (Zalo/Facebook có thể nối thêm fbclid=…, zarsrc=… phía sau).
+    if (!code) {
+      params.forEach(function (value, key) {
+        if (!code && key && value === "") code = key;
+      });
+    }
+    code = code ? code.toLowerCase() : null;
+    if (!window.WEDDING_EVENTS[eventId] && code) eventId = guestEvent(code);
     if (!window.WEDDING_EVENTS[eventId]) eventId = window.WEDDING_DEFAULT_EVENT;
-    return { eventId: eventId, code: code ? code.toLowerCase() : null };
+    return { eventId: eventId, code: code };
   })();
+
+  /** Loại thiệp mặc định của khách: event riêng của khách, không có thì theo danh sách. */
+  function guestEvent(code) {
+    var lists = window.WEDDING_GUESTS || [];
+    for (var i = 0; i < lists.length; i++) {
+      var groups = lists[i].groups || [];
+      for (var j = 0; j < groups.length; j++) {
+        var guests = groups[j].guests || [];
+        for (var k = 0; k < guests.length; k++) {
+          if (String(guests[k].code).toLowerCase() === code)
+            return guests[k].event || lists[i].defaultEvent;
+        }
+      }
+    }
+    return null;
+  }
 })();

@@ -5,19 +5,25 @@
     <meta name="robots" content="noindex" />
     <title>Đang mở thiệp…</title>
     <script>
-      // GitHub Pages không có rewrite: đổi /nha-trai/<mã> thành ?e=nha-trai&k=<mã>
-      // rồi chuyển về trang chính. Link khác thì về trang chủ.
+      // GitHub Pages không có rewrite: đổi link dạng đường dẫn sang dạng query rồi mở trang chính.
+      //   /nha-trai/<mã> → ?e=nha-trai&k=<mã>   (link cũ)
+      //   /<mã>          → ?<mã>                  (khách tự gõ tên miền/mã)
+      // Link khác thì về trang chủ.
       (function () {
         var m = location.pathname.match(
           /^(.*?\/)(nha-trai|nha-gai|bao-hi)(?:\/([^/?#]+))?\/?$/,
         );
-        if (!m) {
-          var root = location.pathname.match(/^(\/[^/]+\/)?/)[0] || "/";
-          location.replace(root);
+        if (m) {
+          var q = "?e=" + m[2] + (m[3] ? "&k=" + m[3] : "");
+          location.replace(m[1] + q + location.hash);
           return;
         }
-        var q = "?e=" + m[2] + (m[3] ? "&k=" + m[3] : "");
-        location.replace(m[1] + q + location.hash);
+        // Trên *.github.io site nằm dưới /<tên repo>/, trên tên miền riêng nằm ở gốc.
+        var root = /\.github\.io$/i.test(location.hostname)
+          ? (location.pathname.match(/^\/[^/]+\//) || ["/"])[0]
+          : "/";
+        var one = location.pathname.slice(root.length).match(/^([a-z0-9-]+)\/?$/i);
+        location.replace(root + (one ? "?" + one[1].toLowerCase() : "") + location.hash);
       })();
     </script>
   </head>
