@@ -73,8 +73,8 @@ Each entry in `js/guests/*.js`:
 |---|---|
 | Dates, times, venues, wording, Hero photo per variant | `js/events.js` (`iso`, `time`, `venue: { name, address, mapQuery }`, `ceremony`, `inviteVerb`, `lead`, `heroImage`, `heroPoster`, `heroPosition`, `firstSide`). When swapping a poster, resize to ~1718×2576 JPEG first and re-check `heroPosition` so the printed text is not cropped on portrait and landscape screens |
 | Gift QR (bank transfer) | `window.WEDDING_GIFT` in `js/events.js` (`trai`/`gai`: `{ bankId, bankName, account, holder }`, `null` shows "Sẽ cập nhật"). `renderGift()` in `main.js` builds the VietQR image URL (`img.vietqr.io`, `compact` template) with the guest name pre-filled as the transfer note, orders cards by `firstSide`, and wires the "Sao chép STK" button |
-| Link preview + favicon | `assets/og-image.jpg` (1200×630, shared by every variant since crawlers don't run JS), `og:*` meta in `<head>`. `favicon.ico`, `assets/favicon-32.png`, `assets/apple-touch-icon.png` (囍 gold on dark red), `theme-color` |
-| Open TODOs | báo hỉ date/venue; after deploy set `og:image` to an absolute URL (Zalo/Facebook ignore relative) |
+| Link preview + favicon | `assets/og-image.jpg` (1200×630, shared by every variant since crawlers don't run JS), `og:*` meta in `<head>`; `og:image` is absolute (`https://tuandiep98.github.io/wedding-invite/…`), update it if the domain changes. `favicon.ico`, `assets/favicon-32.png`, `assets/apple-touch-icon.png` (囍 gold on dark red), `theme-color` |
+| Open TODOs | báo hỉ date/venue |
 | Guest lists | `js/guests/nha-trai.js`, `js/guests/nha-gai.js` |
 | Couple names | `COUPLE` in `js/main.js` + defaults in `index.html` |
 | Ring intro gate photos + SFX | `assets/ring-box.webp`, `assets/ring-box-open.webp`, `assets/ring-fly.webp`, `assets/proposal-ring.webp`, `assets/proposal-moment-*.jpg`, `assets/open.mp3`, `assets/whoosh.mp3` |
