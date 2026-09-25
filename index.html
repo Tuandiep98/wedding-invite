@@ -802,21 +802,20 @@
           <p class="invite__tbd" id="rsvp-tbd" hidden>
             Sẽ mở xác nhận tham dự khi có ngày chính thức
           </p>
-          <form
-            class="form"
-            id="rsvp-form"
-            action="https://formspree.io/f/YOUR_FORM_ID"
-            method="POST"
-          >
+          <form class="form" id="rsvp-form">
             <p class="form__title">Xác nhận tham dự</p>
-            <input
-              type="hidden"
-              name="_subject"
-              value="RSVP đám cưới · Tuấn Điệp &amp; Thu Thảo"
-            />
             <input type="hidden" name="event" id="rsvp-event" value="" />
-            <input type="hidden" name="guest" id="rsvp-guest" value=""
-            />
+            <input type="hidden" name="guest" id="rsvp-guest" value="" />
+            <div class="form__hp" aria-hidden="true">
+              <label for="rsvp-website">Website</label>
+              <input
+                id="rsvp-website"
+                name="website"
+                type="text"
+                tabindex="-1"
+                autocomplete="off"
+              />
+            </div>
             <div class="form__row">
               <label for="name">Họ và tên</label>
               <input

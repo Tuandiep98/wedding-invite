@@ -1596,6 +1596,18 @@ a:focus-visible {
 .form__status.is-show {
   display: block;
 }
+/* Ô bẫy bot: ẩn khỏi người dùng, bot tự điền sẽ bị script bỏ qua */
+.form__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.form .btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
 
 /* ══ Footer ══ */
 .footer {

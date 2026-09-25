@@ -85,6 +85,13 @@
     },
   };
 
+  /**
+   * URL Web App của Google Apps Script nhận xác nhận tham dự (dạng .../exec).
+   * Script nằm ở apps-script/rsvp.gs. Để trống = form báo "chưa mở".
+   */
+  window.WEDDING_RSVP_URL =
+    "https://script.google.com/macros/s/AKfycbyVTXm5ID6d_2KerP3L3K-H7PC4_1cuRnhpMcv40MSXBmy667h2b5-BJHxAEzEiC-GuPw/exec";
+
   /** Loại thiệp khi URL không chỉ định. */
   window.WEDDING_DEFAULT_EVENT = "bao-hi";
 

@@ -76,7 +76,7 @@ Each entry in `js/guests/*.js`:
 | Guest lists | `js/guests/nha-trai.js`, `js/guests/nha-gai.js` |
 | Couple names | `COUPLE` in `js/main.js` + defaults in `index.html` |
 | Ring intro gate photos + SFX | `assets/ring-box.webp`, `assets/ring-box-open.webp`, `assets/ring-fly.webp`, `assets/proposal-ring.webp`, `assets/proposal-moment-*.jpg`, `assets/open.mp3`, `assets/whoosh.mp3` |
-| RSVP form | `index.html`: replace `YOUR_FORM_ID` in the Formspree action URL. Hidden fields `event` and `guest` identify the submitter. |
+| RSVP form | Submitted in the background (`fetch`, guest stays on the page) to a Google Apps Script Web App that writes to a Google Sheet. Script source: `apps-script/rsvp.gs` (paste into the Sheet's Apps Script, deploy as Web App, access "Anyone"). Put the `/exec` URL in `window.WEDDING_RSVP_URL` (`js/events.js`); empty shows "Chưa mở nhận xác nhận". Hidden fields `event` and `guest` identify the submitter; the same event+code resubmitting updates its row. Hidden `website` field is a bot honeypot. After editing `rsvp.gs`, redeploy as a **new version** of the same deployment so the URL stays the same |
 | Gallery images | `index.html` `.gallery__panel` (real photos `assets/gallery-*.jpg`) |
 | Background music | `index.html` `<audio id="bg-music">` source (Mixkit) |
 
@@ -85,7 +85,7 @@ Each entry in `js/guests/*.js`:
 All loaded via CDN — no npm install needed:
 
 - **Google Fonts**: Cormorant Garamond, Be Vietnam Pro, Playfair Display, Alex Brush
-- **Formspree**: RSVP form submission (requires account + form ID)
+- **Google Apps Script + Google Sheet**: RSVP storage (`apps-script/rsvp.gs`)
 - **Mixkit**: Background music
 
 ## Conventions

@@ -795,22 +795,53 @@
   var form = document.getElementById("rsvp-form");
   var formStatus = document.getElementById("form-status");
 
+  var rsvpUrl = window.WEDDING_RSVP_URL || "";
+  var rsvpXung = (GUEST && GUEST.xung) || "bạn";
+
+  function setFormStatus(text) {
+    if (!formStatus) return;
+    formStatus.textContent = text;
+    formStatus.classList.add("is-show");
+  }
+
+  // Gửi ngầm tới Google Apps Script (apps-script/rsvp.gs), khách ở lại trang
   if (form) {
+    var submitBtn = form.querySelector('button[type="submit"]');
     form.addEventListener("submit", function (e) {
-      var action = form.getAttribute("action") || "";
-      if (action.indexOf("YOUR_FORM_ID") !== -1) {
-        e.preventDefault();
-        if (formStatus) {
-          formStatus.textContent =
-            "Vui lòng thay YOUR_FORM_ID bằng mã Formspree của bạn rồi thử lại.";
-          formStatus.classList.add("is-show");
-        }
+      e.preventDefault();
+      if (!rsvpUrl) {
+        setFormStatus("Chưa mở nhận xác nhận, " + rsvpXung + " vui lòng thử lại sau nhé.");
         return;
       }
-      if (formStatus) {
-        formStatus.textContent = "Đang gửi…";
-        formStatus.classList.add("is-show");
+      if (typeof window.fetch !== "function") {
+        setFormStatus("Trình duyệt chưa hỗ trợ gửi, " + rsvpXung + " nhắn trực tiếp cho chúng mình nhé.");
+        return;
       }
+
+      var data = new FormData(form);
+      var attending = data.get("attending") === "yes";
+      if (submitBtn) submitBtn.disabled = true;
+      setFormStatus("Đang gửi…");
+
+      fetch(rsvpUrl, { method: "POST", body: new URLSearchParams(data) })
+        .then(function (res) {
+          return res.json();
+        })
+        .then(function (result) {
+          if (!result || !result.ok) throw new Error("rsvp failed");
+          setFormStatus(
+            attending
+              ? "Cảm ơn " + rsvpXung + "! Chúng mình đã nhận được xác nhận, hẹn gặp " + rsvpXung + " nhé."
+              : "Cảm ơn " + rsvpXung + " đã báo. Chúng mình đã nhận được lời nhắn của " + rsvpXung + ".",
+          );
+          if (submitBtn) submitBtn.textContent = "Gửi lại";
+        })
+        .catch(function () {
+          setFormStatus("Gửi chưa được, " + rsvpXung + " thử lại giúp chúng mình nhé.");
+        })
+        .then(function () {
+          if (submitBtn) submitBtn.disabled = false;
+        });
     });
   }
 })();
