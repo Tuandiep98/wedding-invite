@@ -65,6 +65,26 @@
     },
   };
 
+  /**
+   * Tài khoản nhận quà mừng, QR tạo tự động qua VietQR (img.vietqr.io).
+   * - bankId: mã ngân hàng theo VietQR (VCB, TCB, MB, ICB, BIDV, ACB…).
+   * - null = chưa có → thẻ hiện "Sẽ cập nhật".
+   */
+  window.WEDDING_GIFT = {
+    trai: {
+      bankId: "VCB",
+      bankName: "Vietcombank (VCB)",
+      account: "1019652628",
+      holder: "DANG TUAN DIEP",
+    },
+    gai: {
+      bankId: "VCB",
+      bankName: "Vietcombank (VCB)",
+      account: "1022010541",
+      holder: "NGUYEN THI THU THAO",
+    },
+  };
+
   /** Loại thiệp khi URL không chỉ định. */
   window.WEDDING_DEFAULT_EVENT = "bao-hi";
 

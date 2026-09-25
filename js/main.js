@@ -212,6 +212,11 @@
         ? "Lâu rồi không gặp, mong được gặp " + xung + " trong ngày vui này."
         : "Lâu rồi không gặp, mong nhận được lời chúc phúc từ " + xung + ".",
     ]);
+    setLines(document.querySelector('[data-bind="gift-lead"]'), [
+      "Sự hiện diện của " + xung + " là món quà quý giá nhất với chúng mình.",
+      "Nếu muốn gửi thêm chút tấm lòng, chúng mình trân trọng nhận.",
+    ]);
+    bindText("rsvp-kicker", "Hẹn gặp " + xung + " trong ngày vui");
 
     if (!GUEST) return;
     document.title = document.title + " · Mời " + name;
@@ -221,6 +226,90 @@
     if (rsvpGuest) rsvpGuest.value = GUEST.code;
     var rsvpName = document.getElementById("name");
     if (rsvpName && !rsvpName.value) rsvpName.value = name;
+  }
+
+  /** Bỏ dấu cho nội dung chuyển khoản (ngân hàng không nhận ký tự có dấu). */
+  function toAscii(s) {
+    return String(s)
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D")
+      .replace(/[^A-Za-z0-9 ]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function copyText(text, btn) {
+    function done() {
+      var old = btn.textContent;
+      btn.textContent = "Đã sao chép";
+      btn.classList.add("is-done");
+      setTimeout(function () {
+        btn.textContent = old;
+        btn.classList.remove("is-done");
+      }, 1400);
+    }
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        done();
+      } catch (err) {
+        /* bỏ qua: người dùng vẫn đọc được STK trên màn hình */
+      }
+      ta.remove();
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+  }
+
+  /** Thẻ QR mừng cưới: bên mời đứng trước, nội dung chuyển khoản kèm tên khách. */
+  function renderGift() {
+    var grid = document.getElementById("gift-grid");
+    if (!grid) return;
+    var gift = window.WEDDING_GIFT || {};
+    var note = toAscii((GUEST ? GUEST.name + " " : "") + "mung cuoi Diep Thao");
+
+    var firstCard = grid.querySelector('[data-side="' + EVENT.firstSide + '"]');
+    if (firstCard) grid.insertBefore(firstCard, grid.firstChild);
+
+    grid.querySelectorAll(".gift__card").forEach(function (card) {
+      var info = gift[card.getAttribute("data-side")];
+      var qr = card.querySelector(".gift__qr");
+      show(qr, !!info);
+      show(card.querySelector(".gift__info"), !!info);
+      show(card.querySelector(".gift__pending"), !info);
+      if (!info) return;
+
+      var url =
+        "https://img.vietqr.io/image/" +
+        encodeURIComponent(info.bankId) +
+        "-" +
+        encodeURIComponent(info.account) +
+        "-compact.png?accountName=" +
+        encodeURIComponent(info.holder) +
+        "&addInfo=" +
+        encodeURIComponent(note);
+      qr.href = url;
+      qr.querySelector("img").src = url;
+      card.querySelector(".gift__bank-name").textContent = info.bankName;
+      card.querySelector(".gift__account").textContent = info.account;
+      card.querySelector(".gift__holder").textContent = info.holder;
+      var btn = card.querySelector(".gift__copy");
+      btn.addEventListener("click", function () {
+        copyText(info.account, btn);
+      });
+    });
   }
 
   /** Khi có <base> (link dạng /nha-trai/<mã>), "#section" sẽ trỏ về trang gốc:
@@ -237,6 +326,7 @@
   fixHashLinksUnderBase();
   applyEvent();
   applyGuest();
+  renderGift();
 
   /** Ring nhẫn mở đầu (mỗi link khách xem lại một lần trong phiên) */
   var RING_GATE_KEY =

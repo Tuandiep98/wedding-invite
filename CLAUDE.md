@@ -71,6 +71,7 @@ Each entry in `js/guests/*.js`:
 | What | Where |
 |---|---|
 | Dates, times, venues, wording, Hero photo per variant | `js/events.js` (`iso`, `time`, `venue: { name, address, mapQuery }`, `ceremony`, `inviteVerb`, `lead`, `heroImage`, `heroPoster`, `heroPosition`, `firstSide`). When swapping a poster, resize to ~1718×2576 JPEG first and re-check `heroPosition` so the printed text is not cropped on portrait and landscape screens |
+| Gift QR (bank transfer) | `window.WEDDING_GIFT` in `js/events.js` (`trai`/`gai`: `{ bankId, bankName, account, holder }`, `null` shows "Sẽ cập nhật"). `renderGift()` in `main.js` builds the VietQR image URL (`img.vietqr.io`, `compact` template) with the guest name pre-filled as the transfer note, orders cards by `firstSide`, and wires the "Sao chép STK" button |
 | Open TODOs | báo hỉ date/venue |
 | Guest lists | `js/guests/nha-trai.js`, `js/guests/nha-gai.js` |
 | Couple names | `COUPLE` in `js/main.js` + defaults in `index.html` |
