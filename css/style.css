@@ -2640,34 +2640,14 @@ html.has-ring-gate body {
   transition: opacity 0.35s var(--ease-out);
 }
 
-.ring-gate__skip {
-  border: none;
-  background: none;
-  color: var(--color-text-dim);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-decoration: underline;
-  cursor: pointer;
-  padding: 0.5rem;
-  transition: opacity 0.35s var(--ease-out);
-}
-.ring-gate__skip:focus-visible {
-  outline: 2px solid var(--color-gold);
-  outline-offset: 3px;
-}
-
-/* Ẩn prompt/skip khi ảnh reveal đang hiện — tránh đè chữ lên khung ảnh, cũng không còn cần thiết vì user đã tap */
+/* Ẩn prompt khi ảnh reveal đang hiện — tránh đè chữ lên khung ảnh, cũng không còn cần thiết vì user đã tap */
 .ring-gate[data-step="hand"] .ring-gate__to,
 .ring-gate[data-step="proposal"] .ring-gate__to,
 .ring-gate[data-step="leaving"] .ring-gate__to,
 .ring-gate[data-step="opening"] .ring-gate__prompt,
 .ring-gate[data-step="hand"] .ring-gate__prompt,
 .ring-gate[data-step="proposal"] .ring-gate__prompt,
-.ring-gate[data-step="leaving"] .ring-gate__prompt,
-.ring-gate[data-step="opening"] .ring-gate__skip,
-.ring-gate[data-step="hand"] .ring-gate__skip,
-.ring-gate[data-step="proposal"] .ring-gate__skip,
-.ring-gate[data-step="leaving"] .ring-gate__skip {
+.ring-gate[data-step="leaving"] .ring-gate__prompt {
   opacity: 0;
   pointer-events: none;
 }

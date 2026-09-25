@@ -45,7 +45,6 @@
 
   var ringGate = document.getElementById("ring-gate");
   var ringGateTrigger = document.getElementById("ring-gate-trigger");
-  var ringGateSkip = document.getElementById("ring-gate-skip");
   var ringGateSparkles = document.getElementById("ring-gate-sparkles");
   var ringGatePrompt = document.getElementById("ring-gate-prompt");
   var ringGateInner = document.getElementById("ring-gate-inner");
@@ -441,7 +440,6 @@
     ringGateTrigger.focus();
 
     ringGateTrigger.addEventListener("click", openRingGate);
-    if (ringGateSkip) ringGateSkip.addEventListener("click", skipRingGate);
     ringGate.addEventListener("click", function () {
       // Một lần chạm ở cảnh cầu hôn được xem là người xem đã đọc xong.
       if (ringGate.getAttribute("data-step") === "proposal") leaveRingGate();
