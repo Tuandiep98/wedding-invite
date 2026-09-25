@@ -32,7 +32,7 @@
     <meta property="og:title" content="Tuấn Điệp &amp; Thu Thảo · Thiệp cưới" />
     <meta
       property="og:description"
-      content="Trân trọng kính mời bạn đến chung vui cùng gia đình chúng mình · Tháng 10 · 2026"
+      content="Trân trọng kính mời đến chung vui cùng hai gia đình · Tháng 10 · 2026"
     />
     <meta
       property="og:image"
@@ -145,18 +145,22 @@
             <p class="ring-gate__proposal-kicker">Khoảnh khắc cầu hôn</p>
             <p class="ring-gate__proposal-ornament">❧ ✦ ❧</p>
             <div class="ring-gate__proposal-photos">
-              <img
-                src="assets/proposal-moment-1.jpg"
-                alt=""
-                width="1488"
-                height="2047"
-              />
-              <img
-                src="assets/proposal-moment-2.jpg"
-                alt=""
-                width="1185"
-                height="1600"
-              />
+              <span class="ring-gate__proposal-frame">
+                <img
+                  src="assets/proposal-moment-1.jpg"
+                  alt=""
+                  width="1488"
+                  height="2047"
+                />
+              </span>
+              <span class="ring-gate__proposal-frame">
+                <img
+                  src="assets/proposal-moment-2.jpg"
+                  alt=""
+                  width="1185"
+                  height="1600"
+                />
+              </span>
             </div>
             <p class="ring-gate__proposal-text">
               Một buổi chiều rất bình thường, anh hỏi em một câu. Em gật đầu.
@@ -281,8 +285,8 @@
             </p>
             <div class="invitation__text">
               <p class="reveal" style="--d: 0.26s" data-bind="invite-message">
-                Cảm ơn bạn đã luôn đồng hành cùng chúng mình.<br />
-                Lâu rồi không gặp, mong nhận được lời chúc phúc từ bạn.
+                Cảm ơn quý khách đã luôn đồng hành cùng chúng tôi.<br />
+                Mong nhận được lời chúc phúc từ quý khách.
               </p>
               <p
                 class="reveal invitation__date"
@@ -353,7 +357,7 @@
               </div>
             </div>
             <p class="countdown__done" id="countdown-done" hidden>
-              Hôm nay là ngày vui của chúng mình
+              Hôm nay là ngày vui của <span data-bind="minh">chúng tôi</span>
             </p>
             <p class="invite__tbd" id="countdown-tbd" hidden>
               Ngày chung vui sẽ thông báo sau
@@ -598,7 +602,7 @@
         </p>
       </div>
       <a class="invite__continue" href="#rings">
-        <span>Khám phá câu chuyện của chúng mình</span>
+        <span>Khám phá câu chuyện của <span data-bind="minh">chúng tôi</span></span>
         <span class="invite__continue-arrow" aria-hidden="true">↓</span>
       </a>
     </section>
@@ -684,15 +688,15 @@
               <img
                 src="assets/gallery-1.jpg"
                 alt="Save the date"
-                width="1200"
-                height="1600"
+                width="1718"
+                height="2576"
                 loading="lazy"
                 decoding="async"
               />
               <span class="gallery__caption">
                 <span class="gallery__caption-title">Save the date</span>
                 <span class="gallery__caption-desc"
-                  >Ngày chúng mình về chung một nhà.</span
+                  >Ngày <span data-bind="minh">chúng tôi</span> về chung một nhà.</span
                 >
               </span>
             </button>
@@ -705,19 +709,19 @@
             <button
               type="button"
               class="gallery__slide-btn"
-              aria-label='Xem ảnh "Thiệp của chúng mình" lớn hơn'
+              aria-label='Xem ảnh "Thiệp cưới" lớn hơn'
               data-lightbox
             >
               <img
                 src="assets/save-the-date-poster.jpg"
-                alt="Thiệp của chúng mình"
-                width="1200"
-                height="1600"
+                alt="Thiệp cưới"
+                width="1718"
+                height="2576"
                 loading="lazy"
                 decoding="async"
               />
               <span class="gallery__caption">
-                <span class="gallery__caption-title">Thiệp của chúng mình</span>
+                <span class="gallery__caption-title">Thiệp cưới</span>
                 <span class="gallery__caption-desc"
                   >Tấm thiệp đầu tiên, có tên hai đứa cạnh nhau.</span
                 >
@@ -738,8 +742,8 @@
               <img
                 src="assets/gallery-2.jpg"
                 alt="Nhẫn và hoa"
-                width="1200"
-                height="1600"
+                width="1717"
+                height="2576"
                 loading="lazy"
                 decoding="async"
               />
@@ -762,8 +766,8 @@
               <img
                 src="assets/gallery-4.jpg"
                 alt="Sau tấm voan"
-                width="1200"
-                height="1600"
+                width="1717"
+                height="2576"
                 loading="lazy"
                 decoding="async"
               />
@@ -775,7 +779,137 @@
               </span>
             </button>
           </article>
+          <div class="gallery__separator" aria-hidden="true"></div>
+          <article
+            class="gallery__panel reveal reveal--from-right"
+            role="listitem"
+          >
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label='Xem ảnh "Phiên bản tí hon" lớn hơn'
+              data-lightbox
+            >
+              <img
+                src="assets/gallery-7.jpg"
+                alt="Phiên bản tí hon"
+                width="1086"
+                height="1448"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="gallery__caption">
+                <span class="gallery__caption-title">Phiên bản tí hon</span>
+                <span class="gallery__caption-desc"
+                  >Chú rể và cô dâu nhí, cười thật tươi.</span
+                >
+              </span>
+            </button>
+          </article>
+          <div class="gallery__separator" aria-hidden="true"></div>
+          <article
+            class="gallery__panel reveal reveal--from-left"
+            role="listitem"
+          >
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label='Xem ảnh "Tựa vào nhau" lớn hơn'
+              data-lightbox
+            >
+              <img
+                src="assets/gallery-8.jpg"
+                alt="Tựa vào nhau"
+                width="1122"
+                height="1402"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="gallery__caption">
+                <span class="gallery__caption-title">Tựa vào nhau</span>
+                <span class="gallery__caption-desc"
+                  >Ngồi cạnh nhau là thấy yên lòng.</span
+                >
+              </span>
+            </button>
+          </article>
+          <div class="gallery__separator" aria-hidden="true"></div>
+          <article
+            class="gallery__panel reveal reveal--rise"
+            role="listitem"
+          >
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label='Xem ảnh "Tay trong tay" lớn hơn'
+              data-lightbox
+            >
+              <img
+                src="assets/gallery-9.jpg"
+                alt="Tay trong tay"
+                width="1086"
+                height="1448"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="gallery__caption">
+                <span class="gallery__caption-title">Tay trong tay</span>
+                <span class="gallery__caption-desc"
+                  >Khoác tay nhau, sẵn sàng bước vào lễ đường.</span
+                >
+              </span>
+            </button>
+          </article>
+          <div class="gallery__separator" aria-hidden="true"></div>
+          <article
+            class="gallery__panel reveal reveal--from-right"
+            role="listitem"
+          >
+            <button
+              type="button"
+              class="gallery__slide-btn"
+              aria-label='Xem ảnh "Nụ hôn bất ngờ" lớn hơn'
+              data-lightbox
+            >
+              <img
+                src="assets/gallery-10.jpg"
+                alt="Nụ hôn bất ngờ"
+                width="1086"
+                height="1448"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="gallery__caption">
+                <span class="gallery__caption-title">Nụ hôn bất ngờ</span>
+                <span class="gallery__caption-desc"
+                  >Một nụ hôn lên má, ai đó ngượng đỏ mặt.</span
+                >
+              </span>
+            </button>
+          </article>
         </div>
+        <!-- Video phát sẽ tạm dừng nhạc nền, dừng video thì nhạc bật lại (main.js) -->
+        <figure class="gallery__video reveal reveal--rise">
+          <div class="gallery__video-frame">
+            <video
+              id="gallery-video"
+              controls
+              playsinline
+              preload="none"
+              poster="assets/video-poster.jpg"
+              width="720"
+              height="960"
+            >
+              <source src="assets/video.mp4" type="video/mp4" />
+            </video>
+            <figcaption class="gallery__video-caption">
+              <span class="gallery__caption-title">Lễ Dạm Ngõ</span>
+              <span class="gallery__caption-desc"
+                >29.06.2026 · Ngày hai gia đình chính thức gặp mặt.</span
+              >
+            </figcaption>
+          </div>
+        </figure>
       </div>
     </section>
 
@@ -791,8 +925,8 @@
           style="--d: 0.26s"
           data-bind="gift-lead"
         >
-          Sự hiện diện của bạn là món quà quý giá nhất với chúng mình.<br />
-          Nếu muốn gửi thêm chút tấm lòng, chúng mình trân trọng nhận.
+          Sự hiện diện của quý khách là món quà quý giá nhất với chúng tôi.<br />
+          Nếu muốn gửi thêm chút tấm lòng, chúng tôi xin trân trọng nhận.
         </p>
         <!-- Thẻ QR do main.js renderGift() dựng từ WEDDING_GIFT trong js/events.js -->
         <div class="gift__grid reveal" style="--d: 0.4s" id="gift-grid">
@@ -848,7 +982,7 @@
 
         <div class="gift__rsvp reveal" style="--d: 0.56s">
           <p class="gift__rsvp-kicker" data-bind="rsvp-kicker">
-            Hẹn gặp bạn trong ngày vui
+            Hẹn gặp quý khách trong ngày vui
           </p>
           <h3 id="rsvp-heading" class="invite__script-heading">
             Xác nhận tham dự
@@ -881,24 +1015,24 @@
                 type="text"
                 required
                 autocomplete="name"
-                placeholder="Nhập tên của bạn"
+                placeholder="Nhập tên của quý khách"
               />
             </div>
             <fieldset class="form__row form__fieldset">
-              <legend>Bạn sẽ tham dự chứ?</legend>
+              <legend><span data-bind="Xung">Quý khách</span> sẽ tham dự chứ?</legend>
               <label class="form__radio">
                 <input type="radio" name="attending" value="yes" checked />
-                Có, tôi sẽ tham dự
+                Có, sẽ tham dự
               </label>
               <label class="form__radio">
                 <input type="radio" name="attending" value="no" />
-                Tôi bận, rất tiếc không thể tham dự
+                Rất tiếc, không thể tham dự
               </label>
             </fieldset>
             <div class="form__row">
               <label for="guests">Số khách đi cùng</label>
               <select id="guests" name="guests">
-                <option value="0">Chỉ mình tôi</option>
+                <option value="0">Không có ai đi cùng</option>
                 <option value="1">+1 người</option>
                 <option value="2">+2 người</option>
                 <option value="3">+3 người trở lên</option>
@@ -928,7 +1062,9 @@
     <!-- ═══ Footer ═══ -->
     <footer class="footer">
       <div class="footer__monogram" aria-hidden="true">T &amp; Đ</div>
-      <p class="footer__text">Trân trọng cảm ơn · Hẹn gặp bạn trong ngày vui</p>
+      <p class="footer__text" data-bind="footer-text">
+        Trân trọng cảm ơn · Hẹn gặp quý khách trong ngày vui
+      </p>
       <p class="footer__date" data-bind="date-short"></p>
     </footer>
 
@@ -971,7 +1107,7 @@
 
     <audio id="bg-music" loop preload="metadata">
       <source
-        src="https://assets.mixkit.co/music/389/389.mp3"
+        src="assets/music.mp3"
         type="audio/mpeg"
       />
     </audio>

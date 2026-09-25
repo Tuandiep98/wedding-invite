@@ -1311,11 +1311,29 @@ a:focus-visible {
   color: var(--color-text-dim);
 }
 
-.gallery__story {
-  position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+/* Mỗi ảnh là một "tấm ảnh in" (cùng kiểu viền trắng + bóng với .invite__photo),
+   chú thích nằm trên dải giấy phía dưới như Polaroid. Khung ôm đúng tỉ lệ gốc
+   của từng ảnh (không cắt), vừa trong hộp ~88vw × ~78% chiều cao viewport. */
+.gallery__story,
+.gallery__video {
+  --vh: 1vh;
+  --frame-pad: clamp(6px, 1.6vw, 12px);
+  --cap-h: clamp(4.6rem, calc(11 * var(--vh)), 6.2rem);
+  --photo-max-h: calc(
+    78 * var(--vh) - var(--cap-h) - 2 * var(--frame-pad)
+  );
+  --photo-max-w: calc(88vw - 2 * var(--frame-pad));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2.5rem, calc(8 * var(--vh)), 5rem);
+  padding-block: 1rem 2rem;
+}
+@supports (height: 1svh) {
+  .gallery__story,
+  .gallery__video {
+    --vh: 1svh;
+  }
 }
 
 .gallery__panel {
@@ -1323,51 +1341,69 @@ a:focus-visible {
   margin: 0;
 }
 
+/* Nghiêng xen kẽ như ảnh đặt trên bàn; ảnh đang ở giữa màn hình (.is-active)
+   xoay thẳng và "nhấc" lên. Transform nằm trên nút để không đụng .reveal ở panel. */
+.gallery__panel:nth-of-type(odd) {
+  --tilt: -1.5deg;
+  --shift: -2vw;
+}
+.gallery__panel:nth-of-type(even) {
+  --tilt: 1.5deg;
+  --shift: 2vw;
+}
+
 .gallery__slide-btn {
   position: relative;
-  display: block;
-  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border: 0;
-  background: var(--color-dark);
-  padding: 0;
+  padding: var(--frame-pad) var(--frame-pad) 0;
+  background: #fffdf9;
   cursor: zoom-in;
-  overflow: hidden;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.32),
+    0 2px 6px rgba(0, 0, 0, 0.22);
+  transform: translateX(var(--shift, 0)) rotate(var(--tilt, 0deg));
+  transition:
+    transform 0.8s var(--ease-smooth),
+    box-shadow 0.8s var(--ease-smooth);
 }
 
-.gallery__slide-btn::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 44%;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(73, 68, 69, 0.2) 45%,
-    rgba(48, 43, 44, 0.76) 100%
-  );
-  pointer-events: none;
-  z-index: 1;
+.gallery__panel.is-active .gallery__slide-btn,
+.gallery__slide-btn:hover,
+.gallery__slide-btn:focus-visible {
+  transform: translateX(0) rotate(0deg) scale(1.02);
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.45),
+    0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
+/* width/height tự động theo tỉ lệ thật (lấy từ thuộc tính width/height trong
+   HTML trước khi ảnh tải xong), chỉ bị chặn bởi hộp tối đa → không cắt ảnh. */
 .gallery__slide-btn img {
-  width: 100vw;
-  aspect-ratio: 4/5;
-  object-fit: cover;
-  transform: none;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: var(--photo-max-w);
+  max-height: var(--photo-max-h);
 }
 
 .gallery__caption {
-  position: absolute;
-  left: 1rem;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 2;
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* width 0 + min-width 100%: chú thích dài không nới rộng khung, chỉ xuống dòng */
+  width: 0;
+  min-width: 100%;
+  min-height: var(--cap-h);
+  padding: 0.35rem 0.5rem;
+  text-align: center;
   opacity: 0;
-  transform: translateY(1.2rem);
+  transform: translateY(0.6rem);
   transition:
-    opacity 0.65s var(--ease-smooth),
-    transform 0.65s var(--ease-smooth);
+    opacity 0.65s var(--ease-smooth) 0.1s,
+    transform 0.65s var(--ease-smooth) 0.1s;
 }
 
 .gallery__panel.is-active .gallery__caption {
@@ -1377,24 +1413,72 @@ a:focus-visible {
 
 .gallery__caption-title {
   display: block;
-  margin: 0 0 0.4rem;
+  margin: 0 0 0.2rem;
   font-family: var(--font-display);
-  font-size: clamp(1.3rem, 3.5vw, 2rem);
+  font-size: clamp(1.2rem, 3.2vw, 1.6rem);
   font-style: italic;
-  color: #fff;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  line-height: 1.2;
+  color: var(--color-ink);
 }
 
 .gallery__caption-desc {
   display: block;
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 0.95rem;
-  line-height: 1.55;
-  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.45);
+  color: var(--color-ink-muted);
+  font-size: clamp(0.8rem, 2.4vw, 0.92rem);
+  line-height: 1.45;
 }
 
 .gallery__separator {
   display: none;
+}
+
+/* ── Video dưới album: cùng khung ảnh in nhưng không nghiêng (dễ bấm điều khiển) ── */
+.gallery__video {
+  margin: 0;
+  padding-top: clamp(1rem, calc(4 * var(--vh)), 3rem);
+}
+
+.gallery__video-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--frame-pad) var(--frame-pad) 0;
+  background: #fffdf9;
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.45),
+    0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.gallery__video video {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: var(--photo-max-w);
+  max-height: var(--photo-max-h);
+  background: #000;
+}
+
+.gallery__video-caption {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 0;
+  min-width: 100%;
+  min-height: var(--cap-h);
+  padding: 0.35rem 0.5rem;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery__slide-btn,
+  .gallery__panel.is-active .gallery__slide-btn,
+  .gallery__slide-btn:hover {
+    transform: none;
+  }
+  .gallery__caption {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ══ Gift ══ */
@@ -1952,24 +2036,46 @@ html.has-ring-gate body {
   letter-spacing: 0.55em;
 }
 
+/* Hai tấm ảnh in kiểu Polaroid (cùng giấy + bóng với khung gallery), giữ tỉ lệ gốc.
+   Hàng ảnh được nới rộng ra gần hết bề ngang màn hình (vượt khung chữ 34rem),
+   hai ảnh chồng mép nhau một chút ở giữa để ảnh lớn hơn trên điện thoại. */
 .ring-gate__proposal-photos {
+  --vh: 1vh;
+  --pf-pad: clamp(5px, 1.4vw, 10px);
+  --pf-row: min(calc(100vw - 1.5rem), 44rem);
   display: flex;
   justify-content: center;
-  gap: clamp(0.65rem, 2vw, 1.25rem);
-  margin: 0 0 1.15rem;
+  align-items: center;
+  margin: 0 calc(50% - var(--pf-row) / 2) 1.15rem;
+}
+@supports (height: 1svh) {
+  .ring-gate__proposal-photos {
+    --vh: 1svh;
+  }
+}
+
+.ring-gate__proposal-frame {
+  display: block;
+  flex: 0 1 auto;
+  padding: var(--pf-pad) var(--pf-pad) clamp(1.3rem, 4.5vw, 2.4rem);
+  background: #fffdf9;
+  box-shadow:
+    0 18px 40px rgba(20, 8, 12, 0.5),
+    0 3px 10px rgba(20, 8, 12, 0.3);
+}
+.ring-gate__proposal-frame + .ring-gate__proposal-frame {
+  margin-left: clamp(-1.5rem, -3vw, -0.5rem);
 }
 
 .ring-gate__proposal-photos img {
   display: block;
-  width: clamp(7rem, 17vw, 10rem);
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  border: 0.22rem solid var(--color-paper);
-  border-radius: 0.35rem;
-  box-shadow: 0 0.75rem 1.75rem rgba(43, 20, 28, 0.35);
+  width: auto;
+  height: auto;
+  max-width: calc(var(--pf-row) / 2 - 2 * var(--pf-pad));
+  max-height: calc(40 * var(--vh));
 }
 
-.ring-gate__proposal-photos img:first-child {
+.ring-gate__proposal-frame:first-child {
   opacity: 0;
   transform: translateX(-2rem) rotate(-9deg);
   transition:
@@ -1977,7 +2083,9 @@ html.has-ring-gate body {
     transform 0.7s var(--ease-out);
 }
 
-.ring-gate__proposal-photos img:last-child {
+.ring-gate__proposal-frame:last-child {
+  position: relative;
+  z-index: 1;
   opacity: 0;
   transform: translateX(2rem) rotate(9deg);
   transition:
@@ -2023,12 +2131,12 @@ html.has-ring-gate body {
 .ring-gate[data-step="proposal"] .ring-gate__proposal-photos {
   transition-delay: 0.4s;
 }
-.ring-gate[data-step="proposal"] .ring-gate__proposal-photos img:first-child {
+.ring-gate[data-step="proposal"] .ring-gate__proposal-frame:first-child {
   opacity: 1;
   transform: rotate(-5deg) translateY(0.35rem);
   transition-delay: 0.55s;
 }
-.ring-gate[data-step="proposal"] .ring-gate__proposal-photos img:last-child {
+.ring-gate[data-step="proposal"] .ring-gate__proposal-frame:last-child {
   opacity: 1;
   transform: rotate(4deg) translateY(-0.25rem);
   transition-delay: 0.68s;
@@ -2459,9 +2567,6 @@ html.has-ring-gate body {
   .ring-gate__proposal-memory {
     width: min(calc(100% - 2.5rem), 30rem);
   }
-  .ring-gate__proposal-photos img {
-    width: clamp(6rem, 25vw, 8rem);
-  }
 
   .invite__families {
     gap: 1.25rem 0.75rem;
@@ -2471,18 +2576,6 @@ html.has-ring-gate body {
     max-width: 22rem;
   }
 
-  .gallery__slide-btn img {
-    width: 100vw;
-    max-width: 100vw;
-  }
-  .gallery__caption {
-    left: 0.75rem;
-    right: 0.75rem;
-    bottom: 0.75rem;
-  }
-  .gallery-section .container {
-    max-width: 100%;
-  }
 
   .lightbox__nav--prev {
     left: -0.25rem;
@@ -2498,29 +2591,3 @@ html.has-ring-gate body {
   }
 }
 
-@media (min-width: 769px) {
-  .gallery-section .container {
-    max-width: 72rem;
-  }
-
-  .gallery__story {
-    width: 100%;
-    max-width: 68rem;
-    margin-inline: auto;
-  }
-
-  .gallery__panel {
-    display: flex;
-    justify-content: center;
-  }
-
-  .gallery__slide-btn {
-    width: min(100%, 68rem);
-    margin-inline: auto;
-  }
-
-  .gallery__slide-btn img {
-    width: 100%;
-    object-position: center;
-  }
-}

@@ -8,6 +8,30 @@
   var GUEST = findGuest(ROUTE.code);
   var WEDDING_ISO = EVENT.iso;
 
+  /** Cặp xưng hô: XUNG = gọi khách, MINH = cô dâu chú rể tự xưng.
+   *  Link không có khách → trang trọng "quý khách"/"chúng tôi". */
+  var XUNG = GUEST ? GUEST.xung || "bạn" : "quý khách";
+  var MINH = GUEST ? GUEST.minh || selfPronoun(XUNG) : "chúng tôi";
+
+  function selfPronoun(xung) {
+    var words = String(xung).toLowerCase().split(/\s+/);
+    function has(list) {
+      return words.some(function (w) {
+        return list.indexOf(w) !== -1;
+      });
+    }
+    if (has(["em", "cháu"])) return "anh chị";
+    if (has(["ông", "bà", "cô", "chú", "bác", "dì", "cậu", "mợ", "thím"]))
+      return "chúng cháu";
+    if (has(["anh", "chị"])) return "chúng em";
+    return "chúng mình";
+  }
+
+  /** Viết hoa chữ cái đầu (khi xưng hô đứng đầu câu). */
+  function cap(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
   var cdDays = document.getElementById("cd-days");
   var cdHours = document.getElementById("cd-hours");
   var cdMins = document.getElementById("cd-mins");
@@ -211,20 +235,28 @@
 
   function applyGuest() {
     var name = GUEST ? GUEST.name : "Quý khách";
-    var xung = (GUEST && GUEST.xung) || "bạn";
+    var xung = XUNG;
 
     bindText("guest-name", name);
+    // Các chỗ chỉ có một từ xưng hô trong HTML (caption, nút cuộn, đếm ngược...)
+    bindText("xung", xung);
+    bindText("minh", MINH);
+    bindText("Minh", cap(MINH));
+    bindText("Xung", cap(xung));
     setLines(document.querySelector('[data-bind="invite-message"]'), [
-      "Cảm ơn " + xung + " đã luôn đồng hành cùng chúng mình.",
+      "Cảm ơn " + xung + " đã luôn đồng hành cùng " + MINH + ".",
       EVENT.iso && EVENT_ID !== "bao-hi"
-        ? "Lâu rồi không gặp, mong được gặp " + xung + " trong ngày vui này."
-        : "Lâu rồi không gặp, mong nhận được lời chúc phúc từ " + xung + ".",
+        ? "Mong được đón " + xung + " trong ngày vui này."
+        : "Mong nhận được lời chúc phúc từ " + xung + ".",
     ]);
     setLines(document.querySelector('[data-bind="gift-lead"]'), [
-      "Sự hiện diện của " + xung + " là món quà quý giá nhất với chúng mình.",
-      "Nếu muốn gửi thêm chút tấm lòng, chúng mình trân trọng nhận.",
+      "Sự hiện diện của " + xung + " là món quà quý giá nhất với " + MINH + ".",
+      "Nếu muốn gửi thêm chút tấm lòng, " + MINH + " xin trân trọng nhận.",
     ]);
     bindText("rsvp-kicker", "Hẹn gặp " + xung + " trong ngày vui");
+    bindText("footer-text", "Trân trọng cảm ơn · Hẹn gặp " + xung + " trong ngày vui");
+    var rsvpNameInput = document.getElementById("name");
+    if (rsvpNameInput) rsvpNameInput.placeholder = "Nhập tên của " + xung;
 
     if (!GUEST) return;
     document.title = document.title + " · Mời " + name;
@@ -378,7 +410,7 @@
     if (ringGate.getAttribute("data-step") !== "closed") return;
     ringGate.setAttribute("data-step", "opening");
     if (ringGatePrompt)
-      ringGatePrompt.textContent = "Dành tặng riêng cho bạn ✦";
+      ringGatePrompt.textContent = "Dành tặng riêng cho " + XUNG + " ✦";
 
     openSfx.play().catch(function () {});
     spawnRingGateSparkles();
@@ -415,12 +447,11 @@
 
   function showProposalMoment() {
     ringGate.setAttribute("data-step", "proposal");
-    // Đủ thời gian để xem ảnh và đọc trọn lời cầu hôn trước khi vào trang chính.
-    setTimeout(leaveRingGate, 8000);
+    // Đủ thời gian để xem ảnh và đọc lời cầu hôn trước khi vào trang chính (chạm để qua sớm).
+    setTimeout(leaveRingGate, 4000);
   }
 
   function leaveRingGate() {
-    whooshSfx.play().catch(function () {});
     ringGate.setAttribute("data-step", "leaving");
     if (ringGateInner) ringGateInner.classList.add("is-leaving");
 
@@ -799,12 +830,49 @@
     });
   }
 
+  /** Video Lễ Dạm Ngõ: không phát chồng tiếng với nhạc nền. */
+  var galleryVideo = document.getElementById("gallery-video");
+  if (galleryVideo && audio) {
+    var resumeMusicAfterVideo = false;
+
+    galleryVideo.addEventListener("play", function () {
+      resumeMusicAfterVideo = !audio.paused;
+      if (resumeMusicAfterVideo) {
+        audio.pause();
+        setAudioUi(false);
+      }
+    });
+
+    var onVideoStop = function () {
+      if (!resumeMusicAfterVideo) return;
+      resumeMusicAfterVideo = false;
+      audio.play().then(
+        function () {
+          setAudioUi(true);
+        },
+        function () {
+          setAudioUi(false);
+        },
+      );
+    };
+    galleryVideo.addEventListener("pause", onVideoStop);
+    galleryVideo.addEventListener("ended", onVideoStop);
+
+    // Khách bật lại nhạc nền khi video đang chạy → dừng video
+    audio.addEventListener("play", function () {
+      if (!galleryVideo.paused) {
+        resumeMusicAfterVideo = false;
+        galleryVideo.pause();
+      }
+    });
+  }
+
   /** RSVP */
   var form = document.getElementById("rsvp-form");
   var formStatus = document.getElementById("form-status");
 
   var rsvpUrl = window.WEDDING_RSVP_URL || "";
-  var rsvpXung = (GUEST && GUEST.xung) || "bạn";
+  var rsvpXung = XUNG;
 
   function setFormStatus(text) {
     if (!formStatus) return;
@@ -822,7 +890,7 @@
         return;
       }
       if (typeof window.fetch !== "function") {
-        setFormStatus("Trình duyệt chưa hỗ trợ gửi, " + rsvpXung + " nhắn trực tiếp cho chúng mình nhé.");
+        setFormStatus("Trình duyệt chưa hỗ trợ gửi, " + rsvpXung + " nhắn trực tiếp cho " + MINH + " nhé.");
         return;
       }
 
@@ -839,13 +907,13 @@
           if (!result || !result.ok) throw new Error("rsvp failed");
           setFormStatus(
             attending
-              ? "Cảm ơn " + rsvpXung + "! Chúng mình đã nhận được xác nhận, hẹn gặp " + rsvpXung + " nhé."
-              : "Cảm ơn " + rsvpXung + " đã báo. Chúng mình đã nhận được lời nhắn của " + rsvpXung + ".",
+              ? "Cảm ơn " + rsvpXung + "! " + cap(MINH) + " đã nhận được xác nhận, hẹn gặp " + rsvpXung + " nhé."
+              : "Cảm ơn " + rsvpXung + " đã báo. " + cap(MINH) + " đã nhận được lời nhắn của " + rsvpXung + ".",
           );
           if (submitBtn) submitBtn.textContent = "Gửi lại";
         })
         .catch(function () {
-          setFormStatus("Gửi chưa được, " + rsvpXung + " thử lại giúp chúng mình nhé.");
+          setFormStatus("Gửi chưa được, " + rsvpXung + " thử lại giúp " + MINH + " nhé.");
         })
         .then(function () {
           if (submitBtn) submitBtn.disabled = false;

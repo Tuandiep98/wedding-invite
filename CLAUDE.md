@@ -63,6 +63,7 @@ Each entry in `js/guests/*.js`:
 
 - `code`: unique across **both** files. Use a group suffix for duplicate names (`tu-cty`/`tu-dh`).
 - `name`: shown on the invite. `xung` (default "bạn") is used in the invite sentence.
+- `minh` (optional): how the couple refers to themselves to this guest. Default is derived from `xung` by `selfPronoun()` in `main.js`: em/cháu → "anh chị", ông/bà/cô/chú/bác/dì/cậu/mợ/thím → "chúng cháu", anh/chị → "chúng em", otherwise "chúng mình". Links without a guest use "quý khách" / "chúng tôi". In HTML, pronouns are `data-bind="xung"`/`"minh"` (and `"Xung"`/`"Minh"` capitalized for sentence starts); never hardcode "bạn"/"chúng mình" in copy.
 - `alias`: search-only notes/nicknames for `links.html`. Never displayed on the invite.
 - `event`: overrides the list's `defaultEvent` (groom's list → `nha-trai`, bride's list → `nha-gai`).
 - If an original name contains a parenthetical note, confirm the display name with the user before adding it.
@@ -80,7 +81,8 @@ Each entry in `js/guests/*.js`:
 | Ring intro gate photos + SFX | `assets/ring-box.webp`, `assets/ring-box-open.webp`, `assets/ring-fly.webp`, `assets/proposal-ring.webp`, `assets/proposal-moment-*.jpg`, `assets/open.mp3`, `assets/whoosh.mp3` |
 | RSVP form | Submitted in the background (`fetch`, guest stays on the page) to a Google Apps Script Web App that writes to a Google Sheet. Script source: `apps-script/rsvp.gs` (paste into the Sheet's Apps Script, deploy as Web App, access "Anyone"). Put the `/exec` URL in `window.WEDDING_RSVP_URL` (`js/events.js`); empty shows "Chưa mở nhận xác nhận". Hidden fields `event` and `guest` identify the submitter; the same event+code resubmitting updates its row. Hidden `website` field is a bot honeypot. After editing `rsvp.gs`, redeploy as a **new version** of the same deployment so the URL stays the same |
 | Gallery images | `index.html` `.gallery__panel` (real photos `assets/gallery-*.jpg`) |
-| Background music | `index.html` `<audio id="bg-music">` source (Mixkit) |
+| Gallery video | `index.html` `.gallery__video` → `assets/video.mp4` (H.264/AAC, faststart, `preload="none"`) + `assets/video-poster.jpg`. iPhone .MOV is HDR (HLG): convert to SDR first with `avconvert --preset PresetHighestQuality` (local ffmpeg has no zscale), then `ffmpeg -c:v libx264 -crf 25 -movflags +faststart`. Playing the video pauses the background music and resumes it on pause/end (`main.js`) |
+| Background music | `index.html` `assets/music.mp3` ("Bắt Đầu Chúng Ta", made on Suno), `<audio id="bg-music">` in `index.html` |
 
 ## External Dependencies
 
@@ -88,7 +90,6 @@ All loaded via CDN — no npm install needed:
 
 - **Google Fonts**: Cormorant Garamond, Be Vietnam Pro, Playfair Display, Alex Brush
 - **Google Apps Script + Google Sheet**: RSVP storage (`apps-script/rsvp.gs`)
-- **Mixkit**: Background music
 
 ## Conventions
 
