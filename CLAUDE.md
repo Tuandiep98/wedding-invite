@@ -10,7 +10,7 @@ One `index.html` renders **3 invitation variants** plus **per-guest personalizat
 
 | Variant (`eventId`) | Date | Notes |
 |---|---|---|
-| `nha-gai` (Lễ Vu Quy) | Sun 11/10/2026 10:30 | bride's name + family shown first, Hero = `save-the-date-poster.jpg` |
+| `nha-gai` (Lễ Vu Quy) | Sun 11/10/2026 11:00 | bride's name + family shown first, Hero = `save-the-date-poster.jpg` |
 | `nha-trai` (Lễ Tân Hôn) | Tue 13/10/2026 10:30 | Hero = `save-the-date-1310.jpg` (text centered, `heroPosition: "center 30%"`) |
 | `bao-hi` (Lễ Thành Hôn) | not set yet | default variant; date/time/countdown/venue/RSVP show "Sẽ thông báo sau" |
 
@@ -71,7 +71,7 @@ Each entry in `js/guests/*.js`:
 | What | Where |
 |---|---|
 | Dates, times, venues, wording, Hero photo per variant | `js/events.js` (`iso`, `time`, `venue: { name, address, mapQuery }`, `ceremony`, `inviteVerb`, `lead`, `heroImage`, `heroPoster`, `heroPosition`, `firstSide`). When swapping a poster, resize to ~1718×2576 JPEG first and re-check `heroPosition` so the printed text is not cropped on portrait and landscape screens |
-| Open TODOs | nhà gái venue, báo hỉ date/venue |
+| Open TODOs | báo hỉ date/venue |
 | Guest lists | `js/guests/nha-trai.js`, `js/guests/nha-gai.js` |
 | Couple names | `COUPLE` in `js/main.js` + defaults in `index.html` |
 | Ring intro gate photos + SFX | `assets/ring-box.webp`, `assets/ring-box-open.webp`, `assets/ring-fly.webp`, `assets/proposal-ring.webp`, `assets/proposal-moment-*.jpg`, `assets/open.mp3`, `assets/whoosh.mp3` |

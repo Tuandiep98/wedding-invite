@@ -18,9 +18,14 @@
       ceremony: "Lễ Vu Quy",
       inviteVerb: "Trân trọng kính mời",
       lead: "Tới dự bữa tiệc chung vui cùng gia đình",
-      iso: "2026-10-11T10:30:00+07:00",
-      time: "10:30",
-      venue: null, // TODO: { name: "…", address: "…", mapQuery: "…" }
+      iso: "2026-10-11T11:00:00+07:00",
+      time: "11:00",
+      venue: {
+        name: "Nhà hàng Đức Thắng",
+        address:
+          "Số 34 Phạm Ngọc Thạch, khu phố Tân Phú, phường Đồng Phú, TP. Đồng Nai",
+        mapQuery: "Nhà hàng Đức Thắng, 34 Phạm Ngọc Thạch, Đồng Phú, Đồng Nai",
+      },
       heroImage: "assets/save-the-date-poster.jpg",
       heroPoster: true,
       // Chữ in trên poster nằm lệch phải (~68–93% ngang): neo 85% để màn dọc không cắt mất chữ.
