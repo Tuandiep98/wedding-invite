@@ -283,9 +283,133 @@
     box.hidden = false;
   }
 
+  /** Mã → slug không dấu: "Vợ chồng em An" → "vo-chong-em-an". */
+  function slug(s) {
+    return norm(s)
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 40)
+      .replace(/-+$/, "");
+  }
+
+  /**
+   * Tạo link cho khách chưa có trong danh sách: tên + xưng hô đi kèm link
+   * (?e=…&k=…&n=…&x=…[&m=…]), main.js đọc lại y như khách có sẵn, form xác nhận
+   * vẫn ghi vào Sheet theo mã k. Mã không được trùng mã có sẵn (khách có sẵn sẽ thắng).
+   */
+  function setupCreator() {
+    var form = document.getElementById("creator");
+    if (!form) return;
+    var nameIn = document.getElementById("c-name");
+    var xungSel = document.getElementById("c-xung");
+    var xungCustom = document.getElementById("c-xung-custom");
+    var minhIn = document.getElementById("c-minh");
+    var eventSel = document.getElementById("c-event");
+    var codeIn = document.getElementById("c-code");
+    var preview = document.getElementById("c-preview");
+    var errorEl = document.getElementById("c-error");
+    var linkEl = document.getElementById("c-link");
+    var copyBtn = document.getElementById("c-copy");
+    var codeEdited = false;
+
+    var taken = {};
+    guests.forEach(function (g) {
+      taken[String(g.data.code).toLowerCase()] = true;
+    });
+
+    Object.keys(EVENTS).forEach(function (id) {
+      var opt = eventSel.appendChild(document.createElement("option"));
+      opt.value = id;
+      opt.textContent = EVENTS[id].label;
+    });
+    eventSel.value = EVENTS["nha-gai"] ? "nha-gai" : Object.keys(EVENTS)[0];
+
+    /** Slug từ tên, thêm -2, -3… nếu trùng mã có sẵn. */
+    function freeCode(base) {
+      if (!base) return "";
+      var code = base;
+      for (var n = 2; taken[code]; n++) code = base + "-" + n;
+      return code;
+    }
+
+    function xung() {
+      return (xungSel.value || xungCustom.value).trim() || "bạn";
+    }
+
+    function update() {
+      xungCustom.hidden = xungSel.value !== "";
+      if (!codeEdited) codeIn.value = freeCode(slug(nameIn.value));
+      var name = nameIn.value.trim();
+      var code = codeIn.value.trim().toLowerCase();
+      var x = xung();
+      var minh = minhIn.value.trim();
+      minhIn.placeholder = window.weddingSelfPronoun(x);
+
+      preview.textContent = "";
+      preview.appendChild(document.createElement("b")).textContent =
+        name || "(tên khách)";
+      preview.appendChild(
+        document.createTextNode(
+          "Cảm ơn " + x + " đã luôn đồng hành cùng " + (minh || window.weddingSelfPronoun(x)) + ".",
+        ),
+      );
+
+      var error = "";
+      if (!name) error = "Nhập tên khách.";
+      else if (!/^[a-z0-9-]+$/.test(code)) error = "Mã link chỉ gồm a-z, 0-9, dấu gạch ngang.";
+      else if (taken[code]) error = 'Mã "' + code + '" đã có trong danh sách khách, chọn mã khác.';
+      errorEl.textContent = error;
+      errorEl.hidden = !error || !name;
+      copyBtn.disabled = !!error;
+
+      if (error) {
+        linkEl.removeAttribute("href");
+        linkEl.textContent = "";
+        return;
+      }
+      var url =
+        SITE_URL +
+        "?e=" + eventSel.value +
+        "&k=" + encodeURIComponent(code) +
+        "&n=" + encodeURIComponent(name) +
+        (x !== "bạn" ? "&x=" + encodeURIComponent(x) : "") +
+        (minh ? "&m=" + encodeURIComponent(minh) : "");
+      linkEl.href = url;
+      // Hiện bản có dấu cho dễ đọc; copy vẫn lấy href đã mã hoá.
+      linkEl.textContent = safeDecode(url);
+    }
+
+    function safeDecode(url) {
+      try {
+        return decodeURIComponent(url);
+      } catch (err) {
+        return url;
+      }
+    }
+
+    codeIn.addEventListener("input", function () {
+      codeEdited = codeIn.value.trim() !== "";
+      update();
+    });
+    [nameIn, xungSel, xungCustom, minhIn, eventSel].forEach(function (el) {
+      el.addEventListener("input", update);
+      el.addEventListener("change", update);
+    });
+    // Enter trong ô nhập cũng copy, không để form tải lại trang.
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!copyBtn.disabled) copyBtn.click();
+    });
+    copyBtn.addEventListener("click", function () {
+      if (linkEl.href) copy(linkEl.href, copyBtn);
+    });
+    update();
+  }
+
   searchInput.addEventListener("input", render);
 
   setupMigrate();
+  setupCreator();
   checkData();
   renderStats();
   render();

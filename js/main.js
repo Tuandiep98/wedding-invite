@@ -5,27 +5,13 @@
   var ROUTE = window.WEDDING_ROUTE;
   var EVENT_ID = ROUTE.eventId;
   var EVENT = window.WEDDING_EVENTS[EVENT_ID];
-  var GUEST = findGuest(ROUTE.code);
+  var GUEST = findGuest(ROUTE.code) || guestFromLink(ROUTE.code);
   var WEDDING_ISO = EVENT.iso;
 
   /** Cặp xưng hô: XUNG = gọi khách, MINH = cô dâu chú rể tự xưng.
    *  Link không có khách → trang trọng "quý khách"/"chúng tôi". */
   var XUNG = GUEST ? GUEST.xung || "bạn" : "quý khách";
-  var MINH = GUEST ? GUEST.minh || selfPronoun(XUNG) : "chúng tôi";
-
-  function selfPronoun(xung) {
-    var words = String(xung).toLowerCase().split(/\s+/);
-    function has(list) {
-      return words.some(function (w) {
-        return list.indexOf(w) !== -1;
-      });
-    }
-    if (has(["em", "cháu"])) return "anh chị";
-    if (has(["ông", "bà", "cô", "chú", "bác", "dì", "cậu", "mợ", "thím"]))
-      return "chúng cháu";
-    if (has(["anh", "chị"])) return "chúng em";
-    return "chúng mình";
-  }
+  var MINH = GUEST ? GUEST.minh || window.weddingSelfPronoun(XUNG) : "chúng tôi";
 
   /** Viết hoa chữ cái đầu (khi xưng hô đứng đầu câu). */
   function cap(s) {
@@ -61,6 +47,8 @@
   }
 
   var COUPLE = { trai: "Tuấn Điệp", gai: "Thu Thảo" };
+  var COUPLE_FULL = { trai: "Đặng Tuấn Điệp", gai: "Nguyễn Thị Thu Thảo" };
+  var COUPLE_ROLE = { trai: "Quý Nam", gai: "Út Nữ" };
   var WEEKDAYS = [
     "Chủ Nhật",
     "Thứ Hai",
@@ -85,6 +73,21 @@
       }
     }
     return null;
+  }
+
+  /** Khách tạo nhanh ở links.html (không có trong js/guests/*.js): tên + xưng hô
+   *  nằm ngay trong link ?e=…&k=<mã>&n=<tên>&x=<xưng>[&m=<mình>]. */
+  function guestFromLink(code) {
+    if (!code) return null;
+    var params = new URLSearchParams(location.search);
+    var name = (params.get("n") || "").trim().slice(0, 80);
+    if (!name) return null;
+    return {
+      code: code,
+      name: name,
+      xung: (params.get("x") || "").trim().slice(0, 30) || "bạn",
+      minh: (params.get("m") || "").trim().slice(0, 30) || undefined,
+    };
   }
 
   function bindText(key, text) {
@@ -150,6 +153,10 @@
     var second = first === "gai" ? "trai" : "gai";
     bindText("name-first", COUPLE[first]);
     bindText("name-second", COUPLE[second]);
+    bindText("full-first", COUPLE_FULL[first]);
+    bindText("full-second", COUPLE_FULL[second]);
+    bindText("role-first", COUPLE_ROLE[first]);
+    bindText("role-second", COUPLE_ROLE[second]);
     var heroNames = document.getElementById("hero-names");
     if (heroNames)
       heroNames.setAttribute(

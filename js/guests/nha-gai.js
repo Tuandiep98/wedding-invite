@@ -12,6 +12,40 @@
     defaultEvent: "nha-gai",
     groups: [
       {
+        id: "ho-ngoai",
+        label: "Họ ngoại",
+        guests: [
+          { code: "thuy-sac", name: "Vợ chồng em Thuý", xung: "hai em", alias: ["vợ chồng em thuý"] },
+          { code: "thuy-huyen", name: "Vợ chồng em Thuỳ", xung: "hai em", alias: ["vợ chồng em thuỳ"] },
+          { code: "vinh-nhung", name: "Vợ chồng em Vinh Nhung", xung: "hai em", alias: ["vợ chồng em vinh nhung"] },
+          { code: "thanh-ngoai", name: "Em Thanh", xung: "em", alias: [] },
+          { code: "thuong-nhung", name: "Vợ chồng anh Thường Nhung", xung: "anh chị", alias: ["vợ chồng a thường nhung"] },
+          { code: "anh-vu", name: "Vợ chồng anh Vụ", xung: "anh chị", alias: ["vợ chồng a vụ"] },
+          { code: "chi-yen", name: "Vợ chồng chị Yên", xung: "anh chị", alias: ["vợ chồng chị yên"] },
+          { code: "huong", name: "Vợ chồng em Hướng", xung: "hai em", alias: ["vợ chồng em hướng"] },
+          { code: "son-ngoai", name: "Vợ chồng em Sơn", xung: "hai em", alias: ["vợ chồng em sơn"] },
+          { code: "ngan", name: "Vợ chồng em Ngân", xung: "hai em", alias: ["vợ chồng em ngân"] },
+          { code: "nga-ngoai", name: "Em Nga", xung: "em", alias: [] },
+          { code: "doan", name: "Vợ chồng em Doan", xung: "hai em", alias: ["vợ chồng em doan"] },
+          { code: "doanh", name: "Vợ chồng em Doanh", xung: "hai em", alias: ["vợ chồng em doanh"] },
+          { code: "hieu-ngoai", name: "Em Hiếu", xung: "em", alias: [] },
+          { code: "trang-ngoai", name: "Em Tráng", xung: "em", alias: [] },
+        ],
+      },
+      {
+        id: "ho-noi",
+        label: "Họ nội",
+        guests: [
+          { code: "anh-hoang", name: "Anh Hoàng", xung: "anh", alias: [] },
+          { code: "tuan-mai", name: "Vợ chồng anh Tuấn Mai", xung: "anh chị", alias: ["vợ chồng anh tuấn mai"] },
+          { code: "quynh-huong", name: "Em Quỳnh Hương", xung: "em", alias: [] },
+          { code: "huy-noi", name: "Vợ chồng em Huy", xung: "hai em", alias: ["vợ chồng em huy"] },
+          { code: "co-thao", name: "Anh Cò Thảo", xung: "anh", alias: ["anh cò thảo"] },
+          { code: "son-phuong", name: "Vợ chồng em Sơn Phượng", xung: "hai em", alias: ["vợ chồng em sơn phượng"] },
+          { code: "cuong-hue", name: "Vợ chồng em Cường Huệ", xung: "hai em", alias: ["vợ chồng em cường huệ"] },
+        ],
+      },
+      {
         id: "ban-be",
         label: "Bạn bè",
         guests: [

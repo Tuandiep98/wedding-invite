@@ -61,7 +61,8 @@
       .panel {
         display: grid;
         gap: 10px;
-        grid-template-columns: 1fr;
+        /* minmax(0, 1fr): link dài không nới cột grid ra ngoài màn hình */
+        grid-template-columns: minmax(0, 1fr);
         background: #fff;
         border: 1px solid var(--paper-deep);
         border-radius: 10px;
@@ -218,6 +219,62 @@
         background: var(--ok);
         border-color: var(--ok);
       }
+      .creator h2 {
+        margin: 0;
+      }
+      .creator .row {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: minmax(0, 1fr);
+      }
+      @media (min-width: 600px) {
+        .creator .row {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      .creator .hint {
+        margin: 4px 0 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .creator .preview {
+        margin: 0;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: var(--paper);
+        font-size: 14px;
+      }
+      .creator .preview b {
+        display: block;
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 20px;
+        color: var(--dark);
+      }
+      .creator .out {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        min-width: 0;
+      }
+      /* Link dài (tên có dấu bị mã hoá): hiện tối đa 2 dòng rồi cắt, nút Copy luôn nằm trong khung */
+      .creator .out .link {
+        flex: 1 1 auto;
+        white-space: normal;
+        word-break: break-all;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+      }
+      .creator .out button {
+        flex: none;
+      }
+      .creator .error {
+        margin: 0;
+        font-size: 13px;
+        color: var(--warn);
+      }
       .empty {
         color: var(--muted);
         text-align: center;
@@ -238,6 +295,56 @@
         <button type="button" id="migrate-btn" hidden>Sao chép link chuyển dấu Đã gửi</button>
       </div>
 
+      <!-- Khách chưa có trong js/guests/*.js: tên + xưng hô nằm luôn trong link (links.js). -->
+      <form class="panel creator" id="creator" autocomplete="off">
+        <h2>Tạo link cho khách mới</h2>
+        <div>
+          <label for="c-name">Tên trên thiệp</label>
+          <input type="text" id="c-name" maxlength="80" placeholder="vd: Vợ chồng em An" required />
+        </div>
+        <div class="row">
+          <div>
+            <label for="c-xung">Gọi khách là</label>
+            <select id="c-xung">
+              <option>bạn</option>
+              <option>em</option>
+              <option>anh</option>
+              <option>chị</option>
+              <option>hai em</option>
+              <option>hai bạn</option>
+              <option>anh chị</option>
+              <option>cô</option>
+              <option>chú</option>
+              <option>bác</option>
+              <option>cô chú</option>
+              <option>ông bà</option>
+              <option value="">Khác…</option>
+            </select>
+            <input type="text" id="c-xung-custom" maxlength="30" placeholder="vd: dì dượng" hidden />
+          </div>
+          <div>
+            <label for="c-minh">Cô dâu chú rể tự xưng</label>
+            <input type="text" id="c-minh" maxlength="30" />
+            <p class="hint">Để trống thì tự chọn theo cách gọi khách.</p>
+          </div>
+          <div>
+            <label for="c-event">Loại thiệp</label>
+            <select id="c-event"></select>
+          </div>
+          <div>
+            <label for="c-code">Mã link</label>
+            <input type="text" id="c-code" maxlength="40" pattern="[a-z0-9-]+" />
+            <p class="hint">Tự tạo từ tên, chỉ gồm a-z, 0-9, dấu gạch ngang.</p>
+          </div>
+        </div>
+        <p class="preview" id="c-preview"></p>
+        <p class="error" id="c-error" hidden></p>
+        <div class="out">
+          <a class="link" id="c-link" target="_blank" rel="noopener"></a>
+          <button type="button" id="c-copy">Copy link</button>
+        </div>
+      </form>
+
       <label for="search">Tìm theo tên, biệt danh, mã hoặc nhóm (gõ không dấu cũng được)</label>
       <input
         type="search"
@@ -252,9 +359,9 @@
       <div id="results"></div>
     </main>
 
-    <script src="js/events.js"></script>
-    <script src="js/guests/nha-trai.js"></script>
-    <script src="js/guests/nha-gai.js"></script>
-    <script src="js/links.js"></script>
+    <script src="js/events.js?v=20260929b"></script>
+    <script src="js/guests/nha-trai.js?v=20260929b"></script>
+    <script src="js/guests/nha-gai.js?v=20260929b"></script>
+    <script src="js/links.js?v=20260929b"></script>
   </body>
 </html>

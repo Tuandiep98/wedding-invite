@@ -94,6 +94,21 @@
   window.WEDDING_RSVP_URL =
     "https://script.google.com/macros/s/AKfycbyVTXm5ID6d_2KerP3L3K-H7PC4_1cuRnhpMcv40MSXBmy667h2b5-BJHxAEzEiC-GuPw/exec";
 
+  /** Cô dâu chú rể tự xưng theo cách gọi khách (dùng ở main.js và links.js). */
+  window.weddingSelfPronoun = function (xung) {
+    var words = String(xung).toLowerCase().split(/\s+/);
+    function has(list) {
+      return words.some(function (w) {
+        return list.indexOf(w) !== -1;
+      });
+    }
+    if (has(["em", "cháu"])) return "anh chị";
+    if (has(["ông", "bà", "cô", "chú", "bác", "dì", "cậu", "mợ", "thím"]))
+      return "chúng cháu";
+    if (has(["anh", "chị"])) return "chúng em";
+    return "chúng mình";
+  };
+
   /** Loại thiệp khi URL không chỉ định. */
   window.WEDDING_DEFAULT_EVENT = "bao-hi";
 

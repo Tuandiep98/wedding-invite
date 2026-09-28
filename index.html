@@ -16,14 +16,16 @@
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Thiệp cưới Tuấn Điệp &amp; Thu Thảo"
-    />
+    <meta name="description" content="Thiệp cưới Tuấn Điệp &amp; Thu Thảo" />
     <title>Tuấn Điệp &amp; Thu Thảo · Thiệp cưới</title>
     <meta name="theme-color" content="#5a1d2a" />
     <link rel="icon" href="favicon.ico" sizes="48x48" />
-    <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32" />
+    <link
+      rel="icon"
+      href="assets/favicon-32.png"
+      type="image/png"
+      sizes="32x32"
+    />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <!-- Ảnh + tiêu đề khi gửi link qua Zalo/Messenger (dùng chung mọi thiệp).
          og:image phải là URL tuyệt đối; đổi tên miền thì sửa theo. -->
@@ -48,14 +50,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&family=Alex+Brush&display=swap&subset=vietnamese"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&family=Alex+Brush&family=Dancing+Script:wght@500&display=swap&subset=vietnamese"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/style.css?v=20260929b" />
     <!-- Danh sách khách load trước events.js: link ngắn ?<mã> tự suy ra loại thiệp theo khách -->
-    <script src="js/guests/nha-trai.js"></script>
-    <script src="js/guests/nha-gai.js"></script>
-    <script src="js/events.js"></script>
+    <script src="js/guests/nha-trai.js?v=20260929b"></script>
+    <script src="js/guests/nha-gai.js?v=20260929b"></script>
+    <script src="js/events.js?v=20260929b"></script>
   </head>
   <body>
     <!-- Hiệu ứng mở đầu: nhẫn cầu hôn -->
@@ -288,13 +290,6 @@
                 Cảm ơn quý khách đã luôn đồng hành cùng chúng tôi.<br />
                 Mong nhận được lời chúc phúc từ quý khách.
               </p>
-              <p
-                class="reveal invitation__date"
-                style="--d: 0.38s"
-                data-bind="date-short"
-              >
-                Sẽ thông báo sau
-              </p>
             </div>
           </section>
 
@@ -323,44 +318,23 @@
             </div>
           </div>
 
-          <p class="invite__couple reveal" style="--d: 0.3s">
-            <span class="invite__couple-name" data-bind="name-first"
-              >Tuấn Điệp</span
-            >
-            <span class="invite__couple-amp" aria-hidden="true">&amp;</span>
-            <span class="invite__couple-name" data-bind="name-second"
-              >Thu Thảo</span
-            >
-          </p>
-
-          <div class="countdown" id="countdown">
-            <div
-              class="countdown__grid reveal"
-              style="--d: 0.38s"
-              id="countdown-grid"
-            >
-              <div class="countdown__unit">
-                <div class="countdown__value" id="cd-days">00</div>
-                <div class="countdown__label">ngày</div>
-              </div>
-              <div class="countdown__unit">
-                <div class="countdown__value" id="cd-hours">00</div>
-                <div class="countdown__label">giờ</div>
-              </div>
-              <div class="countdown__unit">
-                <div class="countdown__value" id="cd-mins">00</div>
-                <div class="countdown__label">phút</div>
-              </div>
-              <div class="countdown__unit">
-                <div class="countdown__value" id="cd-secs">00</div>
-                <div class="countdown__label">giây</div>
-              </div>
-            </div>
-            <p class="countdown__done" id="countdown-done" hidden>
-              Hôm nay là ngày vui của <span data-bind="minh">chúng tôi</span>
+          <div class="invite__couple reveal" style="--d: 0.3s">
+            <p class="invite__couple-person">
+              <span class="invite__couple-name" data-bind="full-first"
+                >Đặng Tuấn Điệp</span
+              >
+              <span class="invite__couple-role" data-bind="role-first"
+                >Quý Nam</span
+              >
             </p>
-            <p class="invite__tbd" id="countdown-tbd" hidden>
-              Ngày chung vui sẽ thông báo sau
+            <span class="invite__couple-amp" aria-hidden="true">&amp;</span>
+            <p class="invite__couple-person">
+              <span class="invite__couple-name" data-bind="full-second"
+                >Nguyễn Thị Thu Thảo</span
+              >
+              <span class="invite__couple-role" data-bind="role-second"
+                >Út Nữ</span
+              >
             </p>
           </div>
 
@@ -453,6 +427,37 @@
             </div>
           </div>
 
+          <div class="countdown" id="countdown">
+            <div
+              class="countdown__grid reveal"
+              style="--d: 0.38s"
+              id="countdown-grid"
+            >
+              <div class="countdown__unit">
+                <div class="countdown__value" id="cd-days">00</div>
+                <div class="countdown__label">ngày</div>
+              </div>
+              <div class="countdown__unit">
+                <div class="countdown__value" id="cd-hours">00</div>
+                <div class="countdown__label">giờ</div>
+              </div>
+              <div class="countdown__unit">
+                <div class="countdown__value" id="cd-mins">00</div>
+                <div class="countdown__label">phút</div>
+              </div>
+              <div class="countdown__unit">
+                <div class="countdown__value" id="cd-secs">00</div>
+                <div class="countdown__label">giây</div>
+              </div>
+            </div>
+            <p class="countdown__done" id="countdown-done" hidden>
+              Hôm nay là ngày vui của <span data-bind="minh">chúng tôi</span>
+            </p>
+            <p class="invite__tbd" id="countdown-tbd" hidden>
+              Ngày chung vui sẽ thông báo sau
+            </p>
+          </div>
+
           <div class="invite__notch" aria-hidden="true"></div>
 
           <div class="invite__venue reveal" style="--d: 0.7s">
@@ -460,9 +465,7 @@
               Địa Điểm Tổ Chức
               <span class="invite__venue-pin" aria-hidden="true">📍</span>
             </h3>
-            <p class="invite__venue-name" id="venue-name">
-              Sẽ thông báo sau
-            </p>
+            <p class="invite__venue-name" id="venue-name">Sẽ thông báo sau</p>
             <div class="invite__map" id="venue-map" hidden>
               <iframe
                 id="venue-map-frame"
@@ -501,7 +504,13 @@
                 <stop offset="0.5" stop-color="#fffdf8" />
                 <stop offset="1" stop-color="#e9ddcf" />
               </linearGradient>
-              <linearGradient id="dress-bodice-fill" x1="0" x2="1" y1="0" y2="0">
+              <linearGradient
+                id="dress-bodice-fill"
+                x1="0"
+                x2="1"
+                y1="0"
+                y2="0"
+              >
                 <stop offset="0" stop-color="#efe5d8" />
                 <stop offset="0.5" stop-color="#fffdf8" />
                 <stop offset="1" stop-color="#efe5d8" />
@@ -590,7 +599,9 @@
 
             <g class="invite__dress-sparkle">
               <path d="M44 92l2 6 6 2-6 2-2 6-2-6-6-2 6-2z" />
-              <path d="M160 140l1.5 4.5 4.5 1.5-4.5 1.5-1.5 4.5-1.5-4.5-4.5-1.5 4.5-1.5z" />
+              <path
+                d="M160 140l1.5 4.5 4.5 1.5-4.5 1.5-1.5 4.5-1.5-4.5-4.5-1.5 4.5-1.5z"
+              />
               <path d="M150 70l1 3 3 1-3 1-1 3-1-3-3-1 3-1z" />
             </g>
           </svg>
@@ -602,7 +613,9 @@
         </p>
       </div>
       <a class="invite__continue" href="#rings">
-        <span>Khám phá câu chuyện của <span data-bind="minh">chúng tôi</span></span>
+        <span
+          >Khám phá câu chuyện của <span data-bind="minh">chúng tôi</span></span
+        >
         <span class="invite__continue-arrow" aria-hidden="true">↓</span>
       </a>
     </section>
@@ -718,7 +731,8 @@
               <span class="gallery__caption">
                 <span class="gallery__caption-title">Save the date</span>
                 <span class="gallery__caption-desc"
-                  >Ngày <span data-bind="minh">chúng tôi</span> về chung một nhà.</span
+                  >Ngày <span data-bind="minh">chúng tôi</span> về chung một
+                  nhà.</span
                 >
               </span>
             </button>
@@ -856,89 +870,9 @@
             </button>
           </article>
           <div class="gallery__separator" aria-hidden="true"></div>
+          <!-- Cụm ảnh nhí: 1 ảnh chính + 2 ảnh polaroid ghim ở hai góc dưới. -->
           <article
-            class="gallery__panel reveal reveal--rise"
-            role="listitem"
-          >
-            <button
-              type="button"
-              class="gallery__slide-btn"
-              aria-label='Xem ảnh "Vòng tay" lớn hơn'
-              data-lightbox
-            >
-              <img
-                src="assets/gallery-6.jpg"
-                alt="Vòng tay"
-                width="1717"
-                height="2576"
-                loading="lazy"
-                decoding="async"
-              />
-              <span class="gallery__caption">
-                <span class="gallery__caption-title">Vòng tay</span>
-                <span class="gallery__caption-desc"
-                  >Phía sau luôn có một vòng tay chờ sẵn.</span
-                >
-              </span>
-            </button>
-          </article>
-          <div class="gallery__separator" aria-hidden="true"></div>
-          <article
-            class="gallery__panel reveal reveal--from-right"
-            role="listitem"
-          >
-            <button
-              type="button"
-              class="gallery__slide-btn"
-              aria-label='Xem ảnh "Phiên bản tí hon" lớn hơn'
-              data-lightbox
-            >
-              <img
-                src="assets/gallery-7.jpg"
-                alt="Phiên bản tí hon"
-                width="1086"
-                height="1448"
-                loading="lazy"
-                decoding="async"
-              />
-              <span class="gallery__caption">
-                <span class="gallery__caption-title">Phiên bản tí hon</span>
-                <span class="gallery__caption-desc"
-                  >Chú rể và cô dâu nhí, cười thật tươi.</span
-                >
-              </span>
-            </button>
-          </article>
-          <div class="gallery__separator" aria-hidden="true"></div>
-          <article
-            class="gallery__panel reveal reveal--from-left"
-            role="listitem"
-          >
-            <button
-              type="button"
-              class="gallery__slide-btn"
-              aria-label='Xem ảnh "Tựa vào nhau" lớn hơn'
-              data-lightbox
-            >
-              <img
-                src="assets/gallery-8.jpg"
-                alt="Tựa vào nhau"
-                width="1122"
-                height="1402"
-                loading="lazy"
-                decoding="async"
-              />
-              <span class="gallery__caption">
-                <span class="gallery__caption-title">Tựa vào nhau</span>
-                <span class="gallery__caption-desc"
-                  >Ngồi cạnh nhau là thấy yên lòng.</span
-                >
-              </span>
-            </button>
-          </article>
-          <div class="gallery__separator" aria-hidden="true"></div>
-          <article
-            class="gallery__panel reveal reveal--from-right"
+            class="gallery__panel gallery__panel--cluster reveal reveal--rise"
             role="listitem"
           >
             <button
@@ -956,11 +890,41 @@
                 decoding="async"
               />
               <span class="gallery__caption">
-                <span class="gallery__caption-title">Nụ hôn bất ngờ</span>
+                <span class="gallery__caption-title">Phiên bản tí hon</span>
                 <span class="gallery__caption-desc"
-                  >Một nụ hôn lên má, ai đó ngượng đỏ mặt.</span
+                  >Chú rể và cô dâu nhí, cười thật tươi.</span
                 >
               </span>
+            </button>
+            <button
+              type="button"
+              class="gallery__pin gallery__pin--left"
+              aria-label='Xem ảnh "Phiên bản tí hon" lớn hơn'
+              data-lightbox
+            >
+              <img
+                src="assets/gallery-7.jpg"
+                alt="Phiên bản tí hon"
+                width="1086"
+                height="1448"
+                loading="lazy"
+                decoding="async"
+              />
+            </button>
+            <button
+              type="button"
+              class="gallery__pin gallery__pin--right"
+              aria-label='Xem ảnh "Tựa vào nhau" lớn hơn'
+              data-lightbox
+            >
+              <img
+                src="assets/gallery-8.jpg"
+                alt="Tựa vào nhau"
+                width="1122"
+                height="1402"
+                loading="lazy"
+                decoding="async"
+              />
             </button>
           </article>
         </div>
@@ -1073,7 +1037,9 @@
               />
             </div>
             <fieldset class="form__row form__fieldset">
-              <legend><span data-bind="Xung">Quý khách</span> sẽ tham dự chứ?</legend>
+              <legend>
+                <span data-bind="Xung">Quý khách</span> sẽ tham dự chứ?
+              </legend>
               <label class="form__radio">
                 <input type="radio" name="attending" value="yes" checked />
                 Có, sẽ tham dự
@@ -1124,16 +1090,68 @@
 
     <!-- Nút đi nhanh tới từng mục, xếp theo thứ tự trên trang (main.js ẩn mục chưa có) -->
     <nav class="quick-nav" id="quick-nav" aria-label="Đi nhanh tới">
-      <button type="button" class="quick-nav__btn" data-target="gallery" aria-label="Album ảnh">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="M21 15l-5-5L5 21" /></svg>
+      <button
+        type="button"
+        class="quick-nav__btn"
+        data-target="gallery"
+        aria-label="Album ảnh"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <path d="M21 15l-5-5L5 21" />
+        </svg>
         <span class="quick-nav__label">Album ảnh</span>
       </button>
-      <button type="button" class="quick-nav__btn" data-target="gift" aria-label="QR mừng cưới">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><path d="M14 14h3v3h-3zM21 14v.01M14 21h.01M17 21h4v-4" /></svg>
+      <button
+        type="button"
+        class="quick-nav__btn"
+        data-target="gift"
+        aria-label="QR mừng cưới"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+          <path d="M14 14h3v3h-3zM21 14v.01M14 21h.01M17 21h4v-4" />
+        </svg>
         <span class="quick-nav__label">QR mừng cưới</span>
       </button>
-      <button type="button" class="quick-nav__btn" data-target="rsvp" aria-label="Xác nhận tham dự">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><path d="M17 11l2 2 4-4" /></svg>
+      <button
+        type="button"
+        class="quick-nav__btn"
+        data-target="rsvp"
+        aria-label="Xác nhận tham dự"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="8.5" cy="7" r="4" />
+          <path d="M17 11l2 2 4-4" />
+        </svg>
         <span class="quick-nav__label">Xác nhận tham dự</span>
       </button>
     </nav>
@@ -1176,10 +1194,7 @@
     </button>
 
     <audio id="bg-music" loop preload="metadata">
-      <source
-        src="assets/music.mp3"
-        type="audio/mpeg"
-      />
+      <source src="assets/music.mp3" type="audio/mpeg" />
     </audio>
 
     <!-- Lightbox -->
@@ -1218,7 +1233,7 @@
       </div>
     </dialog>
 
-    <script src="js/lunar.js" defer></script>
-    <script src="js/main.js" defer></script>
+    <script src="js/lunar.js?v=20260929b" defer></script>
+    <script src="js/main.js?v=20260929b" defer></script>
   </body>
 </html>

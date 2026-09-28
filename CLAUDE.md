@@ -90,7 +90,7 @@ Each entry in `js/guests/*.js`:
 
 All loaded via CDN — no npm install needed:
 
-- **Google Fonts**: Cormorant Garamond, Be Vietnam Pro, Playfair Display, Alex Brush
+- **Google Fonts**: Cormorant Garamond, Be Vietnam Pro, Playfair Display, Alex Brush, Dancing Script
 - **Google Apps Script + Google Sheet**: RSVP storage (`apps-script/rsvp.gs`)
 
 ## Conventions
