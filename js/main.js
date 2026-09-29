@@ -912,6 +912,38 @@
     });
   }
 
+  /** Cuộn tới một mục. Ảnh lazy phía trên tải xong giữa chừng làm mục bị đẩy
+   *  xuống, nên kiểm tra lại và cuộn bù thêm vài lần. */
+  var scrollFixTimer;
+  function scrollToTarget(target, attempt) {
+    target.scrollIntoView({
+      behavior: prefersReduced ? "auto" : "smooth",
+      block: "start",
+    });
+    if (attempt >= 3) return;
+    clearTimeout(scrollFixTimer);
+    scrollFixTimer = setTimeout(function () {
+      var margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+      var atBottom =
+        window.innerHeight + window.pageYOffset >=
+        document.documentElement.scrollHeight - 2;
+      if (Math.abs(target.getBoundingClientRect().top - margin) > 8 && !atBottom)
+        scrollToTarget(target, attempt + 1);
+    }, 900);
+  }
+
+  /** Mũi tên "cuộn xuống" chỉ đưa tới mục ngay sau (href="#mục"). */
+  document
+    .querySelectorAll(".hero__scroll-hint, .invite__continue")
+    .forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        var target = link.hash && document.getElementById(link.hash.slice(1));
+        if (!target) return;
+        e.preventDefault();
+        scrollToTarget(target, 0);
+      });
+    });
+
   /** Nút đi nhanh: hiện sau khi cuộn qua Hero, ẩn mục biến thể chưa có, tô mục đang xem. */
   function setupQuickNav() {
     var nav = document.getElementById("quick-nav");
@@ -938,25 +970,6 @@
         }, 1400);
       });
     });
-
-    // Ảnh lazy phía trên tải xong giữa chừng làm mục bị đẩy xuống: cuộn bù thêm vài lần
-    function scrollToTarget(target, attempt) {
-      target.scrollIntoView({
-        behavior: prefersReduced ? "auto" : "smooth",
-        block: "start",
-      });
-      if (attempt >= 3) return;
-      clearTimeout(scrollFixTimer);
-      scrollFixTimer = setTimeout(function () {
-        var margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
-        var atBottom =
-          window.innerHeight + window.pageYOffset >=
-          document.documentElement.scrollHeight - 2;
-        if (Math.abs(target.getBoundingClientRect().top - margin) > 8 && !atBottom)
-          scrollToTarget(target, attempt + 1);
-      }, 900);
-    }
-    var scrollFixTimer;
 
     var hero = document.getElementById("top");
     var ticking = false;
