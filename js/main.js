@@ -500,7 +500,7 @@
   function showProposalMoment() {
     ringGate.setAttribute("data-step", "proposal");
     // Đủ thời gian để xem ảnh và đọc lời cầu hôn trước khi vào trang chính (chạm để qua sớm).
-    setTimeout(leaveRingGate, 4000);
+    setTimeout(leaveRingGate, 5400);
   }
 
   function leaveRingGate() {
