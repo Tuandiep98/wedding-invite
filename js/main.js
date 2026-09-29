@@ -206,7 +206,8 @@
           pad(lunar.month) +
           (lunar.leap ? " nhuận" : "") +
           " năm " +
-          lunar.yearName;
+          lunar.yearName +
+          " (Âm lịch)";
       }
       show(lunarEl, !!lunar);
       var tbody = document.getElementById("calendar-body");
@@ -773,83 +774,113 @@
   }
   setupRingsMergeScroll();
 
-  /** Lightbox với prev/next navigation */
-  var lightbox = document.getElementById("lightbox");
-  var lightboxImg = document.getElementById("lightbox-img");
-  var lightboxClose = document.getElementById("lightbox-close");
-  var lightboxPrev = document.getElementById("lightbox-prev");
-  var lightboxNext = document.getElementById("lightbox-next");
-  var lightboxCounter = document.getElementById("lightbox-counter");
+  /** Xem ảnh toàn màn hình (PhotoSwipe): điện thoại phủ kín màn hình,
+   *  màn lớn chừa lề cho ảnh thoáng. Nút và chú thích nổi trên ảnh. */
+  var ICON_CHEVRON =
+    '<svg class="pswp__icn" viewBox="0 0 32 32" aria-hidden="true">' +
+    '<path d="M19.5 7.5 11 16l8.5 8.5"/></svg>';
+  var ICON_CLOSE =
+    '<svg class="pswp__icn" viewBox="0 0 32 32" aria-hidden="true">' +
+    '<path d="M9.5 9.5l13 13M22.5 9.5l-13 13"/></svg>';
 
-  var lightboxImages = [];
-  var lightboxIndex = 0;
+  var viewerItems = [];
+  var viewer = null;
 
-  document.querySelectorAll("[data-lightbox]").forEach(function (btn, idx) {
+  document.querySelectorAll("[data-lightbox]").forEach(function (btn) {
     var img = btn.querySelector("img");
-    if (img) {
-      lightboxImages.push({ src: img.src, alt: img.alt || "" });
-      btn.addEventListener("click", function () {
-        lightboxIndex = idx;
-        showAt(idx);
+    if (!img) return;
+    var index = viewerItems.length;
+    viewerItems.push({ btn: btn, img: img });
+    btn.addEventListener("click", function () {
+      openViewer(index);
+    });
+  });
+
+  function captionText(btn, selector) {
+    var el = btn.querySelector(selector);
+    return el ? el.textContent.replace(/\s+/g, " ").trim() : "";
+  }
+
+  /** Dựng slide lúc mở: chú thích lấy theo xưng hô của khách đã gắn vào DOM. */
+  function viewerSlides() {
+    return viewerItems.map(function (item) {
+      var img = item.img;
+      var src = img.currentSrc || img.src;
+      return {
+        src: src,
+        msrc: src,
+        width: +img.getAttribute("width") || img.naturalWidth,
+        height: +img.getAttribute("height") || img.naturalHeight,
+        alt: img.alt,
+        element: img,
+        thumbCropped: true,
+        title: captionText(item.btn, ".gallery__caption-title") || img.alt,
+        desc: captionText(item.btn, ".gallery__caption-desc"),
+      };
+    });
+  }
+
+  function registerCaption() {
+    viewer.pswp.ui.registerElement({
+      name: "caption",
+      order: 9,
+      isButton: false,
+      appendTo: "root",
+      onInit: function (el, pswp) {
+        el.classList.add("pswp__hide-on-close");
+        el.setAttribute("aria-live", "polite");
+        var title = el.appendChild(document.createElement("p"));
+        title.className = "pswp__caption-title";
+        var desc = el.appendChild(document.createElement("p"));
+        desc.className = "pswp__caption-desc";
+        pswp.on("change", function () {
+          var data = pswp.currSlide.data;
+          title.textContent = data.title || "";
+          desc.textContent = data.desc || "";
+          desc.hidden = !data.desc;
+          el.hidden = !data.title && !data.desc;
+        });
+      },
+    });
+  }
+
+  function openViewer(index) {
+    if (!window.PhotoSwipeLightbox || !window.PhotoSwipe) {
+      // CDN lỗi: vẫn cho xem ảnh gốc.
+      window.open(viewerItems[index].img.currentSrc, "_blank", "noopener");
+      return;
+    }
+    if (!viewer) {
+      viewer = new window.PhotoSwipeLightbox({
+        pswpModule: window.PhotoSwipe,
+        mainClass: "pswp--wedding",
+        bgOpacity: 1,
+        showHideAnimationType: prefersReduced ? "fade" : "zoom",
+        showAnimationDuration: 380,
+        hideAnimationDuration: 320,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+        paddingFn: function (viewport) {
+          // Điện thoại: ảnh tràn màn hình. Tablet/máy tính: chừa chỗ cho nút và chú thích.
+          if (viewport.x < 768) return { top: 0, bottom: 0, left: 0, right: 0 };
+          var side = viewport.x >= 1200 ? 104 : 72;
+          return { top: 64, bottom: 112, left: side, right: side };
+        },
+        arrowPrevSVG: ICON_CHEVRON,
+        arrowNextSVG: ICON_CHEVRON,
+        closeSVG: ICON_CLOSE,
+        closeTitle: "Đóng",
+        zoomTitle: "Phóng to",
+        arrowPrevTitle: "Ảnh trước",
+        arrowNextTitle: "Ảnh sau",
+        indexIndicatorSep: " / ",
+        errorMsg: "Không tải được ảnh",
       });
+      viewer.on("uiRegister", registerCaption);
+      viewer.init();
     }
-  });
-
-  function showAt(idx) {
-    if (!lightbox || !lightboxImg) return;
-    var item = lightboxImages[idx];
-    lightboxImg.src = item.src;
-    lightboxImg.alt = item.alt;
-    if (lightboxCounter) {
-      lightboxCounter.textContent = idx + 1 + " / " + lightboxImages.length;
-    }
-    if (!lightbox.open) lightbox.showModal();
+    viewer.options.dataSource = viewerSlides();
+    viewer.loadAndOpen(index);
   }
-
-  function closeLightbox() {
-    if (lightbox && lightbox.open) {
-      lightbox.close();
-      lightboxImg.src = "";
-    }
-  }
-
-  if (lightboxPrev) {
-    lightboxPrev.addEventListener("click", function () {
-      lightboxIndex =
-        (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
-      showAt(lightboxIndex);
-    });
-  }
-
-  if (lightboxNext) {
-    lightboxNext.addEventListener("click", function () {
-      lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
-      showAt(lightboxIndex);
-    });
-  }
-
-  if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
-
-  if (lightbox) {
-    lightbox.addEventListener("click", function (e) {
-      if (e.target === lightbox) closeLightbox();
-    });
-    lightbox.addEventListener("cancel", closeLightbox);
-  }
-
-  document.addEventListener("keydown", function (e) {
-    if (!lightbox || !lightbox.open) return;
-    if (e.key === "Escape") closeLightbox();
-    if (e.key === "ArrowLeft") {
-      lightboxIndex =
-        (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
-      showAt(lightboxIndex);
-    }
-    if (e.key === "ArrowRight") {
-      lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
-      showAt(lightboxIndex);
-    }
-  });
 
   /** Nhạc nền */
   function setAudioUi(playing) {

@@ -53,7 +53,11 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&family=Alex+Brush&family=Dancing+Script:wght@500&display=swap&subset=vietnamese"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css?v=20260929b" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css"
+    />
+    <link rel="stylesheet" href="css/style.css?v=20260929e" />
     <!-- Danh sách khách load trước events.js: link ngắn ?<mã> tự suy ra loại thiệp theo khách -->
     <script src="js/guests/nha-trai.js?v=20260929b"></script>
     <script src="js/guests/nha-gai.js?v=20260929b"></script>
@@ -203,6 +207,13 @@
           var ev = window.WEDDING_EVENTS[window.WEDDING_ROUTE.eventId];
           var img = document.getElementById("hero-photo");
           var hero = document.getElementById("top");
+          // url() trong biến CSS tính theo thư mục css/, nên dùng URL tuyệt đối.
+          function setHeroBg(src) {
+            hero.style.setProperty(
+              "--hero-bg",
+              'url("' + new URL(src, document.baseURI).href + '")',
+            );
+          }
           if (ev.heroPoster) hero.classList.add("hero--poster");
           if (ev.heroPosition) img.style.objectPosition = ev.heroPosition;
           if (ev.heroFallback) {
@@ -211,9 +222,12 @@
               hero.classList.remove("hero--poster");
               img.style.objectPosition = "";
               img.src = ev.heroFallback;
+              setHeroBg(ev.heroFallback);
             };
           }
           img.src = ev.heroImage;
+          // Nền mờ hai bên ảnh trên màn ngang (cùng file, không tải thêm).
+          setHeroBg(ev.heroImage);
         })();
       </script>
       <noscript
@@ -293,9 +307,29 @@
             </div>
           </section>
 
+          <div class="invite__couple reveal" style="--d: 0.22s">
+            <p class="invite__couple-person">
+              <span class="invite__couple-name" data-bind="full-first"
+                >Đặng Tuấn Điệp</span
+              >
+              <span class="invite__couple-role" data-bind="role-first"
+                >Quý Nam</span
+              >
+            </p>
+            <span class="invite__couple-amp" aria-hidden="true">&amp;</span>
+            <p class="invite__couple-person">
+              <span class="invite__couple-name" data-bind="full-second"
+                >Nguyễn Thị Thu Thảo</span
+              >
+              <span class="invite__couple-role" data-bind="role-second"
+                >Út Nữ</span
+              >
+            </p>
+          </div>
+
           <div
             class="invite__families reveal"
-            style="--d: 0.22s"
+            style="--d: 0.3s"
             id="invite-families"
           >
             <div class="invite__family" data-side="trai">
@@ -316,26 +350,6 @@
                 Tổ 34, khu phố Tân Phú, phường Đồng Phú, TP.&nbsp;Đồng&nbsp;Nai
               </p>
             </div>
-          </div>
-
-          <div class="invite__couple reveal" style="--d: 0.3s">
-            <p class="invite__couple-person">
-              <span class="invite__couple-name" data-bind="full-first"
-                >Đặng Tuấn Điệp</span
-              >
-              <span class="invite__couple-role" data-bind="role-first"
-                >Quý Nam</span
-              >
-            </p>
-            <span class="invite__couple-amp" aria-hidden="true">&amp;</span>
-            <p class="invite__couple-person">
-              <span class="invite__couple-name" data-bind="full-second"
-                >Nguyễn Thị Thu Thảo</span
-              >
-              <span class="invite__couple-role" data-bind="role-second"
-                >Út Nữ</span
-              >
-            </p>
           </div>
 
           <div class="invite__notch" aria-hidden="true"></div>
@@ -462,8 +476,18 @@
 
           <div class="invite__venue reveal" style="--d: 0.7s">
             <h3 class="invite__script-heading invite__venue-heading">
-              Địa Điểm Tổ Chức
-              <span class="invite__venue-pin" aria-hidden="true">📍</span>
+              <svg
+                class="invite__venue-pin"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M12 2.25a7.25 7.25 0 0 0-7.25 7.25c0 5.1 6.02 11.37 6.7 12.06a.77.77 0 0 0 1.1 0c.68-.69 6.7-6.96 6.7-12.06A7.25 7.25 0 0 0 12 2.25Z"
+                />
+                <circle cx="12" cy="9.5" r="2.6" />
+              </svg>
+              <span>Địa Điểm Tổ Chức</span>
             </h3>
             <p class="invite__venue-name" id="venue-name">Sẽ thông báo sau</p>
             <div class="invite__map" id="venue-map" hidden>
@@ -1197,43 +1221,16 @@
       <source src="assets/music.mp3" type="audio/mpeg" />
     </audio>
 
-    <!-- Lightbox -->
-    <dialog class="lightbox" id="lightbox" aria-label="Ảnh phóng to">
-      <div class="lightbox__inner" id="lightbox-inner">
-        <button
-          type="button"
-          class="lightbox__close"
-          id="lightbox-close"
-          aria-label="Đóng"
-        >
-          ×
-        </button>
-        <button
-          type="button"
-          class="lightbox__nav lightbox__nav--prev"
-          id="lightbox-prev"
-          aria-label="Ảnh trước"
-        >
-          &#8249;
-        </button>
-        <button
-          type="button"
-          class="lightbox__nav lightbox__nav--next"
-          id="lightbox-next"
-          aria-label="Ảnh sau"
-        >
-          &#8250;
-        </button>
-        <img id="lightbox-img" src="" alt="" />
-        <p
-          class="lightbox__counter"
-          id="lightbox-counter"
-          aria-live="polite"
-        ></p>
-      </div>
-    </dialog>
-
+    <!-- PhotoSwipe: xem ảnh toàn màn hình (vuốt, pinch-zoom, phóng từ ảnh nhỏ) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/umd/photoswipe.umd.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/umd/photoswipe-lightbox.umd.min.js"
+      defer
+    ></script>
     <script src="js/lunar.js?v=20260929b" defer></script>
-    <script src="js/main.js?v=20260929b" defer></script>
+    <script src="js/main.js?v=20260929d" defer></script>
   </body>
 </html>
